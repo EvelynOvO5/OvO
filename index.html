@@ -214,6 +214,37 @@
         .chat-send-btn:active { transform: scale(0.9); }
 
 
+
+
+        /* ================= 界面：User 身份管理 ================= */
+        #screen-user-profiles { background: #f2f2f7; padding-top: 55px; }
+        .profile-header { display: flex; align-items: center; padding: 10px 18px 12px 18px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #eee; }
+        .profile-back-btn { color: #12B7F5; font-size: 20px; font-weight: 800; cursor: pointer; width: 54px; }
+        .profile-title { flex: 1; text-align: center; font-size: 18px; font-weight: 800; color: #111; }
+        .profile-add-btn { width: 54px; text-align: right; color: #12B7F5; font-size: 24px; font-weight: 800; cursor: pointer; }
+        .profile-scroll { flex: 1; overflow-y: auto; padding: 18px 16px 28px 16px; box-sizing: border-box; }
+        .profile-scroll::-webkit-scrollbar { display: none; }
+        .profile-hero { background: #fff; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 13px; box-shadow: 0 1px 0 rgba(0,0,0,0.04); margin-bottom: 18px; }
+        .profile-hero-avatar { width: 56px; height: 56px; border-radius: 18px; background: linear-gradient(135deg, #ff9a9e, #fecfef); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; background-size: cover; background-position: center; }
+        .profile-hero-name { font-size: 18px; font-weight: 850; color: #111; margin-bottom: 4px; }
+        .profile-hero-sub { font-size: 12px; line-height: 1.4; color: #8e8e93; }
+        .profile-section-label { font-size: 12px; color: #8e8e93; margin: 0 0 7px 14px; font-weight: 700; }
+        .profile-list { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 0 rgba(0,0,0,0.04); }
+        .profile-item { min-height: 64px; padding: 10px 13px; box-sizing: border-box; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(60,60,67,0.12); cursor: pointer; }
+        .profile-item:last-child { border-bottom: none; }
+        .profile-item:active { background: #f2f2f7; }
+        .profile-item-avatar { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #ffd1df, #c4e0ff); display: flex; align-items: center; justify-content: center; font-size: 23px; flex-shrink: 0; background-size: cover; background-position: center; }
+        .profile-item-main { flex: 1; min-width: 0; }
+        .profile-item-name { font-size: 15px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .profile-item-sub { font-size: 12px; color: #8e8e93; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .profile-default-badge { font-size: 11px; color: #fff; background: #34c759; border-radius: 999px; padding: 3px 7px; flex-shrink: 0; }
+        .profile-empty { padding: 18px; color: #8e8e93; font-size: 13px; line-height: 1.45; }
+        .profile-bind-select { width: 100%; border: 2px solid #eee; border-radius: 12px; padding: 10px 12px; box-sizing: border-box; font-size: 13px; outline: none; background: #f9f9f9; font-family: inherit; }
+        .profile-bind-preview { margin-top: 8px; padding: 10px 12px; background: #f9f9f9; border-radius: 12px; font-size: 12px; color: #777; line-height: 1.45; }
+        .btn-edit-profile-delete { flex: 1; padding: 12px 0; background: #fff0f0; color: #ff4757; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; }
+        .btn-edit-profile-save { flex: 1; padding: 12px 0; background: #12B7F5; color: #fff; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(18,183,245,0.3); }
+        .profile-editor-avatar { width: 72px; height: 72px; border-radius: 22px; margin: 0 auto 14px auto; background: linear-gradient(135deg, #ffd1df, #c4e0ff); display: flex; align-items: center; justify-content: center; font-size: 34px; cursor: pointer; background-size: cover; background-position: center; overflow: hidden; }
+
         /* ================= 聊天设置弹窗 ================= */
         .settings-modal-box {
             width: 330px;
@@ -607,7 +638,7 @@
         <!-- ================= 界面2：QQ消息列表 ================= -->
         <div id="screen-qq" class="screen">
             <div class="qq-header">
-                <div class="qq-avatar-self">👧</div><div class="qq-title">消息</div><div class="qq-add-btn" id="btn-show-add-modal">➕</div>
+                <div class="qq-avatar-self" id="btn-open-user-profiles">👧</div><div class="qq-title">消息</div><div class="qq-add-btn" id="btn-show-add-modal">➕</div>
             </div>
             <div class="qq-search-container"><div class="qq-search-box">🔍 搜索</div></div>
             
@@ -619,6 +650,28 @@
                 <div class="nav-item active"><div class="nav-icon">💬</div><div class="nav-text">消息</div></div>
                 <div class="nav-item"><div class="nav-icon">👥</div><div class="nav-text">联系人</div></div>
                 <div class="nav-item"><div class="nav-icon">🌟</div><div class="nav-text">动态</div></div>
+            </div>
+        </div>
+
+
+
+        <!-- ================= 界面：User 身份管理 ================= -->
+        <div id="screen-user-profiles" class="screen">
+            <div class="profile-header">
+                <div class="profile-back-btn" id="btn-profile-back">❮</div>
+                <div class="profile-title">我的身份</div>
+                <div class="profile-add-btn" id="btn-add-user-profile">＋</div>
+            </div>
+            <div class="profile-scroll">
+                <div class="profile-hero">
+                    <div class="profile-hero-avatar" id="current-user-profile-avatar">👧</div>
+                    <div>
+                        <div class="profile-hero-name" id="current-user-profile-name">User</div>
+                        <div class="profile-hero-sub" id="current-user-profile-sub">点右上角添加身份，再在聊天设置里绑定给角色。</div>
+                    </div>
+                </div>
+                <div class="profile-section-label">身份列表</div>
+                <div class="profile-list" id="user-profile-list"></div>
             </div>
         </div>
 
@@ -685,18 +738,9 @@
                 </div>
 
                 <div class="settings-group">
-                    <div class="settings-label">User 的人设</div>
-                    <textarea class="settings-textarea" id="setting-user-persona" placeholder="写玩家/user 的身份、背景、和角色关系……"></textarea>
-                </div>
-
-                <div class="settings-group">
-                    <div class="settings-label">User 名字</div>
-                    <input type="text" class="settings-input" id="setting-user-name" placeholder="例如：Evi">
-                </div>
-
-                <div class="settings-group">
-                    <div class="settings-label">User 昵称</div>
-                    <input type="text" class="settings-input" id="setting-user-nickname" placeholder="例如：宝宝、姐姐、主人……">
+                    <div class="settings-label">绑定 User 身份</div>
+                    <select class="profile-bind-select" id="setting-user-profile-select"></select>
+                    <div class="profile-bind-preview" id="setting-user-profile-preview">还没有选择身份。</div>
                 </div>
 
                 <div class="settings-actions">
@@ -789,6 +833,40 @@
             </div>
         </div>
 
+
+
+        <!-- 弹窗：编辑 User 身份 -->
+        <div class="modal-overlay" id="user-profile-modal">
+            <div class="modal-box settings-modal-box">
+                <div class="settings-title-row">
+                    <div class="settings-title" id="user-profile-modal-title">编辑身份</div>
+                    <div class="settings-close" id="btn-close-user-profile-modal">×</div>
+                </div>
+                <input type="file" id="user-profile-avatar-input" accept="image/*" style="display:none;">
+                <div class="profile-editor-avatar" id="user-profile-avatar-preview" title="点击上传头像">👧</div>
+                <div class="settings-group">
+                    <div class="settings-label">User 名字</div>
+                    <input type="text" class="settings-input" id="user-profile-name-input" placeholder="例如：Evi">
+                </div>
+                <div class="settings-group">
+                    <div class="settings-label">User 昵称</div>
+                    <input type="text" class="settings-input" id="user-profile-nickname-input" placeholder="例如：宝宝、姐姐、主人……">
+                </div>
+                <div class="settings-group">
+                    <div class="settings-label">User 人设</div>
+                    <textarea class="settings-textarea" id="user-profile-persona-input" placeholder="写这个身份的背景、性格、和角色关系……"></textarea>
+                </div>
+                <div class="settings-check-row" style="margin-bottom:12px;">
+                    <span class="settings-check-text">设为默认身份</span>
+                    <input type="checkbox" class="settings-checkbox" id="user-profile-default-input">
+                </div>
+                <div class="settings-actions">
+                    <div class="btn-edit-profile-delete" id="btn-delete-user-profile">删除身份</div>
+                    <div class="btn-edit-profile-save" id="btn-save-user-profile">保存身份</div>
+                </div>
+            </div>
+        </div>
+
         <!-- 弹窗：删除角色确认 -->
         <div class="modal-overlay" id="delete-confirm-modal">
             <div class="modal-box delete-confirm-box">
@@ -869,6 +947,9 @@
         document.getElementById('btn-open-qq').addEventListener('click', () => showScreen('screen-qq'));
         // 3. 聊天页点返回
         document.getElementById('btn-chat-back').addEventListener('click', () => showScreen('screen-qq'));
+        document.getElementById('btn-open-user-profiles').addEventListener('click', openUserProfilesScreen);
+        document.getElementById('btn-profile-back').addEventListener('click', () => showScreen('screen-qq'));
+        document.getElementById('btn-add-user-profile').addEventListener('click', () => openUserProfileEditor(''));
 
 
         // --------- QQ 业务逻辑：添加好友 ---------
@@ -884,11 +965,15 @@
         const CHATS_KEY = 'airp_phone_chats_v1';
         const CHAT_SETTINGS_KEY = 'airp_phone_chat_settings_v1';
         const API_SETTINGS_KEY = 'airp_phone_api_settings_v1';
+        const USER_PROFILES_KEY = 'airp_phone_user_profiles_v1';
+        const DEFAULT_USER_PROFILE_KEY = 'airp_phone_default_user_profile_v1';
 
         let friends = JSON.parse(localStorage.getItem(FRIENDS_KEY) || '[]');
         let chatHistories = JSON.parse(localStorage.getItem(CHATS_KEY) || '{}');
         let chatSettings = JSON.parse(localStorage.getItem(CHAT_SETTINGS_KEY) || '{}');
         let apiSettings = JSON.parse(localStorage.getItem(API_SETTINGS_KEY) || '{}');
+        let userProfiles = JSON.parse(localStorage.getItem(USER_PROFILES_KEY) || '[]');
+        let defaultUserProfileId = localStorage.getItem(DEFAULT_USER_PROFILE_KEY) || '';
         let currentChatId = '';
         let currentChatName = '';
 
@@ -917,6 +1002,33 @@
 
         function saveApiSettings() {
             localStorage.setItem(API_SETTINGS_KEY, JSON.stringify(apiSettings));
+        }
+
+        function saveUserProfiles() {
+            localStorage.setItem(USER_PROFILES_KEY, JSON.stringify(userProfiles));
+            localStorage.setItem(DEFAULT_USER_PROFILE_KEY, defaultUserProfileId || '');
+        }
+
+        function ensureDefaultUserProfile() {
+            if (!userProfiles.length) {
+                userProfiles.push({ id: 'user_' + Date.now(), name: 'User', nickname: '', persona: '', avatar: '', emoji: '👧' });
+                defaultUserProfileId = userProfiles[0].id;
+                saveUserProfiles();
+            }
+            if (!defaultUserProfileId || !userProfiles.some(p => p.id === defaultUserProfileId)) {
+                defaultUserProfileId = userProfiles[0].id;
+                saveUserProfiles();
+            }
+        }
+
+        function getUserProfileById(profileId) {
+            ensureDefaultUserProfile();
+            return userProfiles.find(p => p.id === profileId) || userProfiles.find(p => p.id === defaultUserProfileId) || userProfiles[0];
+        }
+
+        function getBoundUserProfile(friendId) {
+            const friend = getFriendById(friendId);
+            return getUserProfileById(friend && friend.userProfileId ? friend.userProfileId : defaultUserProfileId);
         }
 
         function escapeHTML(text) {
@@ -1014,6 +1126,7 @@
                 userPersona: '',
                 userName: '',
                 userNickname: '',
+                userProfileId: defaultUserProfileId || '',
                 avatar: currentUploadedAvatar
             };
 
@@ -1068,10 +1181,13 @@
         }
 
         function renderMyMessage(text) {
+            const boundUser = currentChatId ? getBoundUserProfile(currentChatId) : null;
+            const userAvatarStyle = boundUser && boundUser.avatar ? `background-image: url(${boundUser.avatar});` : '';
+            const userAvatarInner = boundUser && boundUser.avatar ? '' : ((boundUser && boundUser.emoji) || '👧');
             const myMsg = `
                 <div class="bubble-row bubble-right">
                     <div class="bubble-text">${escapeHTML(text)}</div>
-                    <div class="bubble-avatar">👧</div>
+                    <div class="bubble-avatar" style="${userAvatarStyle}">${userAvatarInner}</div>
                 </div>
             `;
             chatRoomBox.insertAdjacentHTML('beforeend', myMsg);
@@ -1124,10 +1240,11 @@
         function buildSystemPrompt(profile) {
             const roleName = profile.name || '角色';
             const displayName = getDisplayName(profile);
-            const userName = profile.userName || 'User';
-            const userNickname = profile.userNickname || userName;
+            const boundUser = getBoundUserProfile(profile.id);
+            const userName = (boundUser && boundUser.name) || profile.userName || 'User';
+            const userNickname = (boundUser && boundUser.nickname) || profile.userNickname || userName;
             const rolePersona = profile.persona || '暂无角色人设。';
-            const userPersona = profile.userPersona || '暂无 User 人设。';
+            const userPersona = (boundUser && boundUser.persona) || profile.userPersona || '暂无 User 人设。';
 
             return `你正在扮演一个 1v1 聊天角色。请始终以角色身份回复，不要跳出角色，不要解释自己是 AI。
 
@@ -1295,14 +1412,151 @@ ${userPersona}
         }
 
 
+
+
+        // --------- User 身份管理：从 QQ 头像进入，可给每个角色绑定 ---------
+        const userProfileList = document.getElementById('user-profile-list');
+        const currentUserProfileAvatar = document.getElementById('current-user-profile-avatar');
+        const currentUserProfileName = document.getElementById('current-user-profile-name');
+        const currentUserProfileSub = document.getElementById('current-user-profile-sub');
+        const userProfileModal = document.getElementById('user-profile-modal');
+        const userProfileModalTitle = document.getElementById('user-profile-modal-title');
+        const userProfileAvatarInput = document.getElementById('user-profile-avatar-input');
+        const userProfileAvatarPreview = document.getElementById('user-profile-avatar-preview');
+        const userProfileNameInput = document.getElementById('user-profile-name-input');
+        const userProfileNicknameInput = document.getElementById('user-profile-nickname-input');
+        const userProfilePersonaInput = document.getElementById('user-profile-persona-input');
+        const userProfileDefaultInput = document.getElementById('user-profile-default-input');
+        const deleteUserProfileBtn = document.getElementById('btn-delete-user-profile');
+        let editingUserProfileId = '';
+        let editingUserProfileAvatar = '';
+
+        function setProfileAvatarElement(el, profile) {
+            if (!el) return;
+            el.style.backgroundImage = profile && profile.avatar ? `url(${profile.avatar})` : 'none';
+            el.textContent = profile && profile.avatar ? '' : ((profile && profile.emoji) || '👧');
+        }
+
+        function refreshUserProfilePage() {
+            ensureDefaultUserProfile();
+            const current = getUserProfileById(defaultUserProfileId);
+            setProfileAvatarElement(currentUserProfileAvatar, current);
+            setProfileAvatarElement(document.getElementById('btn-open-user-profiles'), current);
+            currentUserProfileName.innerText = (current.name || 'User') + (current.nickname ? ` · ${current.nickname}` : '');
+            currentUserProfileSub.innerText = current.persona ? current.persona.slice(0, 42) + (current.persona.length > 42 ? '…' : '') : '默认身份会用于新角色，也可以在聊天设置里单独绑定。';
+
+            userProfileList.innerHTML = '';
+            if (!userProfiles.length) {
+                userProfileList.innerHTML = '<div class="profile-empty">还没有身份。点右上角＋添加一个。</div>';
+                return;
+            }
+            userProfiles.forEach(profile => {
+                const item = document.createElement('div');
+                item.className = 'profile-item';
+                item.innerHTML = `
+                    <div class="profile-item-avatar"></div>
+                    <div class="profile-item-main">
+                        <div class="profile-item-name">${escapeHTML(profile.name || 'User')}${profile.nickname ? ' · ' + escapeHTML(profile.nickname) : ''}</div>
+                        <div class="profile-item-sub">${escapeHTML(profile.persona || '未填写人设')}</div>
+                    </div>
+                    ${profile.id === defaultUserProfileId ? '<div class="profile-default-badge">默认</div>' : ''}
+                `;
+                setProfileAvatarElement(item.querySelector('.profile-item-avatar'), profile);
+                item.addEventListener('click', () => openUserProfileEditor(profile.id));
+                userProfileList.appendChild(item);
+            });
+        }
+
+        function openUserProfilesScreen() {
+            refreshUserProfilePage();
+            showScreen('screen-user-profiles');
+        }
+
+        function openUserProfileEditor(profileId = '') {
+            ensureDefaultUserProfile();
+            editingUserProfileId = profileId;
+            const profile = profileId ? getUserProfileById(profileId) : { id: '', name: '', nickname: '', persona: '', avatar: '', emoji: '👧' };
+            editingUserProfileAvatar = profile.avatar || '';
+            userProfileModalTitle.innerText = profileId ? '编辑身份' : '添加身份';
+            userProfileNameInput.value = profile.name || '';
+            userProfileNicknameInput.value = profile.nickname || '';
+            userProfilePersonaInput.value = profile.persona || '';
+            userProfileDefaultInput.checked = profileId ? profile.id === defaultUserProfileId : !userProfiles.length;
+            deleteUserProfileBtn.style.display = profileId ? 'block' : 'none';
+            setProfileAvatarElement(userProfileAvatarPreview, profile);
+            userProfileModal.style.display = 'flex';
+        }
+
+        function closeUserProfileEditor() {
+            userProfileModal.style.display = 'none';
+        }
+
+        function saveEditingUserProfile() {
+            const name = userProfileNameInput.value.trim();
+            if (!name) return alert('User 名字不能为空哦！');
+            const data = {
+                name,
+                nickname: userProfileNicknameInput.value.trim(),
+                persona: userProfilePersonaInput.value.trim(),
+                avatar: editingUserProfileAvatar,
+                emoji: '👧'
+            };
+            if (editingUserProfileId) {
+                const profile = userProfiles.find(p => p.id === editingUserProfileId);
+                if (profile) Object.assign(profile, data);
+            } else {
+                editingUserProfileId = 'user_' + Date.now();
+                userProfiles.push(Object.assign({ id: editingUserProfileId }, data));
+            }
+            if (userProfileDefaultInput.checked || !defaultUserProfileId) defaultUserProfileId = editingUserProfileId;
+            saveUserProfiles();
+            refreshUserProfilePage();
+            closeUserProfileEditor();
+        }
+
+        function deleteEditingUserProfile() {
+            if (!editingUserProfileId) return;
+            if (userProfiles.length <= 1) return alert('至少要保留一个 User 身份。');
+            const targetId = editingUserProfileId;
+            userProfiles = userProfiles.filter(p => p.id !== targetId);
+            if (defaultUserProfileId === targetId) defaultUserProfileId = userProfiles[0].id;
+            friends.forEach(friend => {
+                if (friend.userProfileId === targetId) friend.userProfileId = defaultUserProfileId;
+            });
+            saveUserProfiles();
+            saveFriends();
+            refreshUserProfilePage();
+            closeUserProfileEditor();
+        }
+
+        function renderUserProfileSelect(selectedId = '') {
+            ensureDefaultUserProfile();
+            const selected = selectedId || defaultUserProfileId || (userProfiles[0] && userProfiles[0].id) || '';
+            userProfileSelect.innerHTML = '';
+            userProfiles.forEach(profile => {
+                const opt = document.createElement('option');
+                opt.value = profile.id;
+                opt.textContent = `${profile.name || 'User'}${profile.nickname ? ' · ' + profile.nickname : ''}${profile.id === defaultUserProfileId ? '（默认）' : ''}`;
+                if (profile.id === selected) opt.selected = true;
+                userProfileSelect.appendChild(opt);
+            });
+            updateUserProfilePreview();
+        }
+
+        function updateUserProfilePreview() {
+            const profile = getUserProfileById(userProfileSelect.value);
+            userProfilePreview.innerText = profile ? `名字：${profile.name || 'User'}｜昵称：${profile.nickname || '未填写'}\n人设：${profile.persona || '未填写'}` : '还没有选择身份。';
+        }
+
+        ensureDefaultUserProfile();
+
         // --------- 1对1 聊天设置：改名、备注、人设、删除角色 ---------
         const chatSettingsModal = document.getElementById('chat-settings-modal');
         const roleNameInput = document.getElementById('setting-role-name');
         const roleRemarkInput = document.getElementById('setting-role-remark');
         const rolePersonaInput = document.getElementById('setting-role-persona');
-        const userPersonaInput = document.getElementById('setting-user-persona');
-        const userNameInput = document.getElementById('setting-user-name');
-        const userNicknameInput = document.getElementById('setting-user-nickname');
+        const userProfileSelect = document.getElementById('setting-user-profile-select');
+        const userProfilePreview = document.getElementById('setting-user-profile-preview');
         const deleteRoleBtn = document.getElementById('btn-delete-role');
         const deleteConfirmModal = document.getElementById('delete-confirm-modal');
         const deleteConfirmName = document.getElementById('delete-confirm-name');
@@ -1318,9 +1572,7 @@ ${userPersona}
             roleNameInput.value = profile.name || '';
             roleRemarkInput.value = profile.remark || '';
             rolePersonaInput.value = profile.persona || '';
-            userPersonaInput.value = profile.userPersona || '';
-            userNameInput.value = profile.userName || '';
-            userNicknameInput.value = profile.userNickname || '';
+            renderUserProfileSelect(profile.userProfileId || defaultUserProfileId || '');
 
             deleteRoleBtn.classList.remove('disabled');
             deleteRoleBtn.innerText = '删除角色';
@@ -1341,9 +1593,7 @@ ${userPersona}
                 name: newName,
                 remark: roleRemarkInput.value.trim(),
                 persona: rolePersonaInput.value.trim(),
-                userPersona: userPersonaInput.value.trim(),
-                userName: userNameInput.value.trim(),
-                userNickname: userNicknameInput.value.trim()
+                userProfileId: userProfileSelect.value || defaultUserProfileId || ''
             };
 
             const friend = getFriendById(currentChatId);
@@ -1585,6 +1835,28 @@ ${userPersona}
         deleteConfirmModal.addEventListener('click', function(e) {
             if (e.target === deleteConfirmModal) closeDeleteConfirmModal();
         });
+
+        userProfileSelect.addEventListener('change', updateUserProfilePreview);
+        document.getElementById('btn-close-user-profile-modal').addEventListener('click', closeUserProfileEditor);
+        document.getElementById('btn-save-user-profile').addEventListener('click', saveEditingUserProfile);
+        deleteUserProfileBtn.addEventListener('click', deleteEditingUserProfile);
+        userProfileAvatarPreview.addEventListener('click', () => userProfileAvatarInput.click());
+        userProfileAvatarInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    editingUserProfileAvatar = event.target.result;
+                    userProfileAvatarPreview.style.backgroundImage = `url(${editingUserProfileAvatar})`;
+                    userProfileAvatarPreview.textContent = '';
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+        userProfileModal.addEventListener('click', function(e) {
+            if (e.target === userProfileModal) closeUserProfileEditor();
+        });
+
+        refreshUserProfilePage();
 
         // 第一次进入页面时恢复好友列表和历史预览
         refreshMessageList();
