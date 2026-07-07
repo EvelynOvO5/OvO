@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的AI模拟手机 - 聊天对话版</title>
+    <title>我的AI模拟手机 - 防崩溃满血版</title>
     <style>
         /* ================= 基础设置 ================= */
         html, body { height: 100%; margin: 0; overflow: auto; }
@@ -14,24 +14,22 @@
             user-select: none; box-sizing: border-box;
         }
 
-        /* 手机外壳 */
+        /* ================= 手机外壳 ================= */
         .phone-frame {
             width: 390px; height: 844px;
             border: 14px solid #1a1a1a; 
             box-shadow: 0 0 0 2px #b0b0b0, 0 35px 70px rgba(0,0,0,0.3);
-            border-radius: 55px; position: relative; overflow: hidden;
-            display: flex; flex-direction: column; z-index: 1; background: #fff;
+            border-radius: 55px; position: relative;
+            display: flex; flex-direction: column; z-index: 1; background: #1a1a1a;
         }
         @media (max-height: 920px) { .phone-frame { transform: scale(0.85); transform-origin: top center; } }
         @media (max-height: 780px) { .phone-frame { transform: scale(0.75); transform-origin: top center; } }
 
-        /* ================= 状态栏与灵动岛 ================= */
-        /* ★ 灵动岛现在是Home键啦，加了鼠标手势和点击动效 ★ */
+        /* ================= 灵动岛与状态栏 ================= */
         .dynamic-island {
             position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
             width: 120px; height: 34px; background-color: #000; border-radius: 20px; z-index: 999;
-            box-shadow: inset 0 0 4px rgba(255,255,255,0.1);
-            cursor: pointer; transition: transform 0.1s;
+            box-shadow: inset 0 0 4px rgba(255,255,255,0.1); cursor: pointer; transition: transform 0.1s;
         }
         .dynamic-island:active { transform: translateX(-50%) scale(0.95); }
 
@@ -54,8 +52,12 @@
         .battery-level { position: absolute; top: 1px; left: 1px; bottom: 1px; width: 90%; border-radius: 1px; }
         .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 140px; height: 5px; background: #111; border-radius: 10px; z-index: 999; }
 
-        /* 页面切换控制器 */
-        .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; flex-direction: column; box-sizing: border-box; }
+        /* ================= 屏幕容器管理器 (完美切圆角) ================= */
+        .screen { 
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0; 
+            display: none; flex-direction: column; box-sizing: border-box; 
+            border-radius: 41px; overflow: hidden; background-color: #f5f6fa;
+        }
         .screen.active { display: flex; animation: fade-in 0.2s ease; }
         @keyframes fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
@@ -109,7 +111,7 @@
         .dock .app-icon { width: 56px; height: 56px; border-radius: 18px; font-size: 30px; background: linear-gradient(135deg, #fdfbfb, #ebedee); box-shadow: 0 6px 15px rgba(0,0,0,0.06); }
 
         /* ================= 界面2：QQ消息列表 ================= */
-        #screen-qq { background-color: #f5f6fa; padding-top: 55px; }
+        #screen-qq { padding-top: 55px; }
         
         .qq-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px 15px 20px; background-color: #fff; }
         .qq-avatar-self { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #ff9a9e, #fecfef); display: flex; justify-content: center; align-items: center; font-size: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);}
@@ -125,16 +127,15 @@
 
         .msg-item { display: flex; align-items: center; padding: 12px 20px; transition: background 0.2s; cursor: pointer; border-bottom: 1px solid #fafafa;}
         .msg-item:active { background-color: #f0f2f5; }
-        
         .msg-avatar { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); flex-shrink: 0; background-size: cover; background-position: center; background-color: #eee; }
         .msg-content { flex: 1; overflow: hidden; }
         .msg-name { font-size: 16px; font-weight: 600; color: #222; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         .msg-preview { font-size: 13px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
         .msg-meta { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; height: 40px;}
         .msg-time { font-size: 12px; color: #bbb; }
         .msg-badge { background-color: #ff4757; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold;}
 
+        /* 底部导航栏也会被完美裁切圆角 */
         .qq-bottom-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0 25px 0; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #999; gap: 4px;}
         .nav-item.active { color: #12B7F5; }
@@ -142,7 +143,7 @@
         .nav-text { font-size: 10px; font-weight: 600;}
 
         /* 添加好友弹窗 */
-        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(5px); z-index: 1000; display: none; justify-content: center; align-items: center; border-radius: 55px; }
+        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(5px); z-index: 1000; display: none; justify-content: center; align-items: center; }
         .modal-box { background: #fff; width: 290px; border-radius: 24px; padding: 25px; box-sizing: border-box; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: pop-up 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
         @keyframes pop-up { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .modal-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #333; }
@@ -158,10 +159,9 @@
         .btn-cancel:active, .btn-confirm:active { transform: scale(0.95); }
 
 
-        /* ================= 界面3：1对1 聊天窗口 (全新加入) ================= */
-        #screen-chat { background-color: #f5f6fa; padding-top: 55px; }
+        /* ================= 界面3：1对1 聊天窗口 ================= */
+        #screen-chat { padding-top: 55px; }
         
-        /* 聊天顶部栏 */
         .chat-header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 10px 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
@@ -171,31 +171,25 @@
         .chat-title { font-size: 17px; font-weight: 700; color: #000; flex: 1; text-align: center; }
         .chat-more-btn { font-size: 22px; color: #111; cursor: pointer; }
 
-        /* 聊天消息区 */
         .chat-room {
             flex: 1; overflow-y: auto; padding: 15px 20px; display: flex; flex-direction: column; gap: 20px;
         }
         .chat-room::-webkit-scrollbar { display: none; }
-        
-        /* 聊天时间戳 */
         .chat-time-stamp { text-align: center; font-size: 11px; color: #aaa; margin: 5px 0; }
 
-        /* 气泡通用 */
         .bubble-row { display: flex; align-items: flex-start; max-width: 100%; }
         .bubble-avatar { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; font-size: 22px;}
         .bubble-text { padding: 12px 16px; font-size: 15px; line-height: 1.5; word-break: break-all; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         
-        /* 对方(左侧)气泡 */
         .bubble-left { justify-content: flex-start; }
-        .bubble-left .bubble-avatar { margin-right: 12px; }
+        .bubble-left .bubble-avatar { margin-right: 12px; border: 1px solid #eee; }
         .bubble-left .bubble-text { background-color: #fff; color: #333; border-radius: 2px 18px 18px 18px; }
 
-        /* 我(右侧)气泡 */
         .bubble-right { justify-content: flex-end; }
         .bubble-right .bubble-avatar { margin-left: 12px; background: linear-gradient(135deg, #ff9a9e, #fecfef); }
         .bubble-right .bubble-text { background-color: #12B7F5; color: #fff; border-radius: 18px 2px 18px 18px; }
 
-        /* 底部输入框 */
+        /* 输入框底栏也会被完美裁切圆角 */
         .chat-input-area {
             background: #f5f6fa; padding: 10px 20px 25px 20px; display: flex; align-items: flex-end; gap: 10px; border-top: 1px solid #ddd;
         }
@@ -215,18 +209,15 @@
 <body>
 
     <div class="phone-frame">
-        
-        <!-- 全局：灵动岛(现在是Home键) & 状态栏 -->
         <div class="dynamic-island" id="btn-global-home" title="点击返回桌面"></div>
         <div class="status-bar status-light" id="global-status-bar">
             <span id="status-clock">23:08</span>
             <div class="status-right">
-                <span>📶</span><span>🛜</span>
-                <span class="ios-battery"><span class="battery-level"></span></span>
+                <span>📶</span><span>🛜</span><span class="ios-battery"><span class="battery-level"></span></span>
             </div>
         </div>
 
-        <!-- ================= 界面1：桌面 ================= -->
+        <!-- 屏幕1：桌面 -->
         <div id="screen-home" class="screen active">
             <div class="top-shadow-overlay"></div>
             <div class="top-widgets">
@@ -255,17 +246,11 @@
             <div class="dock"><div class="app-item"><div class="app-icon">📞</div></div><div class="app-item"><div class="app-icon">🎀</div></div><div class="app-item"><div class="app-icon">💬</div></div><div class="app-item"><div class="app-icon">📷</div></div></div>
         </div>
 
-        <!-- ================= 界面2：QQ消息列表 ================= -->
+        <!-- 屏幕2：QQ列表 -->
         <div id="screen-qq" class="screen">
-            <div class="qq-header">
-                <div class="qq-avatar-self">👧</div><div class="qq-title">消息</div><div class="qq-add-btn" id="btn-show-add-modal">➕</div>
-            </div>
+            <div class="qq-header"><div class="qq-avatar-self">👧</div><div class="qq-title">消息</div><div class="qq-add-btn" id="btn-show-add-modal">➕</div></div>
             <div class="qq-search-container"><div class="qq-search-box">🔍 搜索</div></div>
-            
-            <div class="qq-msg-list" id="qq-message-list">
-                <!-- 列表项会动态插入到这里 -->
-            </div>
-            
+            <div class="qq-msg-list" id="qq-message-list"></div>
             <div class="qq-bottom-nav">
                 <div class="nav-item active"><div class="nav-icon">💬</div><div class="nav-text">消息</div></div>
                 <div class="nav-item"><div class="nav-icon">👥</div><div class="nav-text">联系人</div></div>
@@ -273,28 +258,17 @@
             </div>
         </div>
 
-        <!-- ================= 界面3：1对1 聊天窗口 ================= -->
+        <!-- 屏幕3：聊天室 -->
         <div id="screen-chat" class="screen">
-            <!-- 头部 -->
-            <div class="chat-header">
-                <div class="chat-back-btn" id="btn-chat-back">❮</div>
-                <div class="chat-title" id="chat-header-name">角色名字</div>
-                <div class="chat-more-btn">≡</div>
-            </div>
-            
-            <!-- 聊天流 -->
-            <div class="chat-room" id="chat-room-box">
-                <!-- 消息气泡会动态添加到这里 -->
-            </div>
-
-            <!-- 底部输入框 -->
+            <div class="chat-header"><div class="chat-back-btn" id="btn-chat-back">❮</div><div class="chat-title" id="chat-header-name">名字</div><div class="chat-more-btn">≡</div></div>
+            <div class="chat-room" id="chat-room-box"></div>
             <div class="chat-input-area">
                 <textarea class="chat-input-box" id="chat-input-text" placeholder="给TA发消息... (按回车发送)" rows="1"></textarea>
                 <div class="chat-send-btn" id="btn-send-msg">➤</div>
             </div>
         </div>
 
-        <!-- 弹窗：添加好友 -->
+        <!-- 弹窗 -->
         <div class="modal-overlay" id="add-friend-modal">
             <div class="modal-box">
                 <div class="modal-title">添加新角色</div>
@@ -311,13 +285,11 @@
             </div>
         </div>
 
-        <!-- 全局底部黑条 -->
         <div class="home-indicator"></div>
     </div>
 
-    <!-- ================= 交互逻辑 (JavaScript) ================= -->
     <script>
-        // --------- 基础组件：时间更新 ---------
+        // --------- 1. 基础组件：时间更新 ---------
         function updateTime() {
             const now = new Date();
             let h = now.getHours().toString().padStart(2, '0');
@@ -328,182 +300,217 @@
         }
         setInterval(updateTime, 1000); updateTime();
 
-        // --------- 页面路由管理器 ---------
+        // --------- 2. ★ 安全机制：本地数据初始化 (Try-Catch 防崩溃) ★ ---------
+        let friends = [];
+        let chatHistory = {};
+
+        function initData() {
+            try {
+                // 尝试从浏览器读取数据
+                const savedFriends = localStorage.getItem('myAI_friends');
+                const savedChats = localStorage.getItem('myAI_chats');
+                
+                if (savedFriends) {
+                    friends = JSON.parse(savedFriends);
+                } else {
+                    throw new Error("No Data"); // 如果没有数据，跳去生成默认数据
+                }
+                if (savedChats) {
+                    chatHistory = JSON.parse(savedChats);
+                }
+            } catch (error) {
+                // 核心：一旦报错（比如双击文件打开的安全限制），立刻切回【临时记忆】模式，保证程序不崩！
+                friends = [
+                    { id: 'sys_01', name: 'AI企鹅小助手', avatar: '', bg: 'linear-gradient(135deg, #12B7F5, #0098EA)', emoji: '🐧' }
+                ];
+                chatHistory = {
+                    'sys_01': [
+                        { sender: 'ai', text: '点击右上角➕号添加你的专属角色！(注: 本地打开为临时记忆，传到网页就会变成永久记忆哦)', time: '刚刚' }
+                    ]
+                };
+            }
+        }
+        initData(); // 马上执行读取数据
+
+        function saveData() {
+            try {
+                // 存进永久记忆
+                localStorage.setItem('myAI_friends', JSON.stringify(friends));
+                localStorage.setItem('myAI_chats', JSON.stringify(chatHistory));
+            } catch (error) {
+                // 本地打开存不进去没关系，忽略报错，继续运行临时记忆
+                console.warn('本地打开无法保存永久记忆，但是网页运转依然流畅！');
+            }
+        }
+
+        // --------- 3. 页面路由管理器 ---------
         const screens = document.querySelectorAll('.screen');
         const statusBar = document.getElementById('global-status-bar');
 
         function showScreen(screenId) {
-            screens.forEach(s => s.classList.remove('active')); // 隐藏所有
-            document.getElementById(screenId).classList.add('active'); // 显示目标
-            
-            // 只有桌面是亮色状态栏，其他都是黑色
+            screens.forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
             if(screenId === 'screen-home') {
                 statusBar.classList.remove('status-dark'); statusBar.classList.add('status-light');
             } else {
                 statusBar.classList.remove('status-light'); statusBar.classList.add('status-dark');
             }
         }
-
-        // 1. 全局Home键：点击灵动岛回桌面
         document.getElementById('btn-global-home').addEventListener('click', () => showScreen('screen-home'));
-        // 2. 桌面点QQ
-        document.getElementById('btn-open-qq').addEventListener('click', () => showScreen('screen-qq'));
-        // 3. 聊天页点返回
-        document.getElementById('btn-chat-back').addEventListener('click', () => showScreen('screen-qq'));
+        document.getElementById('btn-open-qq').addEventListener('click', () => {
+            renderFriendList(); 
+            showScreen('screen-qq');
+        });
+        document.getElementById('btn-chat-back').addEventListener('click', () => {
+            renderFriendList(); 
+            showScreen('screen-qq');
+        });
 
+        // --------- 4. 渲染QQ消息列表 ---------
+        const messageList = document.getElementById('qq-message-list');
+        function renderFriendList() {
+            messageList.innerHTML = '';
+            [...friends].reverse().forEach(friend => {
+                const history = chatHistory[friend.id] || [];
+                const lastMsg = history.length > 0 ? history[history.length - 1].text : '戳一戳开始聊天吧！';
+                
+                let avatarStyle = friend.avatar ? `background-image: url(${friend.avatar});` : `background: ${friend.bg}; color: white;`;
+                let avatarInner = friend.avatar ? '' : friend.emoji;
 
-        // --------- QQ 业务逻辑：添加好友 ---------
+                const item = document.createElement('div');
+                item.className = 'msg-item';
+                item.innerHTML = `
+                    <div class="msg-avatar" style="${avatarStyle}">${avatarInner}</div>
+                    <div class="msg-content">
+                        <div class="msg-name">${friend.name}</div>
+                        <div class="msg-preview">${lastMsg}</div>
+                    </div>
+                    <div class="msg-meta"><div class="msg-time">刚刚</div><div class="msg-badge">新</div></div>
+                `;
+                item.addEventListener('click', () => openChatRoom(friend.id));
+                messageList.appendChild(item);
+            });
+        }
+
+        // --------- 5. 头像上传与安全压缩 ---------
         const addModal = document.getElementById('add-friend-modal');
         const avatarInput = document.getElementById('avatar-input');
         const avatarPreview = document.getElementById('avatar-preview');
         const nameInput = document.getElementById('friend-name-input');
-        const messageList = document.getElementById('qq-message-list');
         let currentUploadedAvatar = ''; 
 
-        // 打开弹窗重置
         document.getElementById('btn-show-add-modal').addEventListener('click', () => {
-            addModal.style.display = 'flex'; nameInput.value = ''; avatarInput.value = '';
-            currentUploadedAvatar = ''; avatarPreview.style.backgroundImage = 'none';
-            avatarPreview.style.border = '2px dashed #ccc'; avatarPreview.innerHTML = '<span class="avatar-placeholder-text">📷<br>上传头像</span>';
-            nameInput.focus();
+            addModal.style.display = 'flex'; nameInput.value = ''; avatarInput.value = ''; currentUploadedAvatar = ''; 
+            avatarPreview.style.backgroundImage = 'none'; avatarPreview.style.border = '2px dashed #ccc'; 
+            avatarPreview.innerHTML = '<span class="avatar-placeholder-text">📷<br>上传头像</span>';
         });
         document.getElementById('btn-cancel-add').addEventListener('click', () => addModal.style.display = 'none');
 
-        // 读取图片
+        // 图片黑科技压缩，瞬间切圆并缩小尺寸
         avatarInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) {
+            const file = e.target.files[0];
+            if (file) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    currentUploadedAvatar = event.target.result;
-                    avatarPreview.style.backgroundImage = `url(${currentUploadedAvatar})`;
-                    avatarPreview.innerHTML = ''; avatarPreview.style.border = 'none';
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = 150; canvas.height = 150; 
+                        const minDim = Math.min(img.width, img.height);
+                        const startX = (img.width - minDim) / 2;
+                        const startY = (img.height - minDim) / 2;
+                        ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, 150, 150);
+                        
+                        currentUploadedAvatar = canvas.toDataURL('image/jpeg', 0.8);
+                        avatarPreview.style.backgroundImage = `url(${currentUploadedAvatar})`;
+                        avatarPreview.innerHTML = ''; avatarPreview.style.border = 'none';
+                    };
+                    img.src = event.target.result;
                 };
-                reader.readAsDataURL(e.target.files[0]);
+                reader.readAsDataURL(file);
             }
         });
 
-        // 确定添加并生成列表项
+        // 确定添加角色
         document.getElementById('btn-confirm-add').addEventListener('click', () => {
             const friendName = nameInput.value.trim(); 
             if (!currentUploadedAvatar) return alert('请上传一张头像哦！');
             if (!friendName) return alert('名字不能为空哦！');
 
-            // 动态生成HTML，并把名字和图片数据绑在元素属性上，方便后面聊天室读取
-            const newItem = document.createElement('div');
-            newItem.className = 'msg-item';
-            // 给这个 item 加上一个自定义属性 data-avatar，保存图片数据
-            newItem.setAttribute('data-avatar', currentUploadedAvatar); 
-            newItem.innerHTML = `
-                <div class="msg-avatar" style="background-image: url(${currentUploadedAvatar}); border: 1px solid #eee;"></div>
-                <div class="msg-content">
-                    <div class="msg-name">${friendName}</div>
-                    <div class="msg-preview">（新朋友）戳一戳开始聊天吧！</div>
-                </div>
-                <div class="msg-meta"><div class="msg-time">刚刚</div><div class="msg-badge">新</div></div>
-            `;
-
-            // 绑定点击进入聊天室的事件
-            newItem.addEventListener('click', function() {
-                openChatRoom(friendName, currentUploadedAvatar);
-            });
-
-            messageList.insertAdjacentElement('afterbegin', newItem);
+            const newId = 'user_' + Date.now(); 
+            friends.push({ id: newId, name: friendName, avatar: currentUploadedAvatar });
+            chatHistory[newId] = [ { sender: 'ai', text: '我通过了你的朋友验证请求，现在我们可以开始聊天了', time: '刚刚' } ];
+            
+            saveData(); 
+            renderFriendList(); 
             addModal.style.display = 'none';
         });
 
-        // 内置系统小助手（同样绑定聊天事件）
-        const sysBot = document.createElement('div');
-        sysBot.className = 'msg-item';
-        sysBot.innerHTML = `
-            <div class="msg-avatar" style="background: linear-gradient(135deg, #12B7F5, #0098EA); color: white;">🐧</div>
-            <div class="msg-content"><div class="msg-name">AI企鹅小助手</div><div class="msg-preview">快点击右上角➕号添加角色吧！</div></div>
-            <div class="msg-meta"><div class="msg-time">刚刚</div><div class="msg-badge">1</div></div>
-        `;
-        sysBot.addEventListener('click', () => openChatRoom('AI企鹅小助手', '', '🐧', 'linear-gradient(135deg, #12B7F5, #0098EA)'));
-        messageList.appendChild(sysBot);
-
-
-        // --------- 1对1 聊天室业务逻辑 ---------
+        // --------- 6. 1对1 聊天室业务 ---------
         const chatRoomBox = document.getElementById('chat-room-box');
         const chatInputText = document.getElementById('chat-input-text');
-        
-        let currentChatAvatarURL = ''; // 记录当前聊天对象的图片
-        let currentChatEmoji = '';     // 记录如果是系统助手，用的emoji
-        let currentChatBg = '';
+        let currentChatId = null;
 
-        // 打开聊天室的函数
-        function openChatRoom(name, avatarURL, emoji = '', bg = '') {
-            showScreen('screen-chat');
-            document.getElementById('chat-header-name').innerText = name;
+        function openChatRoom(friendId) {
+            currentChatId = friendId;
+            const friend = friends.find(f => f.id === friendId);
+            document.getElementById('chat-header-name').innerText = friend.name;
             
-            // 保存当前对方的头像数据，发消息时要用到
-            currentChatAvatarURL = avatarURL;
-            currentChatEmoji = emoji;
-            currentChatBg = bg;
-
-            // 清空旧的聊天记录
-            chatRoomBox.innerHTML = '';
-
-            // 插入一条系统时间
+            chatRoomBox.innerHTML = ''; 
             const now = new Date();
             chatRoomBox.innerHTML += `<div class="chat-time-stamp">${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}</div>`;
 
-            // 自动发一条欢迎打招呼
-            receiveMessage(`你好呀！我是 ${name}，很高兴认识你！`);
+            const history = chatHistory[friendId] || [];
+            history.forEach(msg => {
+                if(msg.sender === 'me') renderMyMsg(msg.text);
+                else renderFriendMsg(friend, msg.text);
+            });
+
+            showScreen('screen-chat');
+            chatRoomBox.scrollTop = chatRoomBox.scrollHeight; 
         }
 
-        // 我发送消息的功能
+        function renderMyMsg(text) {
+            chatRoomBox.insertAdjacentHTML('beforeend', `
+                <div class="bubble-row bubble-right"><div class="bubble-text">${text}</div><div class="bubble-avatar">👧</div></div>
+            `);
+            chatRoomBox.scrollTop = chatRoomBox.scrollHeight;
+        }
+
+        function renderFriendMsg(friend, text) {
+            let avatarStyle = friend.avatar ? `background-image: url(${friend.avatar});` : `background: ${friend.bg}; color: white;`;
+            let avatarInner = friend.avatar ? '' : friend.emoji;
+            chatRoomBox.insertAdjacentHTML('beforeend', `
+                <div class="bubble-row bubble-left"><div class="bubble-avatar" style="${avatarStyle}">${avatarInner}</div><div class="bubble-text">${text}</div></div>
+            `);
+            chatRoomBox.scrollTop = chatRoomBox.scrollHeight;
+        }
+
         function sendMessage() {
             const text = chatInputText.value.trim();
-            if (!text) return;
+            if (!text || !currentChatId) return;
+            const friend = friends.find(f => f.id === currentChatId);
 
-            // 1. 生成我的蓝色气泡（右侧）
-            const myMsg = `
-                <div class="bubble-row bubble-right">
-                    <div class="bubble-text">${text}</div>
-                    <div class="bubble-avatar">👧</div>
-                </div>
-            `;
-            chatRoomBox.insertAdjacentHTML('beforeend', myMsg);
+            chatHistory[currentChatId].push({ sender: 'me', text: text, time: '刚刚' });
+            saveData();
             
-            // 2. 清空输入框并滚动到底部
+            renderMyMsg(text);
             chatInputText.value = '';
-            chatRoomBox.scrollTop = chatRoomBox.scrollHeight;
 
-            // 3. 模拟AI自动回复 (延迟1秒)
             setTimeout(() => {
-                receiveMessage(`(AI思考中...) 你刚才说："${text}"。不过我还没有连接AI大脑呢，等下一步吧！`);
+                const replyText = `(AI思考中...) 等你连上大模型，我就可以根据人设来回复这句 "${text}" 啦！`;
+                chatHistory[currentChatId].push({ sender: 'ai', text: replyText, time: '刚刚' });
+                saveData();
+                renderFriendMsg(friend, replyText);
             }, 1000);
         }
 
-        // 接收（对方发来）消息的功能
-        function receiveMessage(text) {
-            // 判断对方是图片头像还是emoji头像
-            let avatarStyle = currentChatAvatarURL ? `background-image: url(${currentChatAvatarURL});` : `background: ${currentChatBg}; color: white;`;
-            let avatarInner = currentChatAvatarURL ? '' : currentChatEmoji;
-
-            const friendMsg = `
-                <div class="bubble-row bubble-left">
-                    <div class="bubble-avatar" style="${avatarStyle}; border: 1px solid #eee;">${avatarInner}</div>
-                    <div class="bubble-text">${text}</div>
-                </div>
-            `;
-            chatRoomBox.insertAdjacentHTML('beforeend', friendMsg);
-            chatRoomBox.scrollTop = chatRoomBox.scrollHeight;
-        }
-
-        // 绑定发送按钮
         document.getElementById('btn-send-msg').addEventListener('click', sendMessage);
-
-        // 绑定回车键发送
         chatInputText.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault(); // 阻止默认的回车换行
-                sendMessage();
-            }
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
         });
 
     </script>
-
 </body>
 </html>
