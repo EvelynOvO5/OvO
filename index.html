@@ -245,6 +245,79 @@
         .btn-edit-profile-save { flex: 1; padding: 12px 0; background: #12B7F5; color: #fff; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(18,183,245,0.3); }
         .profile-editor-avatar { width: 72px; height: 72px; border-radius: 22px; margin: 0 auto 14px auto; background: linear-gradient(135deg, #ffd1df, #c4e0ff); display: flex; align-items: center; justify-content: center; font-size: 34px; cursor: pointer; background-size: cover; background-position: center; overflow: hidden; }
 
+
+
+        /* ================= QQ 风格：个人侧页与名片 ================= */
+        #screen-profile-menu, #screen-profile-card { background: #fff; padding-top: 0; }
+        .self-cover {
+            height: 245px;
+            padding: 54px 28px 0 28px;
+            box-sizing: border-box;
+            color: #fff;
+            background: radial-gradient(circle at 70% 35%, rgba(255,255,255,0.15), transparent 34%), linear-gradient(135deg, #d8362a 0%, #7b1f36 48%, #21151b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .self-cover::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.08), rgba(0,0,0,0.18));
+            pointer-events: none;
+        }
+        .self-top-actions { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; }
+        .self-back-btn, .self-round-icon { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 28px; cursor: pointer; background: rgba(0,0,0,0.10); backdrop-filter: blur(8px); }
+        .self-round-icon { font-size: 19px; margin-left: 10px; }
+        .self-icons { display: flex; align-items: center; }
+        .profile-menu-card {
+            margin: -64px 18px 18px 18px;
+            min-height: 176px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.96);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+            position: relative;
+            z-index: 2;
+            padding: 24px 18px 16px 18px;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        .profile-menu-main { display: flex; align-items: flex-start; gap: 14px; }
+        .self-avatar-xl { width: 86px; height: 86px; border-radius: 28px; background: linear-gradient(135deg, #ffd1df, #c4e0ff); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; font-size: 42px; flex-shrink: 0; box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+        .profile-menu-name { font-size: 24px; line-height: 1.1; font-weight: 900; color: #ff4b32; margin: 7px 0 8px 0; }
+        .profile-menu-sign { font-size: 14px; color: #8e8e93; line-height: 1.4; }
+        .profile-menu-tags { margin-top: 13px; display: flex; flex-wrap: wrap; gap: 8px; }
+        .profile-menu-tag { font-size: 12px; color: #8a6536; background: #fff3df; border-radius: 999px; padding: 4px 9px; font-weight: 800; }
+        .profile-menu-stats { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; font-size: 15px; color: #222; font-weight: 700; }
+        .profile-menu-pill { border: 1px solid #e5e5ea; border-radius: 999px; padding: 8px 14px; font-size: 14px; color: #222; background: #fff; }
+        .profile-menu-list { padding: 8px 24px 20px 24px; box-sizing: border-box; }
+        .profile-menu-row { height: 58px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(60,60,67,0.08); cursor: pointer; }
+        .profile-menu-row:active { opacity: 0.55; }
+        .profile-menu-row-icon { width: 30px; text-align: center; font-size: 24px; }
+        .profile-menu-row-title { flex: 1; font-size: 18px; font-weight: 700; color: #222; }
+        .profile-menu-row-sub { font-size: 12px; color: #999; }
+        .profile-menu-arrow { color: #aaa; font-size: 26px; }
+        .profile-menu-bottom { display: flex; gap: 42px; padding: 22px 30px; border-top: 1px solid rgba(60,60,67,0.09); margin-top: 8px; }
+        .profile-menu-bottom-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #111; font-size: 14px; font-weight: 700; cursor: pointer; }
+        .profile-menu-bottom-icon { font-size: 27px; }
+
+        .profile-card-cover { height: 315px; padding: 54px 26px 0 26px; box-sizing: border-box; background: radial-gradient(circle at 70% 35%, rgba(255,255,255,0.14), transparent 36%), linear-gradient(135deg, #d8362a 0%, #7b1f36 50%, #20161a 100%); position: relative; color: #fff; }
+        .profile-card-panel { margin-top: -55px; background: #fff; border-radius: 28px 28px 0 0; min-height: calc(100% - 260px); position: relative; z-index: 2; padding: 38px 18px 104px 18px; box-sizing: border-box; }
+        .profile-card-avatar { position: absolute; left: 26px; top: -48px; width: 92px; height: 92px; border-radius: 28px; background: linear-gradient(135deg, #ffd1df, #c4e0ff); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; font-size: 44px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); border: 4px solid #fff; }
+        .profile-card-name-row { margin-left: 118px; display: flex; align-items: center; justify-content: space-between; }
+        .profile-card-name { color: #ff4b32; font-size: 23px; font-weight: 900; }
+        .profile-card-like { color: #1677ff; font-size: 13px; font-weight: 900; }
+        .profile-card-id { margin-left: 118px; margin-top: 4px; color: #999; font-size: 13px; }
+        .profile-card-bio { margin-top: 28px; color: #8e8e93; font-size: 16px; line-height: 1.4; }
+        .profile-card-complete { margin: 18px -18px 0 -18px; padding: 16px 20px; background: #f2f2f2; display: flex; justify-content: space-between; align-items: center; color: #222; font-size: 16px; font-weight: 700; }
+        .profile-card-section { margin-top: 24px; }
+        .profile-card-section-title { display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: 800; color: #111; margin-bottom: 14px; }
+        .profile-card-section-title span { color: #1677ff; font-size: 13px; font-weight: 700; }
+        .profile-card-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .profile-card-thumb { height: 82px; border-radius: 4px; background: linear-gradient(135deg, #f8d6df, #c4e0ff); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #fff; font-weight: 900; overflow: hidden; }
+        .profile-card-bottom-actions { position: absolute; left: 18px; right: 18px; bottom: 28px; display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 10px; }
+        .profile-card-btn { height: 54px; border-radius: 20px; border: 1px solid #d8d8df; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; background: #fff; color: #111; }
+        .profile-card-btn.primary { background: #12a8ff; color: #fff; border-color: #12a8ff; }
+
         /* ================= 聊天设置弹窗 ================= */
         .settings-modal-box {
             width: 330px;
@@ -655,11 +728,76 @@
 
 
 
+        <!-- ================= 界面：QQ 个人菜单 ================= -->
+        <div id="screen-profile-menu" class="screen">
+            <div class="self-cover">
+                <div class="self-top-actions">
+                    <div class="self-back-btn" id="btn-self-menu-back">‹</div>
+                    <div class="self-icons">
+                        <div class="self-round-icon">▦</div>
+                        <div class="self-round-icon">🔔</div>
+                        <div class="self-round-icon" id="btn-self-menu-settings">⚙️</div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-menu-card" id="btn-open-profile-card">
+                <div class="profile-menu-main">
+                    <div class="self-avatar-xl" id="self-menu-avatar">👧</div>
+                    <div style="min-width:0; flex:1;">
+                        <div class="profile-menu-name" id="self-menu-name">User</div>
+                        <div class="profile-menu-sign" id="self-menu-sign">编辑个签，展示我的独特态度。</div>
+                        <div class="profile-menu-tags"><span class="profile-menu-tag">🎩 SVIP6</span><span class="profile-menu-tag">👑</span><span class="profile-menu-tag">🌙</span></div>
+                    </div>
+                </div>
+                <div class="profile-menu-stats"><span>🔔 通知</span><span>👍 9999+</span><span class="profile-menu-pill">我的QQ秀</span></div>
+            </div>
+            <div class="profile-menu-list">
+                <div class="profile-menu-row"><div class="profile-menu-row-icon">🖼️</div><div class="profile-menu-row-title">相册</div><div class="profile-menu-arrow">›</div></div>
+                <div class="profile-menu-row"><div class="profile-menu-row-icon">🔖</div><div class="profile-menu-row-title">收藏</div><div class="profile-menu-arrow">›</div></div>
+                <div class="profile-menu-row"><div class="profile-menu-row-icon">📁</div><div class="profile-menu-row-title">文件</div><div class="profile-menu-arrow">›</div></div>
+                <div class="profile-menu-row"><div class="profile-menu-row-icon">💳</div><div class="profile-menu-row-title">钱包</div><div class="profile-menu-arrow">›</div></div>
+                <div class="profile-menu-row"><div class="profile-menu-row-icon">👚</div><div class="profile-menu-row-title">个性装扮</div><div class="profile-menu-row-sub">好友正在使用</div><div class="profile-menu-arrow">›</div></div>
+                <div class="profile-menu-bottom">
+                    <div class="profile-menu-bottom-item" id="btn-open-user-profiles-from-menu"><div class="profile-menu-bottom-icon">⚙️</div><div>设置</div></div>
+                    <div class="profile-menu-bottom-item"><div class="profile-menu-bottom-icon">🌙</div><div>夜间</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 界面：QQ 个人名片 ================= -->
+        <div id="screen-profile-card" class="screen">
+            <div class="profile-card-cover">
+                <div class="self-top-actions">
+                    <div class="self-back-btn" id="btn-profile-card-back">‹</div>
+                    <div class="self-icons">
+                        <div class="self-round-icon">▦</div>
+                        <div class="self-round-icon">🔔</div>
+                        <div class="self-round-icon" id="btn-open-user-profiles-from-card">⚙️</div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-card-panel">
+                <div class="profile-card-avatar" id="self-card-avatar">👧</div>
+                <div class="profile-card-name-row">
+                    <div class="profile-card-name" id="self-card-name">User</div>
+                    <div class="profile-card-like">👍 +10</div>
+                </div>
+                <div class="profile-card-id" id="self-card-id">QQ：3446843157</div>
+                <div class="profile-card-bio" id="self-card-bio">编辑个签，展示我的独特态度。</div>
+                <div class="profile-card-complete"><span>▣ 资料完成度80%</span><span style="color:#1677ff;">去完善 ›</span></div>
+                <div class="profile-card-section">
+                    <div class="profile-card-section-title">☆ QQ空间 <span>分享新鲜事 ›</span></div>
+                    <div class="profile-card-thumbs"><div class="profile-card-thumb">0:19</div><div class="profile-card-thumb">🧋</div><div class="profile-card-thumb">💬</div><div class="profile-card-thumb">🥭</div></div>
+                </div>
+                <div class="profile-card-bottom-actions"><div class="profile-card-btn">个性名片</div><div class="profile-card-btn">编辑资料</div><div class="profile-card-btn primary">发消息</div></div>
+            </div>
+        </div>
+
         <!-- ================= 界面：User 身份管理 ================= -->
         <div id="screen-user-profiles" class="screen">
             <div class="profile-header">
                 <div class="profile-back-btn" id="btn-profile-back">❮</div>
-                <div class="profile-title">我的身份</div>
+                <div class="profile-title">切换 User</div>
                 <div class="profile-add-btn" id="btn-add-user-profile">＋</div>
             </div>
             <div class="profile-scroll">
@@ -667,7 +805,7 @@
                     <div class="profile-hero-avatar" id="current-user-profile-avatar">👧</div>
                     <div>
                         <div class="profile-hero-name" id="current-user-profile-name">User</div>
-                        <div class="profile-hero-sub" id="current-user-profile-sub">点右上角添加身份，再在聊天设置里绑定给角色。</div>
+                        <div class="profile-hero-sub" id="current-user-profile-sub">默认身份会显示在 QQ 个人页，也可以绑定给不同角色。</div>
                     </div>
                 </div>
                 <div class="profile-section-label">身份列表</div>
@@ -947,8 +1085,14 @@
         document.getElementById('btn-open-qq').addEventListener('click', () => showScreen('screen-qq'));
         // 3. 聊天页点返回
         document.getElementById('btn-chat-back').addEventListener('click', () => showScreen('screen-qq'));
-        document.getElementById('btn-open-user-profiles').addEventListener('click', openUserProfilesScreen);
-        document.getElementById('btn-profile-back').addEventListener('click', () => showScreen('screen-qq'));
+        document.getElementById('btn-open-user-profiles').addEventListener('click', openSelfMenuScreen);
+        document.getElementById('btn-self-menu-back').addEventListener('click', () => showScreen('screen-qq'));
+        document.getElementById('btn-open-profile-card').addEventListener('click', openSelfProfileCard);
+        document.getElementById('btn-profile-card-back').addEventListener('click', openSelfMenuScreen);
+        document.getElementById('btn-self-menu-settings').addEventListener('click', () => openUserProfilesScreen('screen-profile-menu'));
+        document.getElementById('btn-open-user-profiles-from-menu').addEventListener('click', () => openUserProfilesScreen('screen-profile-menu'));
+        document.getElementById('btn-open-user-profiles-from-card').addEventListener('click', () => openUserProfilesScreen('screen-profile-card'));
+        document.getElementById('btn-profile-back').addEventListener('click', () => showScreen(userProfileReturnScreen || 'screen-profile-card'));
         document.getElementById('btn-add-user-profile').addEventListener('click', () => openUserProfileEditor(''));
 
 
@@ -1430,6 +1574,14 @@ ${userPersona}
         const deleteUserProfileBtn = document.getElementById('btn-delete-user-profile');
         let editingUserProfileId = '';
         let editingUserProfileAvatar = '';
+        let userProfileReturnScreen = 'screen-profile-card';
+        const selfMenuAvatar = document.getElementById('self-menu-avatar');
+        const selfMenuName = document.getElementById('self-menu-name');
+        const selfMenuSign = document.getElementById('self-menu-sign');
+        const selfCardAvatar = document.getElementById('self-card-avatar');
+        const selfCardName = document.getElementById('self-card-name');
+        const selfCardId = document.getElementById('self-card-id');
+        const selfCardBio = document.getElementById('self-card-bio');
 
         function setProfileAvatarElement(el, profile) {
             if (!el) return;
@@ -1442,8 +1594,17 @@ ${userPersona}
             const current = getUserProfileById(defaultUserProfileId);
             setProfileAvatarElement(currentUserProfileAvatar, current);
             setProfileAvatarElement(document.getElementById('btn-open-user-profiles'), current);
-            currentUserProfileName.innerText = (current.name || 'User') + (current.nickname ? ` · ${current.nickname}` : '');
-            currentUserProfileSub.innerText = current.persona ? current.persona.slice(0, 42) + (current.persona.length > 42 ? '…' : '') : '默认身份会用于新角色，也可以在聊天设置里单独绑定。';
+            setProfileAvatarElement(selfMenuAvatar, current);
+            setProfileAvatarElement(selfCardAvatar, current);
+            const profileName = (current.name || 'User') + (current.nickname ? ` · ${current.nickname}` : '');
+            const profileBio = current.persona ? current.persona.slice(0, 58) + (current.persona.length > 58 ? '…' : '') : '编辑个签，展示我的独特态度。';
+            currentUserProfileName.innerText = profileName;
+            currentUserProfileSub.innerText = current.persona ? current.persona.slice(0, 42) + (current.persona.length > 42 ? '…' : '') : '默认身份会显示在 QQ 个人页，也可以绑定给不同角色。';
+            if (selfMenuName) selfMenuName.innerText = profileName;
+            if (selfMenuSign) selfMenuSign.innerText = profileBio;
+            if (selfCardName) selfCardName.innerText = profileName;
+            if (selfCardBio) selfCardBio.innerText = profileBio;
+            if (selfCardId) selfCardId.innerText = `QQ：${current.id ? current.id.replace(/\D/g, '').slice(-10).padStart(10, '3') : '3446843157'}`;
 
             userProfileList.innerHTML = '';
             if (!userProfiles.length) {
@@ -1467,7 +1628,18 @@ ${userPersona}
             });
         }
 
-        function openUserProfilesScreen() {
+        function openSelfMenuScreen() {
+            refreshUserProfilePage();
+            showScreen('screen-profile-menu');
+        }
+
+        function openSelfProfileCard() {
+            refreshUserProfilePage();
+            showScreen('screen-profile-card');
+        }
+
+        function openUserProfilesScreen(returnScreen = 'screen-profile-card') {
+            userProfileReturnScreen = returnScreen;
             refreshUserProfilePage();
             showScreen('screen-user-profiles');
         }
