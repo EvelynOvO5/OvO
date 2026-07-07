@@ -210,6 +210,35 @@
         }
         .chat-send-btn:active { transform: scale(0.9); }
 
+
+        /* ================= 聊天设置弹窗 ================= */
+        .settings-modal-box {
+            width: 330px;
+            max-height: 710px;
+            overflow-y: auto;
+            text-align: left;
+            padding: 22px;
+        }
+        .settings-modal-box::-webkit-scrollbar { display: none; }
+        .settings-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .settings-title { font-size: 18px; font-weight: 800; color: #222; }
+        .settings-close { width: 28px; height: 28px; border-radius: 50%; background: #f0f2f5; color: #666; display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: 800; }
+        .settings-group { margin-bottom: 12px; }
+        .settings-label { font-size: 12px; font-weight: 700; color: #777; margin-bottom: 6px; padding-left: 2px; }
+        .settings-input, .settings-textarea {
+            width: 100%; border: 2px solid #eee; border-radius: 12px; padding: 10px 12px;
+            box-sizing: border-box; font-size: 13px; outline: none; background: #f9f9f9; font-family: inherit;
+        }
+        .settings-input:focus, .settings-textarea:focus { border-color: #12B7F5; background: #fff; }
+        .settings-textarea { min-height: 72px; max-height: 130px; resize: vertical; line-height: 1.45; }
+        .settings-tip { font-size: 11px; color: #aaa; line-height: 1.4; margin: -4px 0 12px 2px; }
+        .settings-actions { display: flex; gap: 10px; margin-top: 16px; }
+        .btn-save-settings { flex: 1; padding: 12px 0; background: #12B7F5; color: #fff; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(18, 183, 245, 0.3); }
+        .btn-delete-role { flex: 1; padding: 12px 0; background: #fff0f0; color: #ff4757; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; }
+        .btn-save-settings:active, .btn-delete-role:active, .settings-close:active { transform: scale(0.95); }
+        .btn-delete-role.disabled { opacity: 0.45; cursor: not-allowed; }
+
+
     </style>
 </head>
 <body>
@@ -243,7 +272,7 @@
                 </div>
             </div>
             <div class="bottom-layout">
-                <div class="memo-square"><div class="memo-title">To-Do List 📌</div><div class="memo-list"><span class="memo-check">✔</span> 捏个人设<br><span class="memo-check">✔</span> 开启新世界<br><span class="memo-check">✔</span> 找AI聊天</div></div>
+                <div class="memo-square"><div class="memo-title">To-Do List 📌</div><div class="memo-list"><span class="memo-check">✔</span> 捏个人设<br><span class="memo-check">✔</span> 开启新世界<br><span class="memo-check">✔</span> 找角色聊天</div></div>
                 <div class="apps-2x2">
                     <div class="app-item"><div class="app-icon icon-gallery">🖼️</div><div class="app-name">相册</div></div>
                     <div class="app-item"><div class="app-icon icon-world">🌍</div><div class="app-name">世界书</div></div>
@@ -279,7 +308,7 @@
             <div class="chat-header">
                 <div class="chat-back-btn" id="btn-chat-back">❮</div>
                 <div class="chat-title" id="chat-header-name">角色名字</div>
-                <div class="chat-more-btn">≡</div>
+                <div class="chat-more-btn" id="btn-open-chat-settings">≡</div>
             </div>
             
             <!-- 聊天流 -->
@@ -307,6 +336,54 @@
                 <input type="text" class="modal-input" id="friend-name-input" placeholder="输入角色名字 (如:五条悟)">
                 <div class="modal-btns">
                     <div class="btn-cancel" id="btn-cancel-add">取消</div><div class="btn-confirm" id="btn-confirm-add">确定添加</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 弹窗：聊天设置 -->
+        <div class="modal-overlay" id="chat-settings-modal">
+            <div class="modal-box settings-modal-box">
+                <div class="settings-title-row">
+                    <div class="settings-title">聊天设置</div>
+                    <div class="settings-close" id="btn-close-chat-settings">×</div>
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-label">角色名字</div>
+                    <input type="text" class="settings-input" id="setting-role-name" placeholder="角色原本的名字">
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-label">备注</div>
+                    <input type="text" class="settings-input" id="setting-role-remark" placeholder="显示在列表和聊天顶部的名字，可不填">
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-label">角色人设</div>
+                    <textarea class="settings-textarea" id="setting-role-persona" placeholder="写角色设定、性格、背景、说话风格……"></textarea>
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-label">User 的人设</div>
+                    <textarea class="settings-textarea" id="setting-user-persona" placeholder="写玩家/user 的身份、背景、和角色关系……"></textarea>
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-label">User 名字</div>
+                    <input type="text" class="settings-input" id="setting-user-name" placeholder="例如：Evi">
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-label">User 昵称</div>
+                    <input type="text" class="settings-input" id="setting-user-nickname" placeholder="例如：宝宝、姐姐、主人……">
+                </div>
+
+                <div class="settings-tip">这些内容会保存在当前浏览器里，刷新不会丢。后面接 AI 时，可以把人设字段拼进提示词。</div>
+
+                <div class="settings-actions">
+                    <div class="btn-delete-role" id="btn-delete-role">删除角色</div>
+                    <div class="btn-save-settings" id="btn-save-chat-settings">保存设置</div>
                 </div>
             </div>
         </div>
@@ -363,9 +440,11 @@
         // --------- 本地存储：刷新后保留角色与聊天记录 ---------
         const FRIENDS_KEY = 'airp_phone_friends_v1';
         const CHATS_KEY = 'airp_phone_chats_v1';
+        const CHAT_SETTINGS_KEY = 'airp_phone_chat_settings_v1';
 
         let friends = JSON.parse(localStorage.getItem(FRIENDS_KEY) || '[]');
         let chatHistories = JSON.parse(localStorage.getItem(CHATS_KEY) || '{}');
+        let chatSettings = JSON.parse(localStorage.getItem(CHAT_SETTINGS_KEY) || '{}');
         let currentChatId = '';
         let currentChatName = '';
 
@@ -377,6 +456,10 @@
             localStorage.setItem(CHATS_KEY, JSON.stringify(chatHistories));
         }
 
+        function saveChatSettings() {
+            localStorage.setItem(CHAT_SETTINGS_KEY, JSON.stringify(chatSettings));
+        }
+
         function escapeHTML(text) {
             return String(text)
                 .replace(/&/g, '&amp;')
@@ -384,6 +467,19 @@
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
+        }
+
+        function getFriendById(friendId) {
+            return friends.find(friend => friend.id === friendId) || null;
+        }
+
+        function getChatProfile(friendId) {
+            return getFriendById(friendId);
+        }
+
+        function getDisplayName(profile) {
+            if (!profile) return '角色名字';
+            return (profile.remark && profile.remark.trim()) || (profile.name && profile.name.trim()) || '角色名字';
         }
 
         function getLastPreview(friendId) {
@@ -405,7 +501,7 @@
             newItem.innerHTML = `
                 ${avatarHTML}
                 <div class="msg-content">
-                    <div class="msg-name">${escapeHTML(friend.name)}</div>
+                    <div class="msg-name">${escapeHTML(getDisplayName(friend))}</div>
                     <div class="msg-preview">${escapeHTML(getLastPreview(friend.id))}</div>
                 </div>
                 <div class="msg-meta"><div class="msg-time">刚刚</div><div class="msg-badge">新</div></div>
@@ -420,19 +516,7 @@
 
         function refreshMessageList() {
             messageList.innerHTML = '';
-
-            // 内置系统小助手
-            const sysBot = {
-                id: 'sys_ai_penguin',
-                name: 'AI企鹅小助手',
-                avatar: '',
-                emoji: '🐧',
-                bg: 'linear-gradient(135deg, #12B7F5, #0098EA)'
-            };
-            createFriendItem(sysBot, 'beforeend');
-
-            // 用户添加的角色
-            friends.forEach(friend => createFriendItem(friend, 'afterbegin'));
+            friends.forEach(friend => createFriendItem(friend, 'beforeend'));
         }
 
         // 打开弹窗重置
@@ -466,6 +550,11 @@
             const friend = {
                 id: 'friend_' + Date.now(),
                 name: friendName,
+                remark: '',
+                persona: '',
+                userPersona: '',
+                userName: '',
+                userNickname: '',
                 avatar: currentUploadedAvatar
             };
 
@@ -481,15 +570,16 @@
         const chatInputText = document.getElementById('chat-input-text');
         
         let currentChatAvatarURL = ''; // 记录当前聊天对象的图片
-        let currentChatEmoji = '';     // 记录如果是系统助手，用的emoji
+        let currentChatEmoji = '';
         let currentChatBg = '';
 
         // 打开聊天室的函数
         function openChatRoom(id, name, avatarURL, emoji = '', bg = '') {
             showScreen('screen-chat');
             currentChatId = id;
-            currentChatName = name;
-            document.getElementById('chat-header-name').innerText = name;
+            const profile = getChatProfile(id) || { id, name, avatar: avatarURL, emoji, bg };
+            currentChatName = profile.name || name;
+            document.getElementById('chat-header-name').innerText = getDisplayName(profile);
             
             // 保存当前对方的头像数据，发消息时要用到
             currentChatAvatarURL = avatarURL;
@@ -506,7 +596,7 @@
             // 有历史就恢复历史，没有历史才发欢迎语
             if (!chatHistories[currentChatId]) {
                 chatHistories[currentChatId] = [];
-                receiveMessage(`你好呀！我是 ${name}，很高兴认识你！`);
+                receiveMessage(`你好呀！我是 ${getDisplayName(profile)}，很高兴认识你！`);
             } else {
                 chatHistories[currentChatId].forEach(msg => {
                     if (msg.from === 'me') {
@@ -566,7 +656,7 @@
 
             // 模拟AI自动回复 (延迟1秒)
             setTimeout(() => {
-                receiveMessage(`(AI思考中...) 你刚才说：“${text}”。不过我还没有连接AI大脑呢，等下一步吧！`);
+                receiveMessage(`你刚才说：“${text}”。不过我现在还只是本地测试回复，等下一步再接入真正的角色对话吧！`);
             }, 1000);
         }
 
@@ -581,6 +671,113 @@
             saveChats();
             updatePreviewInList(currentChatId, text);
         }
+
+
+        // --------- 1对1 聊天设置：改名、备注、人设、删除角色 ---------
+        const chatSettingsModal = document.getElementById('chat-settings-modal');
+        const roleNameInput = document.getElementById('setting-role-name');
+        const roleRemarkInput = document.getElementById('setting-role-remark');
+        const rolePersonaInput = document.getElementById('setting-role-persona');
+        const userPersonaInput = document.getElementById('setting-user-persona');
+        const userNameInput = document.getElementById('setting-user-name');
+        const userNicknameInput = document.getElementById('setting-user-nickname');
+        const deleteRoleBtn = document.getElementById('btn-delete-role');
+
+        function openChatSettings() {
+            if (!currentChatId) return;
+            const profile = getChatProfile(currentChatId);
+            if (!profile) return;
+
+            roleNameInput.value = profile.name || '';
+            roleRemarkInput.value = profile.remark || '';
+            rolePersonaInput.value = profile.persona || '';
+            userPersonaInput.value = profile.userPersona || '';
+            userNameInput.value = profile.userName || '';
+            userNicknameInput.value = profile.userNickname || '';
+
+            deleteRoleBtn.classList.remove('disabled');
+            deleteRoleBtn.innerText = '删除角色';
+
+            chatSettingsModal.style.display = 'flex';
+        }
+
+        function closeChatSettings() {
+            chatSettingsModal.style.display = 'none';
+        }
+
+        function saveCurrentChatSettings() {
+            if (!currentChatId) return;
+            const newName = roleNameInput.value.trim();
+            if (!newName) return alert('角色名字不能为空哦！');
+
+            const data = {
+                name: newName,
+                remark: roleRemarkInput.value.trim(),
+                persona: rolePersonaInput.value.trim(),
+                userPersona: userPersonaInput.value.trim(),
+                userName: userNameInput.value.trim(),
+                userNickname: userNicknameInput.value.trim()
+            };
+
+            const friend = getFriendById(currentChatId);
+            if (!friend) return alert('这个角色已经不存在了。');
+            Object.assign(friend, data);
+            saveFriends();
+
+            const profile = getChatProfile(currentChatId);
+            currentChatName = profile.name;
+            document.getElementById('chat-header-name').innerText = getDisplayName(profile);
+            refreshMessageList();
+            closeChatSettings();
+        }
+
+        function deleteCurrentRole(e) {
+            if (e) e.stopPropagation();
+            if (!currentChatId) return;
+
+            const roleIdToDelete = currentChatId;
+            const profile = getChatProfile(roleIdToDelete);
+            if (!profile) {
+                closeChatSettings();
+                showScreen('screen-qq');
+                refreshMessageList();
+                return;
+            }
+
+            const displayName = getDisplayName(profile);
+            const ok = confirm(`确定要删除「${displayName}」吗？聊天记录也会一起删除。`);
+            if (!ok) return;
+
+            friends = friends.filter(friend => friend.id !== roleIdToDelete);
+            delete chatHistories[roleIdToDelete];
+            delete chatSettings[roleIdToDelete];
+            saveFriends();
+            saveChats();
+            saveChatSettings();
+
+            currentChatId = '';
+            currentChatName = '';
+            currentChatAvatarURL = '';
+            currentChatEmoji = '';
+            currentChatBg = '';
+
+            closeChatSettings();
+            chatRoomBox.innerHTML = '';
+            refreshMessageList();
+            showScreen('screen-qq');
+        }
+
+        document.getElementById('btn-open-chat-settings').addEventListener('click', openChatSettings);
+        document.getElementById('btn-close-chat-settings').addEventListener('click', closeChatSettings);
+        document.getElementById('btn-save-chat-settings').addEventListener('click', saveCurrentChatSettings);
+        deleteRoleBtn.addEventListener('click', deleteCurrentRole);
+        deleteRoleBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            deleteCurrentRole(e);
+        }, { passive: false });
+        chatSettingsModal.addEventListener('click', function(e) {
+            if (e.target === chatSettingsModal) closeChatSettings();
+        });
 
         // 第一次进入页面时恢复好友列表和历史预览
         refreshMessageList();
