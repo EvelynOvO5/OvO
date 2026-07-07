@@ -29,7 +29,7 @@
         /* ★ 灵动岛现在是Home键啦，加了鼠标手势和点击动效 ★ */
         .dynamic-island {
             position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-            width: 120px; height: 34px; background-color: #000; border-radius: 20px; z-index: 999;
+            width: 120px; height: 34px; background-color: #000; border-radius: 20px; z-index: 1600;
             box-shadow: inset 0 0 4px rgba(255,255,255,0.1);
             cursor: pointer; transition: transform 0.1s;
         }
@@ -37,7 +37,7 @@
 
         .status-bar {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 25px 0 25px; font-size: 15px; font-weight: 700; z-index: 998;
+            padding: 18px 25px 0 25px; font-size: 15px; font-weight: 700; z-index: 1599;
             position: absolute; top: 0; left: 0; width: 100%; box-sizing: border-box; transition: color 0.3s ease; pointer-events: none;
         }
         .status-light { color: #ffffff; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
@@ -52,7 +52,7 @@
         .ios-battery { width: 24px; height: 11px; border: 1px solid; border-radius: 3px; position: relative; display: inline-block; }
         .ios-battery::after { content: ''; position: absolute; right: -4px; top: 2px; width: 2px; height: 5px; border-radius: 0 2px 2px 0; }
         .battery-level { position: absolute; top: 1px; left: 1px; bottom: 1px; width: 90%; border-radius: 1px; }
-        .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 140px; height: 5px; background: #111; border-radius: 10px; z-index: 999; }
+        .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 140px; height: 5px; background: #111; border-radius: 10px; z-index: 1600; }
 
         /* 页面切换控制器 */
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; flex-direction: column; box-sizing: border-box; }
@@ -232,11 +232,286 @@
         .settings-input:focus, .settings-textarea:focus { border-color: #12B7F5; background: #fff; }
         .settings-textarea { min-height: 72px; max-height: 130px; resize: vertical; line-height: 1.45; }
         .settings-tip { font-size: 11px; color: #aaa; line-height: 1.4; margin: -4px 0 12px 2px; }
+        .settings-section-title { font-size: 13px; font-weight: 900; color: #12B7F5; margin: 18px 0 10px 2px; padding-top: 12px; border-top: 1px solid #f0f2f5; }
+        .settings-check-row { display: flex; align-items: center; justify-content: space-between; background: #f9f9f9; border: 2px solid #eee; border-radius: 12px; padding: 10px 12px; box-sizing: border-box; }
+        .settings-check-text { font-size: 13px; font-weight: 800; color: #555; }
+        .settings-checkbox { width: 20px; height: 20px; accent-color: #12B7F5; }
+        .settings-mini-row { display: flex; gap: 10px; }
+        .settings-mini-row .settings-group { flex: 1; }
+        .api-test-btn { width: 100%; padding: 11px 0; background: #eef9ff; color: #12B7F5; border-radius: 12px; font-size: 13px; font-weight: 800; cursor: pointer; text-align: center; margin-top: 6px; }
+        .api-test-btn:active { transform: scale(0.98); }
+        .api-status-text { min-height: 16px; font-size: 11px; color: #999; line-height: 1.4; margin-top: 6px; }
         .settings-actions { display: flex; gap: 10px; margin-top: 16px; }
         .btn-save-settings { flex: 1; padding: 12px 0; background: #12B7F5; color: #fff; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(18, 183, 245, 0.3); }
         .btn-delete-role { flex: 1; padding: 12px 0; background: #fff0f0; color: #ff4757; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; }
         .btn-save-settings:active, .btn-delete-role:active, .settings-close:active { transform: scale(0.95); }
         .btn-delete-role.disabled { opacity: 0.45; cursor: not-allowed; }
+
+
+
+
+        /* ================= 首页：iOS 风格设置页 ================= */
+        #home-settings-modal {
+            z-index: 900;
+            background: transparent;
+            backdrop-filter: none;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+        #home-settings-modal .ios-settings-page {
+            width: 100%;
+            height: 100%;
+            max-height: none;
+            border-radius: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #f2f2f7;
+            box-shadow: none;
+            text-align: left;
+            animation: ios-settings-in 0.22s ease;
+        }
+        @keyframes ios-settings-in {
+            from { transform: translateX(18px); opacity: 0.96; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .ios-settings-header {
+            height: 88px;
+            padding: 48px 18px 0 18px;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: 82px 1fr 82px;
+            align-items: center;
+            background: rgba(242, 242, 247, 0.88);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            position: relative;
+            z-index: 2;
+        }
+        .ios-settings-back {
+            color: #007aff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            white-space: nowrap;
+        }
+        .ios-settings-back:active { opacity: 0.5; }
+        .ios-settings-header-title {
+            text-align: center;
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+        }
+        .ios-settings-scroll {
+            height: calc(100% - 88px);
+            overflow-y: auto;
+            padding: 18px 18px 34px 18px;
+            box-sizing: border-box;
+        }
+        .ios-settings-scroll::-webkit-scrollbar { display: none; }
+        .ios-settings-large-title {
+            font-size: 34px;
+            line-height: 1;
+            font-weight: 800;
+            color: #111;
+            margin: 0 0 18px 2px;
+            letter-spacing: -1px;
+        }
+        .ios-api-hero {
+            background: #fff;
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+        }
+        .ios-api-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
+            background: linear-gradient(135deg, #34c759, #5ac8fa);
+            box-shadow: 0 7px 16px rgba(52, 199, 89, 0.25);
+            flex-shrink: 0;
+        }
+        .ios-api-title { font-size: 17px; font-weight: 800; color: #111; margin-bottom: 3px; }
+        .ios-api-subtitle { font-size: 12px; line-height: 1.35; color: #8e8e93; }
+        .ios-settings-section-label {
+            font-size: 12px;
+            color: #8e8e93;
+            letter-spacing: 0.02em;
+            margin: 0 0 7px 16px;
+            font-weight: 600;
+        }
+        .ios-settings-list {
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+        }
+        .ios-settings-cell {
+            min-height: 48px;
+            padding: 9px 14px 9px 16px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            border-bottom: 1px solid rgba(60, 60, 67, 0.12);
+        }
+        .ios-settings-cell:last-child { border-bottom: none; }
+        .ios-cell-title {
+            font-size: 15px;
+            color: #111;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .ios-cell-input {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 14px;
+            color: #3a3a3c;
+            text-align: right;
+            padding: 4px 0;
+        }
+        .ios-cell-input::placeholder { color: #c7c7cc; }
+        .ios-cell-input[type="password"] { letter-spacing: 0.03em; }
+        .ios-switch {
+            position: relative;
+            width: 50px;
+            height: 30px;
+            flex-shrink: 0;
+        }
+        .ios-switch input { opacity: 0; width: 0; height: 0; }
+        .ios-switch-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: #e5e5ea;
+            border-radius: 999px;
+            transition: 0.2s;
+        }
+        .ios-switch-slider::before {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            left: 2px;
+            top: 2px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.22);
+            transition: 0.2s;
+        }
+        .ios-switch input:checked + .ios-switch-slider { background: #34c759; }
+        .ios-switch input:checked + .ios-switch-slider::before { transform: translateX(20px); }
+        .ios-settings-note {
+            font-size: 12px;
+            color: #8e8e93;
+            line-height: 1.45;
+            margin: -12px 14px 20px 14px;
+        }
+        .ios-settings-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+            margin-top: 2px;
+        }
+        .ios-primary-btn, .ios-secondary-btn {
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+        }
+        .ios-primary-btn { background: #007aff; color: #fff; box-shadow: 0 8px 18px rgba(0,122,255,0.22); }
+        .ios-secondary-btn { background: #fff; color: #007aff; box-shadow: 0 1px 0 rgba(0,0,0,0.04); }
+        .ios-primary-btn:active, .ios-secondary-btn:active { transform: scale(0.985); opacity: 0.75; }
+        .ios-api-status {
+            min-height: 18px;
+            margin: 10px 4px 0 4px;
+            font-size: 12px;
+            line-height: 1.45;
+            color: #8e8e93;
+            text-align: center;
+        }
+
+
+        /* ================= 删除确认弹窗 ================= */
+        .delete-confirm-box {
+            width: 292px;
+            padding: 24px 22px 20px 22px;
+        }
+        .delete-confirm-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            margin: 0 auto 14px auto;
+            background: #fff0f0;
+            color: #ff4757;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 900;
+        }
+        .delete-confirm-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #222;
+            margin-bottom: 8px;
+        }
+        .delete-confirm-text {
+            font-size: 13px;
+            line-height: 1.55;
+            color: #777;
+            margin-bottom: 18px;
+        }
+        .delete-confirm-name {
+            color: #ff4757;
+            font-weight: 800;
+        }
+        .delete-confirm-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .btn-delete-cancel, .btn-delete-confirm {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.1s;
+        }
+        .btn-delete-cancel {
+            background: #f0f2f5;
+            color: #666;
+        }
+        .btn-delete-confirm {
+            background: #ff4757;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.28);
+        }
+        .btn-delete-cancel:active, .btn-delete-confirm:active { transform: scale(0.95); }
 
 
     </style>
@@ -276,7 +551,7 @@
                 <div class="apps-2x2">
                     <div class="app-item"><div class="app-icon icon-gallery">🖼️</div><div class="app-name">相册</div></div>
                     <div class="app-item"><div class="app-icon icon-world">🌍</div><div class="app-name">世界书</div></div>
-                    <div class="app-item"><div class="app-icon icon-setting">⚙️</div><div class="app-name">设置</div></div>
+                    <div class="app-item" id="btn-open-home-settings"><div class="app-icon icon-setting">⚙️</div><div class="app-name">设置</div></div>
                     <div class="app-item" id="btn-open-qq"><div class="app-icon icon-qq">🐧</div><div class="app-name" style="color: #0072ff; font-weight: 800;">QQ</div></div>
                 </div>
             </div>
@@ -379,11 +654,93 @@
                     <input type="text" class="settings-input" id="setting-user-nickname" placeholder="例如：宝宝、姐姐、主人……">
                 </div>
 
-                <div class="settings-tip">这些内容会保存在当前浏览器里，刷新不会丢。后面接 AI 时，可以把人设字段拼进提示词。</div>
-
                 <div class="settings-actions">
                     <div class="btn-delete-role" id="btn-delete-role">删除角色</div>
                     <div class="btn-save-settings" id="btn-save-chat-settings">保存设置</div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- 弹窗：首页设置 / API 接入 -->
+        <div class="modal-overlay" id="home-settings-modal">
+            <div class="modal-box ios-settings-page">
+                <div class="ios-settings-header">
+                    <div class="ios-settings-back" id="btn-close-home-settings">‹ 桌面</div>
+                    <div class="ios-settings-header-title">设置</div>
+                    <div></div>
+                </div>
+
+                <div class="ios-settings-scroll">
+                    <div class="ios-settings-large-title">设置</div>
+
+                    <div class="ios-api-hero">
+                        <div class="ios-api-icon">AI</div>
+                        <div>
+                            <div class="ios-api-title">API 接入</div>
+                            <div class="ios-api-subtitle">支持官方 OpenAI 格式，也支持兼容 /v1 的中转地址。</div>
+                        </div>
+                    </div>
+
+                    <div class="ios-settings-section-label">连接</div>
+                    <div class="ios-settings-list">
+                        <label class="ios-settings-cell">
+                            <span class="ios-cell-title">真实 AI 回复</span>
+                            <span class="ios-switch">
+                                <input type="checkbox" id="home-api-enabled">
+                                <span class="ios-switch-slider"></span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="ios-settings-section-label">接口</div>
+                    <div class="ios-settings-list">
+                        <label class="ios-settings-cell">
+                            <span class="ios-cell-title">Base URL</span>
+                            <input type="text" class="ios-cell-input" id="home-api-base" placeholder="https://api.openai.com/v1">
+                        </label>
+                        <label class="ios-settings-cell">
+                            <span class="ios-cell-title">API Key</span>
+                            <input type="password" class="ios-cell-input" id="home-api-key" placeholder="sk-...">
+                        </label>
+                        <label class="ios-settings-cell">
+                            <span class="ios-cell-title">模型</span>
+                            <input type="text" class="ios-cell-input" id="home-api-model" placeholder="gpt-4o-mini">
+                        </label>
+                    </div>
+
+                    <div class="ios-settings-section-label">生成</div>
+                    <div class="ios-settings-list">
+                        <label class="ios-settings-cell">
+                            <span class="ios-cell-title">温度</span>
+                            <input type="number" class="ios-cell-input" id="home-api-temperature" min="0" max="2" step="0.1" placeholder="0.8">
+                        </label>
+                        <label class="ios-settings-cell">
+                            <span class="ios-cell-title">上下文条数</span>
+                            <input type="number" class="ios-cell-input" id="home-api-context" min="2" max="80" step="1" placeholder="20">
+                        </label>
+                    </div>
+                    <div class="ios-settings-note">这些内容只保存在当前浏览器。公开分享网页时，不要预填自己的 API Key，让使用者填写自己的 Key。</div>
+
+                    <div class="ios-settings-buttons">
+                        <div class="ios-secondary-btn" id="btn-home-test-api">测试 API</div>
+                        <div class="ios-primary-btn" id="btn-save-home-settings">保存设置</div>
+                    </div>
+                    <div class="ios-api-status" id="home-api-status-text"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 弹窗：删除角色确认 -->
+        <div class="modal-overlay" id="delete-confirm-modal">
+            <div class="modal-box delete-confirm-box">
+                <div class="delete-confirm-icon">!</div>
+                <div class="delete-confirm-title">删除角色</div>
+                <div class="delete-confirm-text">确定要删除 <span class="delete-confirm-name" id="delete-confirm-name">这个角色</span> 吗？<br>聊天记录也会一起删除，删除后不能恢复。</div>
+                <div class="delete-confirm-actions">
+                    <div class="btn-delete-cancel" id="btn-cancel-delete-role">取消</div>
+                    <div class="btn-delete-confirm" id="btn-confirm-delete-role">确认删除</div>
                 </div>
             </div>
         </div>
@@ -422,7 +779,11 @@
         }
 
         // 1. 全局Home键：点击灵动岛回桌面
-        document.getElementById('btn-global-home').addEventListener('click', () => showScreen('screen-home'));
+        document.getElementById('btn-global-home').addEventListener('click', () => {
+            const homeSettings = document.getElementById('home-settings-modal');
+            if (homeSettings) homeSettings.style.display = 'none';
+            showScreen('screen-home');
+        });
         // 2. 桌面点QQ
         document.getElementById('btn-open-qq').addEventListener('click', () => showScreen('screen-qq'));
         // 3. 聊天页点返回
@@ -441,10 +802,12 @@
         const FRIENDS_KEY = 'airp_phone_friends_v1';
         const CHATS_KEY = 'airp_phone_chats_v1';
         const CHAT_SETTINGS_KEY = 'airp_phone_chat_settings_v1';
+        const API_SETTINGS_KEY = 'airp_phone_api_settings_v1';
 
         let friends = JSON.parse(localStorage.getItem(FRIENDS_KEY) || '[]');
         let chatHistories = JSON.parse(localStorage.getItem(CHATS_KEY) || '{}');
         let chatSettings = JSON.parse(localStorage.getItem(CHAT_SETTINGS_KEY) || '{}');
+        let apiSettings = JSON.parse(localStorage.getItem(API_SETTINGS_KEY) || '{}');
         let currentChatId = '';
         let currentChatName = '';
 
@@ -458,6 +821,20 @@
 
         function saveChatSettings() {
             localStorage.setItem(CHAT_SETTINGS_KEY, JSON.stringify(chatSettings));
+        }
+
+        function getApiSettings() {
+            return Object.assign({
+                enabled: false,
+                baseUrl: '',
+                model: '',
+                temperature: '0.8',
+                contextCount: '20'
+            }, apiSettings || {});
+        }
+
+        function saveApiSettings() {
+            localStorage.setItem(API_SETTINGS_KEY, JSON.stringify(apiSettings));
         }
 
         function escapeHTML(text) {
@@ -641,8 +1018,110 @@
             if (preview) preview.innerText = text;
         }
 
+        function getChatEndpoint(baseUrl) {
+            let base = (baseUrl || '').trim();
+            if (!base) return '';
+            base = base.replace(/\/+$/, '');
+            if (/\/chat\/completions$/i.test(base)) return base;
+            return base + '/chat/completions';
+        }
+
+        function buildSystemPrompt(profile) {
+            const roleName = profile.name || '角色';
+            const displayName = getDisplayName(profile);
+            const userName = profile.userName || 'User';
+            const userNickname = profile.userNickname || userName;
+            const rolePersona = profile.persona || '暂无角色人设。';
+            const userPersona = profile.userPersona || '暂无 User 人设。';
+
+            return `你正在扮演一个 1v1 聊天角色。请始终以角色身份回复，不要跳出角色，不要解释自己是 AI。
+
+【角色名字】${roleName}
+【聊天显示名/备注】${displayName}
+【角色人设】
+${rolePersona}
+
+【User 名字】${userName}
+【User 昵称】${userNickname}
+【User 人设】
+${userPersona}
+
+回复要求：像手机聊天一样自然，优先使用中文；不要每次都写很长；要结合历史对话继续说。`;
+        }
+
+        function buildApiMessages(profile, apiConfig = getApiSettings()) {
+            const contextCount = Math.max(2, Math.min(80, parseInt(apiConfig.contextCount || '20', 10) || 20));
+            const history = (chatHistories[currentChatId] || []).slice(-contextCount);
+            const messages = [
+                { role: 'system', content: buildSystemPrompt(profile) }
+            ];
+
+            history.forEach(msg => {
+                messages.push({
+                    role: msg.from === 'me' ? 'user' : 'assistant',
+                    content: msg.text || ''
+                });
+            });
+
+            return messages;
+        }
+
+        async function requestAIReply(profile, apiConfig = getApiSettings()) {
+            const endpoint = getChatEndpoint(apiConfig.baseUrl);
+            const apiKey = (apiConfig.apiKey || '').trim();
+            const model = (apiConfig.model || '').trim();
+            const temperature = Number(apiConfig.temperature || 0.8);
+
+            if (!endpoint || !apiKey || !model) {
+                throw new Error('还没有填完整 API 地址、API Key 和模型名。');
+            }
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model,
+                    messages: buildApiMessages(profile, apiConfig),
+                    temperature: Number.isFinite(temperature) ? temperature : 0.8
+                })
+            });
+
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const message = data?.error?.message || data?.message || `HTTP ${response.status}`;
+                throw new Error(message);
+            }
+
+            const reply = data?.choices?.[0]?.message?.content || data?.choices?.[0]?.text || '';
+            if (!reply.trim()) throw new Error('API 返回了空内容。');
+            return reply.trim();
+        }
+
+        function showTypingBubble() {
+            const typingId = 'typing_' + Date.now();
+            const avatarStyle = currentChatAvatarURL ? `background-image: url(${currentChatAvatarURL});` : `background: ${currentChatBg}; color: white;`;
+            const avatarInner = currentChatAvatarURL ? '' : currentChatEmoji;
+            const typingHTML = `
+                <div class="bubble-row bubble-left" id="${typingId}">
+                    <div class="bubble-avatar" style="${avatarStyle}; border: 1px solid #eee;">${avatarInner}</div>
+                    <div class="bubble-text">正在输入…</div>
+                </div>
+            `;
+            chatRoomBox.insertAdjacentHTML('beforeend', typingHTML);
+            chatRoomBox.scrollTop = chatRoomBox.scrollHeight;
+            return typingId;
+        }
+
+        function removeTypingBubble(typingId) {
+            const el = document.getElementById(typingId);
+            if (el) el.remove();
+        }
+
         // 我发送消息的功能
-        function sendMessage() {
+        async function sendMessage() {
             const text = chatInputText.value.trim();
             if (!text || !currentChatId) return;
 
@@ -654,10 +1133,24 @@
             saveChats();
             updatePreviewInList(currentChatId, text);
 
-            // 模拟AI自动回复 (延迟1秒)
-            setTimeout(() => {
-                receiveMessage(`你刚才说：“${text}”。不过我现在还只是本地测试回复，等下一步再接入真正的角色对话吧！`);
-            }, 1000);
+            const profile = getChatProfile(currentChatId);
+            const apiConfig = getApiSettings();
+            if (!apiConfig.enabled) {
+                setTimeout(() => {
+                    receiveMessage(`你刚才说：“${text}”。不过还没有启用 API，回到首页点「设置」打开「真实 AI 回复」吧。`);
+                }, 600);
+                return;
+            }
+
+            const typingId = showTypingBubble();
+            try {
+                const reply = await requestAIReply(profile, apiConfig);
+                removeTypingBubble(typingId);
+                receiveMessage(reply);
+            } catch (err) {
+                removeTypingBubble(typingId);
+                receiveMessage(`API 连接失败：${err.message || err}。如果你用的是官方或中转接口，检查 Base URL、Key、模型名，以及这个接口是否允许网页跨域访问。`);
+            }
         }
 
         // 接收（对方发来）消息的功能
@@ -682,6 +1175,11 @@
         const userNameInput = document.getElementById('setting-user-name');
         const userNicknameInput = document.getElementById('setting-user-nickname');
         const deleteRoleBtn = document.getElementById('btn-delete-role');
+        const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+        const deleteConfirmName = document.getElementById('delete-confirm-name');
+        const cancelDeleteRoleBtn = document.getElementById('btn-cancel-delete-role');
+        const confirmDeleteRoleBtn = document.getElementById('btn-confirm-delete-role');
+        let pendingDeleteRoleId = '';
 
         function openChatSettings() {
             if (!currentChatId) return;
@@ -731,12 +1229,11 @@
             closeChatSettings();
         }
 
-        function deleteCurrentRole(e) {
+        function openDeleteConfirmModal(e) {
             if (e) e.stopPropagation();
             if (!currentChatId) return;
 
-            const roleIdToDelete = currentChatId;
-            const profile = getChatProfile(roleIdToDelete);
+            const profile = getChatProfile(currentChatId);
             if (!profile) {
                 closeChatSettings();
                 showScreen('screen-qq');
@@ -744,9 +1241,22 @@
                 return;
             }
 
-            const displayName = getDisplayName(profile);
-            const ok = confirm(`确定要删除「${displayName}」吗？聊天记录也会一起删除。`);
-            if (!ok) return;
+            pendingDeleteRoleId = currentChatId;
+            deleteConfirmName.innerText = `「${getDisplayName(profile)}」`;
+            closeChatSettings();
+            deleteConfirmModal.style.display = 'flex';
+        }
+
+        function closeDeleteConfirmModal() {
+            deleteConfirmModal.style.display = 'none';
+            pendingDeleteRoleId = '';
+        }
+
+        function confirmDeleteCurrentRole(e) {
+            if (e) e.stopPropagation();
+            if (!pendingDeleteRoleId) return;
+
+            const roleIdToDelete = pendingDeleteRoleId;
 
             friends = friends.filter(friend => friend.id !== roleIdToDelete);
             delete chatHistories[roleIdToDelete];
@@ -755,28 +1265,126 @@
             saveChats();
             saveChatSettings();
 
-            currentChatId = '';
-            currentChatName = '';
-            currentChatAvatarURL = '';
-            currentChatEmoji = '';
-            currentChatBg = '';
+            if (currentChatId === roleIdToDelete) {
+                currentChatId = '';
+                currentChatName = '';
+                currentChatAvatarURL = '';
+                currentChatEmoji = '';
+                currentChatBg = '';
+                chatRoomBox.innerHTML = '';
+            }
 
-            closeChatSettings();
-            chatRoomBox.innerHTML = '';
+            closeDeleteConfirmModal();
             refreshMessageList();
             showScreen('screen-qq');
         }
 
+        // --------- 首页设置：全局 API 接入 ---------
+        const homeSettingsModal = document.getElementById('home-settings-modal');
+        const homeApiEnabledInput = document.getElementById('home-api-enabled');
+        const homeApiBaseInput = document.getElementById('home-api-base');
+        const homeApiKeyInput = document.getElementById('home-api-key');
+        const homeApiModelInput = document.getElementById('home-api-model');
+        const homeApiTemperatureInput = document.getElementById('home-api-temperature');
+        const homeApiContextInput = document.getElementById('home-api-context');
+        const homeApiStatusText = document.getElementById('home-api-status-text');
+
+        function openHomeSettings() {
+            const config = getApiSettings();
+            homeApiEnabledInput.checked = !!config.enabled;
+            homeApiBaseInput.value = config.baseUrl || '';
+            homeApiKeyInput.value = config.apiKey || '';
+            homeApiModelInput.value = config.model || '';
+            homeApiTemperatureInput.value = config.temperature || '0.8';
+            homeApiContextInput.value = config.contextCount || '20';
+            homeApiStatusText.innerText = '';
+            statusBar.classList.remove('status-light');
+            statusBar.classList.add('status-dark');
+            homeSettingsModal.style.display = 'flex';
+        }
+
+        function closeHomeSettings() {
+            homeSettingsModal.style.display = 'none';
+            if (document.getElementById('screen-home').classList.contains('active')) {
+                statusBar.classList.remove('status-dark');
+                statusBar.classList.add('status-light');
+            }
+        }
+
+        function collectHomeApiSettings() {
+            return {
+                enabled: homeApiEnabledInput.checked,
+                baseUrl: homeApiBaseInput.value.trim(),
+                apiKey: homeApiKeyInput.value.trim(),
+                model: homeApiModelInput.value.trim(),
+                temperature: homeApiTemperatureInput.value.trim() || '0.8',
+                contextCount: homeApiContextInput.value.trim() || '20'
+            };
+        }
+
+        function saveHomeSettings() {
+            apiSettings = collectHomeApiSettings();
+            saveApiSettings();
+            homeApiStatusText.innerText = '已保存。';
+            setTimeout(closeHomeSettings, 350);
+        }
+
+        async function testHomeApiSettings() {
+            homeApiStatusText.innerText = '正在测试…';
+            const tempConfig = Object.assign({}, collectHomeApiSettings(), { enabled: true, contextCount: '4' });
+            const oldCurrentId = currentChatId;
+            const testId = '__api_test__';
+            currentChatId = testId;
+            chatHistories[testId] = [{ from: 'me', text: '只回复“连接成功”四个字，用于测试 API。' }];
+            try {
+                const reply = await requestAIReply({
+                    name: '测试角色',
+                    remark: '',
+                    persona: '你正在进行 API 连通性测试。',
+                    userPersona: '',
+                    userName: 'User',
+                    userNickname: ''
+                }, tempConfig);
+                homeApiStatusText.innerText = '测试成功：' + reply.slice(0, 40);
+            } catch (err) {
+                homeApiStatusText.innerText = '测试失败：' + (err.message || err);
+            } finally {
+                delete chatHistories[testId];
+                currentChatId = oldCurrentId;
+            }
+        }
+
+        document.getElementById('btn-open-home-settings').addEventListener('click', openHomeSettings);
+        document.getElementById('btn-close-home-settings').addEventListener('click', closeHomeSettings);
+        document.getElementById('btn-save-home-settings').addEventListener('click', saveHomeSettings);
+        document.getElementById('btn-home-test-api').addEventListener('click', testHomeApiSettings);
+        homeSettingsModal.addEventListener('click', function(e) {
+            if (e.target === homeSettingsModal) closeHomeSettings();
+        });
+        
         document.getElementById('btn-open-chat-settings').addEventListener('click', openChatSettings);
         document.getElementById('btn-close-chat-settings').addEventListener('click', closeChatSettings);
         document.getElementById('btn-save-chat-settings').addEventListener('click', saveCurrentChatSettings);
-        deleteRoleBtn.addEventListener('click', deleteCurrentRole);
+        deleteRoleBtn.addEventListener('click', openDeleteConfirmModal);
         deleteRoleBtn.addEventListener('touchend', function(e) {
             e.preventDefault();
-            deleteCurrentRole(e);
+            openDeleteConfirmModal(e);
+        }, { passive: false });
+        cancelDeleteRoleBtn.addEventListener('click', closeDeleteConfirmModal);
+        confirmDeleteRoleBtn.addEventListener('click', confirmDeleteCurrentRole);
+        cancelDeleteRoleBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            closeDeleteConfirmModal();
+        }, { passive: false });
+        confirmDeleteRoleBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            confirmDeleteCurrentRole(e);
         }, { passive: false });
         chatSettingsModal.addEventListener('click', function(e) {
             if (e.target === chatSettingsModal) closeChatSettings();
+        });
+        deleteConfirmModal.addEventListener('click', function(e) {
+            if (e.target === deleteConfirmModal) closeDeleteConfirmModal();
         });
 
         // 第一次进入页面时恢复好友列表和历史预览
