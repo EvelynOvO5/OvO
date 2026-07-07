@@ -144,6 +144,42 @@
         .nav-icon { font-size: 24px; }
         .nav-text { font-size: 10px; font-weight: 600;}
 
+
+        /* ================= QQ 联系人页 ================= */
+        #screen-contacts { background: #f2f6ff; padding-top: 55px; }
+        .contacts-header { display: flex; align-items: center; gap: 12px; padding: 10px 20px 14px 20px; background: #f2f6ff; }
+        .contacts-self-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg,#ff9a9e,#fecfef); display:flex; align-items:center; justify-content:center; font-size:22px; background-size:cover; background-position:center; flex-shrink:0; cursor:pointer; }
+        .contacts-title { flex: 1; font-size: 24px; font-weight: 900; color: #111; }
+        .contacts-add-btn { width: 42px; height: 42px; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-size:28px; color:#111; cursor:pointer; }
+        .contacts-panel { flex:1; background:#fff; border-radius: 24px 24px 0 0; overflow-y:auto; padding-bottom:22px; }
+        .contacts-panel::-webkit-scrollbar { display:none; }
+        .contacts-search { margin: 16px 18px 20px 18px; height: 44px; border-radius: 16px; background:#f3f6fc; color:#9aa0aa; display:flex; align-items:center; justify-content:center; font-size:17px; }
+        .contacts-row { height:56px; display:flex; align-items:center; padding:0 18px; border-bottom:1px solid rgba(60,60,67,0.08); box-sizing:border-box; cursor:pointer; }
+        .contacts-row:active { background:#f2f2f7; }
+        .contacts-row-icon { width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; margin-right:12px; color:#fff; background:#12B7F5; }
+        .contacts-row-title { flex:1; font-size:17px; font-weight:700; color:#111; }
+        .contacts-row-arrow { color:#aaa; font-size:26px; }
+        .contacts-tabs { display:flex; align-items:center; justify-content:space-around; height:52px; border-top:8px solid #f2f2f7; border-bottom:1px solid rgba(60,60,67,0.10); background:#fff; }
+        .contacts-tab { position:relative; font-size:16px; font-weight:850; color:#111; padding:15px 0; }
+        .contacts-tab.active::after { content:''; position:absolute; left:8px; right:8px; bottom:2px; height:4px; border-radius:999px; background:#12B7F5; }
+        .contact-group-title { display:flex; align-items:center; justify-content:space-between; padding:18px 18px 6px 18px; color:#111; font-size:18px; font-weight:850; }
+        .contact-group-title span { color:#9aa0aa; font-size:12px; font-weight:600; }
+        .contact-list { padding:0 0 8px 0; }
+        .contact-card { display:flex; align-items:center; padding:10px 18px; min-height:62px; box-sizing:border-box; cursor:pointer; }
+        .contact-card:active { background:#f2f2f7; }
+        .contact-avatar { width:44px; height:44px; border-radius:50%; margin-right:12px; background:#eee; background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+        .contact-main { flex:1; min-width:0; }
+        .contact-name { font-size:17px; color:#111; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .contact-sub { font-size:13px; color:#8e8e93; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .contact-empty { padding:24px 20px; color:#8e8e93; font-size:14px; line-height:1.5; text-align:center; }
+        .chat-header-actions { display:flex; align-items:center; gap:14px; }
+        .chat-plus-btn { font-size:26px; color:#12B7F5; cursor:pointer; line-height:1; font-weight:700; }
+        .contact-picker-list { max-height: 430px; overflow-y:auto; margin-top:10px; border-radius:16px; background:#f9f9f9; }
+        .contact-picker-list::-webkit-scrollbar { display:none; }
+        .contact-picker-item { display:flex; align-items:center; padding:10px 12px; border-bottom:1px solid #eee; cursor:pointer; }
+        .contact-picker-item:last-child { border-bottom:none; }
+        .contact-picker-item:active { background:#edf8ff; }
+
         /* 添加好友弹窗 */
         .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(5px); z-index: 1000; display: none; justify-content: center; align-items: center; border-radius: 55px; }
         .modal-box { background: #fff; width: 290px; border-radius: 24px; padding: 25px; box-sizing: border-box; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: pop-up 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -716,7 +752,7 @@
         <!-- ================= 界面2：QQ消息列表 ================= -->
         <div id="screen-qq" class="screen">
             <div class="qq-header">
-                <div class="qq-avatar-self" id="btn-open-user-profiles">👧</div><div class="qq-title">消息</div><div class="qq-add-btn" id="btn-show-add-modal">➕</div>
+                <div class="qq-avatar-self" id="btn-open-user-profiles">👧</div><div class="qq-title">消息</div><div class="qq-add-btn" style="visibility:hidden;">➕</div>
             </div>
             <div class="qq-search-container"><div class="qq-search-box">🔍 搜索</div></div>
             
@@ -725,12 +761,33 @@
             </div>
             
             <div class="qq-bottom-nav">
-                <div class="nav-item active"><div class="nav-icon">💬</div><div class="nav-text">消息</div></div>
-                <div class="nav-item"><div class="nav-icon">👥</div><div class="nav-text">联系人</div></div>
+                <div class="nav-item active" id="nav-to-messages"><div class="nav-icon">💬</div><div class="nav-text">消息</div></div>
+                <div class="nav-item" id="nav-to-contacts"><div class="nav-icon">👥</div><div class="nav-text">联系人</div></div>
                 <div class="nav-item"><div class="nav-icon">🌟</div><div class="nav-text">动态</div></div>
             </div>
         </div>
 
+        <!-- ================= 界面：QQ联系人 ================= -->
+        <div id="screen-contacts" class="screen">
+            <div class="contacts-header">
+                <div class="contacts-self-avatar" id="contacts-self-avatar">👧</div>
+                <div class="contacts-title">联系人</div>
+                <div class="contacts-add-btn" id="btn-show-add-modal">♁</div>
+            </div>
+            <div class="contacts-panel">
+                <div class="contacts-search">🔍 搜索</div>
+                <div class="contacts-row"><div class="contacts-row-icon">＋</div><div class="contacts-row-title">新朋友</div><div class="contacts-row-arrow">›</div></div>
+                <div class="contacts-row"><div class="contacts-row-icon" style="background:#8e8e93;">群</div><div class="contacts-row-title">群通知</div><div class="contacts-row-arrow">›</div></div>
+                <div class="contacts-tabs"><div class="contacts-tab active">分组</div><div class="contacts-tab">好友</div><div class="contacts-tab">群聊</div><div class="contacts-tab">频道</div><div class="contacts-tab">设备</div></div>
+                <div class="contact-group-title">我的角色 <span id="contact-count-text">0/0</span></div>
+                <div class="contact-list" id="contact-list"></div>
+            </div>
+            <div class="qq-bottom-nav">
+                <div class="nav-item" id="contacts-nav-to-messages"><div class="nav-icon">💬</div><div class="nav-text">消息</div></div>
+                <div class="nav-item active"><div class="nav-icon">👥</div><div class="nav-text">联系人</div></div>
+                <div class="nav-item"><div class="nav-icon">🌟</div><div class="nav-text">动态</div></div>
+            </div>
+        </div>
 
 
         <!-- ================= 界面：QQ 个人菜单 ================= -->
@@ -827,7 +884,7 @@
             <div class="chat-header">
                 <div class="chat-back-btn" id="btn-chat-back">❮</div>
                 <div class="chat-title" id="chat-header-name">角色名字</div>
-                <div class="chat-more-btn" id="btn-open-chat-settings">≡</div>
+                <div class="chat-header-actions"><div class="chat-plus-btn" id="btn-open-contact-picker">＋</div><div class="chat-more-btn" id="btn-open-chat-settings">≡</div></div>
             </div>
             
             <!-- 聊天流 -->
@@ -999,6 +1056,10 @@
                     <input type="text" class="settings-input" id="user-profile-nickname-input" placeholder="例如：宝宝、姐姐、主人……">
                 </div>
                 <div class="settings-group">
+                    <div class="settings-label">QQ ID</div>
+                    <input type="text" class="settings-input" id="user-profile-qqid-input" placeholder="例如：3446843157">
+                </div>
+                <div class="settings-group">
                     <div class="settings-label">User 人设</div>
                     <textarea class="settings-textarea" id="user-profile-persona-input" placeholder="写这个身份的背景、性格、和角色关系……"></textarea>
                 </div>
@@ -1028,6 +1089,19 @@
                     <div class="btn-cancel" id="btn-cancel-signature">取消</div>
                     <div class="btn-confirm" id="btn-save-signature">保存个签</div>
                 </div>
+            </div>
+        </div>
+
+
+
+        <!-- 弹窗：选择联系人开始对话 -->
+        <div class="modal-overlay" id="contact-picker-modal">
+            <div class="modal-box settings-modal-box">
+                <div class="settings-title-row">
+                    <div class="settings-title">选择联系人</div>
+                    <div class="settings-close" id="btn-close-contact-picker">×</div>
+                </div>
+                <div class="contact-picker-list" id="contact-picker-list"></div>
             </div>
         </div>
 
@@ -1137,6 +1211,8 @@
         const avatarPreview = document.getElementById('avatar-preview');
         const nameInput = document.getElementById('friend-name-input');
         const messageList = document.getElementById('qq-message-list');
+        const contactList = document.getElementById('contact-list');
+        const contactCountText = document.getElementById('contact-count-text');
         let currentUploadedAvatar = ''; 
 
         // --------- 本地存储：刷新后保留角色与聊天记录 ---------
@@ -1190,7 +1266,7 @@
 
         function ensureDefaultUserProfile() {
             if (!userProfiles.length) {
-                userProfiles.push({ id: 'user_' + Date.now(), name: 'User', nickname: '', persona: '', signature: '', avatar: '', emoji: '👧' });
+                userProfiles.push({ id: 'user_' + Date.now(), name: 'User', nickname: '', qqid: '3446843157', persona: '', signature: '', avatar: '', emoji: '👧' });
                 defaultUserProfileId = userProfiles[0].id;
                 saveUserProfiles();
             }
@@ -1268,14 +1344,45 @@
             messageList.innerHTML = '';
             friends.forEach(friend => createFriendItem(friend, 'beforeend'));
         }
+        function createContactItem(friend) {
+            const item = document.createElement('div');
+            item.className = 'contact-card';
+            item.setAttribute('data-id', friend.id);
+            const avatarHTML = friend.avatar
+                ? `<div class="contact-avatar" style="background-image: url(${friend.avatar}); border: 1px solid #eee;"></div>`
+                : `<div class="contact-avatar" style="background: ${friend.bg || 'linear-gradient(135deg, #12B7F5, #0098EA)'}; color: white;">${friend.emoji || '🐧'}</div>`;
+            item.innerHTML = `
+                ${avatarHTML}
+                <div class="contact-main">
+                    <div class="contact-name">${escapeHTML(getDisplayName(friend))}</div>
+                    <div class="contact-sub">${escapeHTML(friend.persona ? friend.persona.slice(0, 34) + (friend.persona.length > 34 ? '…' : '') : '在线 · 点一下开始聊天')}</div>
+                </div>
+            `;
+            item.addEventListener('click', () => openChatRoom(friend.id, friend.name, friend.avatar || '', friend.emoji || '', friend.bg || ''));
+            contactList.appendChild(item);
+        }
 
-        // 打开弹窗重置
-        document.getElementById('btn-show-add-modal').addEventListener('click', () => {
+        function refreshContactList() {
+            if (!contactList) return;
+            contactList.innerHTML = '';
+            if (contactCountText) contactCountText.innerText = `${friends.length}/${friends.length}`;
+            if (!friends.length) {
+                contactList.innerHTML = '<div class="contact-empty">还没有角色。点右上角＋创建一个 Char。</div>';
+                return;
+            }
+            friends.forEach(friend => createContactItem(friend));
+        }
+
+        function openAddRoleModal() {
             addModal.style.display = 'flex'; nameInput.value = ''; avatarInput.value = '';
             currentUploadedAvatar = ''; avatarPreview.style.backgroundImage = 'none';
             avatarPreview.style.border = '2px dashed #ccc'; avatarPreview.innerHTML = '<span class="avatar-placeholder-text">📷<br>上传头像</span>';
             nameInput.focus();
-        });
+        }
+
+
+        // 打开创建角色弹窗：现在入口在联系人页右上角
+        document.getElementById('btn-show-add-modal').addEventListener('click', openAddRoleModal);
         document.getElementById('btn-cancel-add').addEventListener('click', () => addModal.style.display = 'none');
 
         // 读取图片
@@ -1311,7 +1418,9 @@
 
             friends.push(friend);
             saveFriends();
-            createFriendItem(friend, 'afterbegin');
+            refreshMessageList();
+            refreshContactList();
+            showScreen('screen-contacts');
             addModal.style.display = 'none';
         });
 
@@ -1399,6 +1508,7 @@
             if (!item) return;
             const preview = item.querySelector('.msg-preview');
             if (preview) preview.innerText = text;
+            refreshContactList();
         }
 
         function normalizeApiBaseUrl(baseUrl) {
@@ -1610,6 +1720,7 @@ ${userPersona}
         const userProfileAvatarPreview = document.getElementById('user-profile-avatar-preview');
         const userProfileNameInput = document.getElementById('user-profile-name-input');
         const userProfileNicknameInput = document.getElementById('user-profile-nickname-input');
+        const userProfileQqidInput = document.getElementById('user-profile-qqid-input');
         const userProfilePersonaInput = document.getElementById('user-profile-persona-input');
         const userProfileDefaultInput = document.getElementById('user-profile-default-input');
         const deleteUserProfileBtn = document.getElementById('btn-delete-user-profile');
@@ -1651,6 +1762,7 @@ ${userPersona}
             const current = getUserProfileById(defaultUserProfileId);
             setProfileAvatarElement(currentUserProfileAvatar, current);
             setProfileAvatarElement(document.getElementById('btn-open-user-profiles'), current);
+            setProfileAvatarElement(document.getElementById('contacts-self-avatar'), current);
             setProfileAvatarElement(selfMenuAvatar, current);
             setProfileAvatarElement(selfCardAvatar, current);
             const profileName = (current.name || 'User') + (current.nickname ? ` · ${current.nickname}` : '');
@@ -1663,7 +1775,7 @@ ${userPersona}
             if (selfMenuSign) selfMenuSign.innerText = menuSignatureText;
             if (selfCardName) selfCardName.innerText = profileName;
             if (selfCardBio) selfCardBio.innerText = cardSignatureText;
-            if (selfCardId) selfCardId.innerText = `QQ：${current.id ? current.id.replace(/\D/g, '').slice(-10).padStart(10, '3') : '3446843157'}`;
+            if (selfCardId) selfCardId.innerText = `QQ：${current.qqid || '3446843157'}`;
 
             userProfileList.innerHTML = '';
             if (!userProfiles.length) {
@@ -1773,6 +1885,7 @@ ${userPersona}
             userProfileModalTitle.innerText = profileId ? '编辑身份' : '添加身份';
             userProfileNameInput.value = profile.name || '';
             userProfileNicknameInput.value = profile.nickname || '';
+            userProfileQqidInput.value = profile.qqid || '';
             userProfilePersonaInput.value = profile.persona || '';
             userProfileDefaultInput.checked = profileId ? profile.id === defaultUserProfileId : !userProfiles.length;
             deleteUserProfileBtn.style.display = profileId ? 'block' : 'none';
@@ -1790,6 +1903,7 @@ ${userPersona}
             const data = {
                 name,
                 nickname: userProfileNicknameInput.value.trim(),
+                qqid: userProfileQqidInput.value.trim(),
                 persona: userProfilePersonaInput.value.trim(),
                 signature: editingUserProfileId ? ((getUserProfileById(editingUserProfileId) || {}).signature || '') : '',
                 avatar: editingUserProfileAvatar,
@@ -1824,6 +1938,7 @@ ${userPersona}
             saveUserProfiles();
             saveFriends();
             refreshUserProfilePage();
+            refreshContactList();
             closeUserProfileEditor();
         }
 
@@ -1843,7 +1958,7 @@ ${userPersona}
 
         function updateUserProfilePreview() {
             const profile = getUserProfileById(userProfileSelect.value);
-            userProfilePreview.innerText = profile ? `名字：${profile.name || 'User'}｜昵称：${profile.nickname || '未填写'}\n人设：${profile.persona || '未填写'}` : '还没有选择身份。';
+            userProfilePreview.innerText = profile ? `名字：${profile.name || 'User'}｜昵称：${profile.nickname || '未填写'}｜QQ：${profile.qqid || '未填写'}\n人设：${profile.persona || '未填写'}` : '还没有选择身份。';
         }
 
         ensureDefaultUserProfile();
@@ -1903,6 +2018,7 @@ ${userPersona}
             currentChatName = profile.name;
             document.getElementById('chat-header-name').innerText = getDisplayName(profile);
             refreshMessageList();
+            refreshContactList();
             closeChatSettings();
         }
 
@@ -1953,6 +2069,7 @@ ${userPersona}
 
             closeDeleteConfirmModal();
             refreshMessageList();
+            refreshContactList();
             showScreen('screen-qq');
         }
 
@@ -2100,7 +2217,60 @@ ${userPersona}
             }
         }
 
+
+
+        // --------- 联系人与聊天页选择联系人 ---------
+        const contactPickerModal = document.getElementById('contact-picker-modal');
+        const contactPickerList = document.getElementById('contact-picker-list');
+
+        function openContactsScreen() {
+            refreshUserProfilePage();
+            refreshContactList();
+            showScreen('screen-contacts');
+        }
+
+        function openMessagesScreen() {
+            refreshMessageList();
+            showScreen('screen-qq');
+        }
+
+        function renderContactPicker() {
+            contactPickerList.innerHTML = '';
+            if (!friends.length) {
+                contactPickerList.innerHTML = '<div class="contact-empty">还没有联系人。先去「联系人」页右上角＋创建 Char。</div>';
+                return;
+            }
+            friends.forEach(friend => {
+                const item = document.createElement('div');
+                item.className = 'contact-picker-item';
+                const avatarHTML = friend.avatar
+                    ? `<div class="contact-avatar" style="background-image:url(${friend.avatar}); border:1px solid #eee;"></div>`
+                    : `<div class="contact-avatar" style="background:${friend.bg || 'linear-gradient(135deg, #12B7F5, #0098EA)'}; color:white;">${friend.emoji || '🐧'}</div>`;
+                item.innerHTML = `${avatarHTML}<div class="contact-main"><div class="contact-name">${escapeHTML(getDisplayName(friend))}</div><div class="contact-sub">${escapeHTML(friend.persona || '开始对话')}</div></div>`;
+                item.addEventListener('click', () => {
+                    closeContactPicker();
+                    openChatRoom(friend.id, friend.name, friend.avatar || '', friend.emoji || '', friend.bg || '');
+                });
+                contactPickerList.appendChild(item);
+            });
+        }
+
+        function openContactPicker() {
+            renderContactPicker();
+            contactPickerModal.style.display = 'flex';
+        }
+
+        function closeContactPicker() {
+            contactPickerModal.style.display = 'none';
+        }
+
         document.getElementById('btn-open-home-settings').addEventListener('click', openHomeSettings);
+        document.getElementById('nav-to-contacts').addEventListener('click', openContactsScreen);
+        document.getElementById('contacts-nav-to-messages').addEventListener('click', openMessagesScreen);
+        document.getElementById('contacts-self-avatar').addEventListener('click', openSelfMenuScreen);
+        document.getElementById('btn-open-contact-picker').addEventListener('click', openContactPicker);
+        document.getElementById('btn-close-contact-picker').addEventListener('click', closeContactPicker);
+        contactPickerModal.addEventListener('click', function(e) { if (e.target === contactPickerModal) closeContactPicker(); });
         document.getElementById('btn-close-home-settings').addEventListener('click', closeHomeSettings);
         document.getElementById('btn-save-home-settings').addEventListener('click', saveHomeSettings);
         document.getElementById('btn-home-connect-api').addEventListener('click', connectHomeApiSettings);
@@ -2158,6 +2328,7 @@ ${userPersona}
 
         // 第一次进入页面时恢复好友列表和历史预览
         refreshMessageList();
+        refreshContactList();
 
         // 绑定发送按钮
         document.getElementById('btn-send-msg').addEventListener('click', sendMessage);
