@@ -309,8 +309,11 @@
         .profile-card-name { color: #ff4b32; font-size: 23px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .profile-card-like { color: #1677ff; font-size: 13px; font-weight: 900; flex-shrink: 0; }
         .profile-card-id { margin-top: 5px; color: #999; font-size: 13px; }
-        .profile-card-bio { margin-top: 22px; color: #8e8e93; font-size: 16px; line-height: 1.4; cursor: pointer; padding: 8px 0; }
+        .profile-card-bio { margin-top: 22px; color: #8e8e93; font-size: 16px; line-height: 1.4; cursor: text; padding: 8px 0; }
         .profile-card-bio:active { opacity: 0.6; }
+        .profile-menu-sign { cursor: text; }
+        .profile-card-bio.editing, .profile-menu-sign.editing { outline: none; background: rgba(0,0,0,0.04); border-radius: 10px; padding-left: 8px; padding-right: 8px; color: #4b5563; }
+        .profile-card-bio[contenteditable="true"], .profile-menu-sign[contenteditable="true"] { -webkit-user-select: text; user-select: text; }
         .profile-card-section { margin-top: 18px; }
         .profile-card-section-title { display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: 800; color: #111; margin-bottom: 14px; }
         .profile-card-section-title span { color: #1677ff; font-size: 13px; font-weight: 700; }
@@ -1112,8 +1115,12 @@
         document.getElementById('btn-self-menu-back').addEventListener('click', () => showScreen('screen-qq'));
         document.getElementById('btn-open-profile-card').addEventListener('click', openSelfProfileCard);
         document.getElementById('btn-profile-card-back').addEventListener('click', openSelfMenuScreen);
-        document.getElementById('self-card-bio').addEventListener('click', openSignatureEditor);
-        document.getElementById('self-menu-sign').addEventListener('click', function(e) { e.stopPropagation(); openSignatureEditor(); });
+        document.getElementById('self-card-bio').addEventListener('click', function(e) { beginInlineSignatureEdit(this, e); });
+        document.getElementById('self-menu-sign').addEventListener('click', function(e) { beginInlineSignatureEdit(this, e); });
+        document.getElementById('self-card-bio').addEventListener('blur', function() { saveInlineSignatureEdit(this); });
+        document.getElementById('self-menu-sign').addEventListener('blur', function() { saveInlineSignatureEdit(this); });
+        document.getElementById('self-card-bio').addEventListener('keydown', handleInlineSignatureKeydown);
+        document.getElementById('self-menu-sign').addEventListener('keydown', handleInlineSignatureKeydown);
         document.getElementById('btn-close-signature-modal').addEventListener('click', closeSignatureEditor);
         document.getElementById('btn-cancel-signature').addEventListener('click', closeSignatureEditor);
         document.getElementById('btn-save-signature').addEventListener('click', saveSignatureEditor);
@@ -1352,14 +1359,20 @@
             }
         }
 
+        function getUserAvatarHTML(profile, extraStyle = '') {
+            const safeExtra = extraStyle || '';
+            if (profile && profile.avatar) {
+                return `<div class="bubble-avatar" style="background: url(${profile.avatar}) center / cover no-repeat; border: 1px solid #eee; ${safeExtra}"></div>`;
+            }
+            return `<div class="bubble-avatar" style="background: linear-gradient(135deg, #ff9a9e, #fecfef); color: white; ${safeExtra}">${(profile && profile.emoji) || '👧'}</div>`;
+        }
+
         function renderMyMessage(text) {
-            const boundUser = currentChatId ? getBoundUserProfile(currentChatId) : null;
-            const userAvatarStyle = boundUser && boundUser.avatar ? `background-image: url(${boundUser.avatar});` : '';
-            const userAvatarInner = boundUser && boundUser.avatar ? '' : ((boundUser && boundUser.emoji) || '👧');
+            const boundUser = currentChatId ? getBoundUserProfile(currentChatId) : getUserProfileById(defaultUserProfileId);
             const myMsg = `
                 <div class="bubble-row bubble-right">
                     <div class="bubble-text">${escapeHTML(text)}</div>
-                    <div class="bubble-avatar" style="${userAvatarStyle}">${userAvatarInner}</div>
+                    ${getUserAvatarHTML(boundUser, 'margin-left: 12px;')}
                 </div>
             `;
             chatRoomBox.insertAdjacentHTML('beforeend', myMsg);
@@ -1615,8 +1628,22 @@ ${userPersona}
 
         function setProfileAvatarElement(el, profile) {
             if (!el) return;
-            el.style.backgroundImage = profile && profile.avatar ? `url(${profile.avatar})` : 'none';
-            el.textContent = profile && profile.avatar ? '' : ((profile && profile.emoji) || '👧');
+            const avatar = profile && profile.avatar ? profile.avatar : '';
+            if (avatar) {
+                // 用 background 简写强制覆盖原来的蓝色/渐变底，确保 QQ 左上角、个人页、聊天气泡同步显示同一个 User 头像。
+                el.style.background = `url(${avatar}) center / cover no-repeat`;
+                el.style.backgroundImage = `url(${avatar})`;
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+                el.style.backgroundRepeat = 'no-repeat';
+                el.textContent = '';
+            } else {
+                el.style.background = 'linear-gradient(135deg, #ff9a9e, #fecfef)';
+                el.style.backgroundImage = 'linear-gradient(135deg, #ff9a9e, #fecfef)';
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+                el.textContent = (profile && profile.emoji) || '👧';
+            }
         }
 
         function refreshUserProfilePage() {
@@ -1628,13 +1655,14 @@ ${userPersona}
             setProfileAvatarElement(selfCardAvatar, current);
             const profileName = (current.name || 'User') + (current.nickname ? ` · ${current.nickname}` : '');
             const signatureText = current.signature || '编辑个签，展示我的独特态度。';
-            const profileBio = signatureText.slice(0, 58) + (signatureText.length > 58 ? '…' : '');
+            const menuSignatureText = signatureText.slice(0, 38) + (signatureText.length > 38 ? '…' : '');
+            const cardSignatureText = signatureText;
             currentUserProfileName.innerText = profileName;
             currentUserProfileSub.innerText = current.persona ? current.persona.slice(0, 42) + (current.persona.length > 42 ? '…' : '') : '默认身份会显示在 QQ 个人页，也可以绑定给不同角色。';
             if (selfMenuName) selfMenuName.innerText = profileName;
-            if (selfMenuSign) selfMenuSign.innerText = profileBio;
+            if (selfMenuSign) selfMenuSign.innerText = menuSignatureText;
             if (selfCardName) selfCardName.innerText = profileName;
-            if (selfCardBio) selfCardBio.innerText = profileBio;
+            if (selfCardBio) selfCardBio.innerText = cardSignatureText;
             if (selfCardId) selfCardId.innerText = `QQ：${current.id ? current.id.replace(/\D/g, '').slice(-10).padStart(10, '3') : '3446843157'}`;
 
             userProfileList.innerHTML = '';
@@ -1657,6 +1685,46 @@ ${userPersona}
                 item.addEventListener('click', () => openUserProfileEditor(profile.id));
                 userProfileList.appendChild(item);
             });
+        }
+
+        function placeCaretAtEnd(el) {
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+
+        function beginInlineSignatureEdit(el, event) {
+            if (event) event.stopPropagation();
+            ensureDefaultUserProfile();
+            const current = getUserProfileById(defaultUserProfileId);
+            el.setAttribute('contenteditable', 'true');
+            el.classList.add('editing');
+            el.innerText = current && current.signature ? current.signature : '';
+            el.focus();
+            placeCaretAtEnd(el);
+        }
+
+        function saveInlineSignatureEdit(el) {
+            if (!el || el.getAttribute('contenteditable') !== 'true') return;
+            ensureDefaultUserProfile();
+            const current = getUserProfileById(defaultUserProfileId);
+            if (current) {
+                current.signature = el.innerText.trim();
+                saveUserProfiles();
+            }
+            el.removeAttribute('contenteditable');
+            el.classList.remove('editing');
+            refreshUserProfilePage();
+        }
+
+        function handleInlineSignatureKeydown(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.blur();
+            }
         }
 
         function openSignatureEditor() {
@@ -1737,6 +1805,10 @@ ${userPersona}
             if (userProfileDefaultInput.checked || !defaultUserProfileId) defaultUserProfileId = editingUserProfileId;
             saveUserProfiles();
             refreshUserProfilePage();
+            if (currentChatId && document.getElementById('screen-chat').classList.contains('active')) {
+                const profile = getChatProfile(currentChatId);
+                if (profile) openChatRoom(currentChatId);
+            }
             closeUserProfileEditor();
         }
 
