@@ -846,7 +846,7 @@
                             <div class="profile-card-name" id="self-card-name">User</div>
                             <div class="profile-card-like">👍 +10</div>
                         </div>
-                        <div class="profile-card-id" id="self-card-id">QQ：3446843157</div>
+                        <div class="profile-card-id" id="self-card-id">QQ：10000001</div>
                     </div>
                 </div>
                 <div class="profile-card-bio" id="self-card-bio">编辑个签，展示我的独特态度。</div>
@@ -1056,8 +1056,8 @@
                     <input type="text" class="settings-input" id="user-profile-nickname-input" placeholder="例如：宝宝、姐姐、主人……">
                 </div>
                 <div class="settings-group">
-                    <div class="settings-label">QQ ID</div>
-                    <input type="text" class="settings-input" id="user-profile-qqid-input" placeholder="例如：3446843157">
+                    <div class="settings-label">QQ昵称</div>
+                    <input type="text" class="settings-input" id="user-profile-qqid-input" placeholder="例如：宇宙海豹喵">
                 </div>
                 <div class="settings-group">
                     <div class="settings-label">User 人设</div>
@@ -1264,9 +1264,22 @@
             localStorage.setItem(DEFAULT_USER_PROFILE_KEY, defaultUserProfileId || '');
         }
 
+        function generateFakeQQNumber() {
+            return String(Math.floor(100000000 + Math.random() * 900000000));
+        }
+
+        function normalizeUserProfile(profile) {
+            if (!profile) return profile;
+            if (!profile.qqNumber || profile.qqNumber === '10000001') profile.qqNumber = generateFakeQQNumber();
+            // 这里的 qqid 字段现在表示 QQ 昵称，不再存 QQ 号。旧版本如果保存过纯数字，会自动替换掉，避免暴露真实号码。
+            if (!profile.qqid || /^\d{5,}$/.test(String(profile.qqid))) profile.qqid = profile.name || '宇宙海豹喵';
+            return profile;
+        }
+
         function ensureDefaultUserProfile() {
+            userProfiles.forEach(normalizeUserProfile);
             if (!userProfiles.length) {
-                userProfiles.push({ id: 'user_' + Date.now(), name: 'User', nickname: '', qqid: '3446843157', persona: '', signature: '', avatar: '', emoji: '👧' });
+                userProfiles.push({ id: 'user_' + Date.now(), name: 'User', nickname: '', qqid: '宇宙海豹喵', qqNumber: generateFakeQQNumber(), persona: '', signature: '', avatar: '', emoji: '👧' });
                 defaultUserProfileId = userProfiles[0].id;
                 saveUserProfiles();
             }
@@ -1759,23 +1772,25 @@ ${userPersona}
 
         function refreshUserProfilePage() {
             ensureDefaultUserProfile();
-            const current = getUserProfileById(defaultUserProfileId);
+            const current = normalizeUserProfile(getUserProfileById(defaultUserProfileId));
+            saveUserProfiles();
             setProfileAvatarElement(currentUserProfileAvatar, current);
             setProfileAvatarElement(document.getElementById('btn-open-user-profiles'), current);
             setProfileAvatarElement(document.getElementById('contacts-self-avatar'), current);
             setProfileAvatarElement(selfMenuAvatar, current);
             setProfileAvatarElement(selfCardAvatar, current);
             const profileName = (current.name || 'User') + (current.nickname ? ` · ${current.nickname}` : '');
+            const qqDisplayName = current.qqid || current.name || '宇宙海豹喵';
             const signatureText = current.signature || '编辑个签，展示我的独特态度。';
             const menuSignatureText = signatureText.slice(0, 38) + (signatureText.length > 38 ? '…' : '');
             const cardSignatureText = signatureText;
             currentUserProfileName.innerText = profileName;
             currentUserProfileSub.innerText = current.persona ? current.persona.slice(0, 42) + (current.persona.length > 42 ? '…' : '') : '默认身份会显示在 QQ 个人页，也可以绑定给不同角色。';
-            if (selfMenuName) selfMenuName.innerText = profileName;
+            if (selfMenuName) selfMenuName.innerText = qqDisplayName;
             if (selfMenuSign) selfMenuSign.innerText = menuSignatureText;
-            if (selfCardName) selfCardName.innerText = profileName;
+            if (selfCardName) selfCardName.innerText = qqDisplayName;
             if (selfCardBio) selfCardBio.innerText = cardSignatureText;
-            if (selfCardId) selfCardId.innerText = `QQ：${current.qqid || '3446843157'}`;
+            if (selfCardId) selfCardId.innerText = `QQ：${current.qqNumber || generateFakeQQNumber()}`;
 
             userProfileList.innerHTML = '';
             if (!userProfiles.length) {
@@ -1880,7 +1895,7 @@ ${userPersona}
         function openUserProfileEditor(profileId = '') {
             ensureDefaultUserProfile();
             editingUserProfileId = profileId;
-            const profile = profileId ? getUserProfileById(profileId) : { id: '', name: '', nickname: '', persona: '', signature: '', avatar: '', emoji: '👧' };
+            const profile = profileId ? normalizeUserProfile(getUserProfileById(profileId)) : { id: '', name: '', nickname: '', qqid: '', qqNumber: generateFakeQQNumber(), persona: '', signature: '', avatar: '', emoji: '👧' };
             editingUserProfileAvatar = profile.avatar || '';
             userProfileModalTitle.innerText = profileId ? '编辑身份' : '添加身份';
             userProfileNameInput.value = profile.name || '';
@@ -1904,6 +1919,7 @@ ${userPersona}
                 name,
                 nickname: userProfileNicknameInput.value.trim(),
                 qqid: userProfileQqidInput.value.trim(),
+                qqNumber: editingUserProfileId ? ((getUserProfileById(editingUserProfileId) || {}).qqNumber || generateFakeQQNumber()) : generateFakeQQNumber(),
                 persona: userProfilePersonaInput.value.trim(),
                 signature: editingUserProfileId ? ((getUserProfileById(editingUserProfileId) || {}).signature || '') : '',
                 avatar: editingUserProfileAvatar,
@@ -1958,7 +1974,7 @@ ${userPersona}
 
         function updateUserProfilePreview() {
             const profile = getUserProfileById(userProfileSelect.value);
-            userProfilePreview.innerText = profile ? `名字：${profile.name || 'User'}｜昵称：${profile.nickname || '未填写'}｜QQ：${profile.qqid || '未填写'}\n人设：${profile.persona || '未填写'}` : '还没有选择身份。';
+            userProfilePreview.innerText = profile ? `名字：${profile.name || 'User'}｜称呼：${profile.nickname || '未填写'}｜QQ昵称：${profile.qqid || '未填写'}｜QQ号：${profile.qqNumber || '自动生成'}\n人设：${profile.persona || '未填写'}` : '还没有选择身份。';
         }
 
         ensureDefaultUserProfile();
