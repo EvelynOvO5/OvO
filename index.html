@@ -6,10 +6,11 @@
     <title>我的AI模拟手机 - 聊天对话版</title>
     <style>
         /* ================= 基础设置 ================= */
-        html, body { height: 100%; margin: 0; overflow: auto; }
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
         body {
-            display: flex; justify-content: center; align-items: flex-start;
-            padding-top: 30px; padding-bottom: 30px; background-color: #d1d5db;
+            min-height: 100dvh;
+            display: flex; justify-content: center; align-items: center;
+            padding: 8px; background-color: #d1d5db;
             font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
             user-select: none; box-sizing: border-box;
         }
@@ -21,9 +22,11 @@
             box-shadow: 0 0 0 2px #b0b0b0, 0 35px 70px rgba(0,0,0,0.3);
             border-radius: 55px; position: relative; overflow: hidden;
             display: flex; flex-direction: column; z-index: 1; background: #fff;
+            flex-shrink: 0;
+            transform: scale(var(--phone-scale, 1));
+            transform-origin: center center;
+            transition: transform 0.18s ease;
         }
-        @media (max-height: 920px) { .phone-frame { transform: scale(0.85); transform-origin: top center; } }
-        @media (max-height: 780px) { .phone-frame { transform: scale(0.75); transform-origin: top center; } }
 
         /* ================= 状态栏与灵动岛 ================= */
         /* ★ 灵动岛现在是Home键啦，加了鼠标手势和点击动效 ★ */
@@ -453,6 +456,48 @@
             color: #8e8e93;
             text-align: center;
         }
+        .ios-connect-state {
+            font-size: 13px;
+            color: #8e8e93;
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .ios-connect-state.connected { color: #34c759; font-weight: 700; }
+        .ios-connect-state.failed { color: #ff3b30; font-weight: 700; }
+        .ios-model-list {
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+            display: none;
+        }
+        .ios-model-item {
+            min-height: 52px;
+            padding: 9px 14px 9px 16px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid rgba(60, 60, 67, 0.12);
+            cursor: pointer;
+        }
+        .ios-model-item:last-child { border-bottom: none; }
+        .ios-model-item:active { background: #f2f2f7; }
+        .ios-model-main { min-width: 0; flex: 1; }
+        .ios-model-name { font-size: 14px; color: #111; font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ios-model-channel { font-size: 11px; color: #8e8e93; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ios-model-check { font-size: 16px; color: #007aff; flex-shrink: 0; opacity: 0; }
+        .ios-model-item.selected .ios-model-check { opacity: 1; }
+        .ios-empty-models {
+            padding: 14px 16px;
+            font-size: 12px;
+            color: #8e8e93;
+            line-height: 1.4;
+        }
 
 
         /* ================= 删除确认弹窗 ================= */
@@ -704,11 +749,22 @@
                             <span class="ios-cell-title">API Key</span>
                             <input type="password" class="ios-cell-input" id="home-api-key" placeholder="sk-...">
                         </label>
+                        <div class="ios-settings-cell">
+                            <span class="ios-cell-title">连接状态</span>
+                            <span class="ios-connect-state" id="home-api-connect-state">未连接</span>
+                        </div>
+                    </div>
+
+                    <div class="ios-settings-section-label">模型</div>
+                    <div class="ios-settings-list">
                         <label class="ios-settings-cell">
-                            <span class="ios-cell-title">模型</span>
-                            <input type="text" class="ios-cell-input" id="home-api-model" placeholder="gpt-4o-mini">
+                            <span class="ios-cell-title">当前模型</span>
+                            <input type="text" class="ios-cell-input" id="home-api-model" placeholder="连接后选择，或手动填写">
                         </label>
                     </div>
+
+                    <div class="ios-settings-section-label" id="home-api-models-label" style="display:none;">可用模型 / 渠道</div>
+                    <div class="ios-model-list" id="home-api-model-list"></div>
 
                     <div class="ios-settings-section-label">生成</div>
                     <div class="ios-settings-list">
@@ -721,11 +777,12 @@
                             <input type="number" class="ios-cell-input" id="home-api-context" min="2" max="80" step="1" placeholder="20">
                         </label>
                     </div>
-                    <div class="ios-settings-note">这些内容只保存在当前浏览器。公开分享网页时，不要预填自己的 API Key，让使用者填写自己的 Key。</div>
+                    <div class="ios-settings-note">先填 Base URL 和 API Key，再点「连接 API」。连接成功后会自动读取并显示可用模型。公开分享网页时，不要预填自己的 API Key。</div>
 
                     <div class="ios-settings-buttons">
-                        <div class="ios-secondary-btn" id="btn-home-test-api">测试 API</div>
-                        <div class="ios-primary-btn" id="btn-save-home-settings">保存设置</div>
+                        <div class="ios-primary-btn" id="btn-home-connect-api">连接 API</div>
+                        <div class="ios-secondary-btn" id="btn-home-test-api">测试当前模型</div>
+                        <div class="ios-secondary-btn" id="btn-save-home-settings">保存设置</div>
                     </div>
                     <div class="ios-api-status" id="home-api-status-text"></div>
                 </div>
@@ -751,7 +808,31 @@
 
     <!-- ================= 交互逻辑 (JavaScript) ================= -->
     <script>
+        // --------- 自适应缩放：按屏幕等比放大/缩小手机 ---------
+        function updatePhoneScale() {
+            const frame = document.querySelector('.phone-frame');
+            if (!frame) return;
+
+            // 手机原始尺寸：390 x 844，外壳边框左右/上下各 14px，所以实际占位约 418 x 872
+            const baseWidth = 418;
+            const baseHeight = 872;
+            const safePadding = 16;
+
+            const availableWidth = window.innerWidth - safePadding;
+            const availableHeight = window.innerHeight - safePadding;
+            const rawScale = Math.min(availableWidth / baseWidth, availableHeight / baseHeight);
+
+            // 小屏幕会缩小到刚好放下；大屏幕最多放大到 1.18，避免大到失真
+            const scale = Math.max(0.72, Math.min(rawScale, 1.18));
+            frame.style.setProperty('--phone-scale', scale.toFixed(3));
+        }
+
+        window.addEventListener('resize', updatePhoneScale);
+        window.addEventListener('orientationchange', updatePhoneScale);
+        updatePhoneScale();
+
         // --------- 基础组件：时间更新 ---------
+
         function updateTime() {
             const now = new Date();
             let h = now.getHours().toString().padStart(2, '0');
@@ -829,7 +910,8 @@
                 baseUrl: '',
                 model: '',
                 temperature: '0.8',
-                contextCount: '20'
+                contextCount: '20',
+                availableModels: []
             }, apiSettings || {});
         }
 
@@ -1018,12 +1100,25 @@
             if (preview) preview.innerText = text;
         }
 
-        function getChatEndpoint(baseUrl) {
+        function normalizeApiBaseUrl(baseUrl) {
             let base = (baseUrl || '').trim();
             if (!base) return '';
             base = base.replace(/\/+$/, '');
-            if (/\/chat\/completions$/i.test(base)) return base;
+            base = base.replace(/\/chat\/completions$/i, '');
+            base = base.replace(/\/models$/i, '');
+            return base;
+        }
+
+        function getChatEndpoint(baseUrl) {
+            const base = normalizeApiBaseUrl(baseUrl);
+            if (!base) return '';
             return base + '/chat/completions';
+        }
+
+        function getModelsEndpoint(baseUrl) {
+            const base = normalizeApiBaseUrl(baseUrl);
+            if (!base) return '';
+            return base + '/models';
         }
 
         function buildSystemPrompt(profile) {
@@ -1098,6 +1193,40 @@ ${userPersona}
             const reply = data?.choices?.[0]?.message?.content || data?.choices?.[0]?.text || '';
             if (!reply.trim()) throw new Error('API 返回了空内容。');
             return reply.trim();
+        }
+
+        function normalizeModelList(data) {
+            let raw = [];
+            if (Array.isArray(data?.data)) raw = data.data;
+            else if (Array.isArray(data?.models)) raw = data.models;
+            else if (Array.isArray(data)) raw = data;
+            return raw.map(item => {
+                if (typeof item === 'string') return { id: item, channel: '' };
+                return {
+                    id: item?.id || item?.name || item?.model || '',
+                    channel: item?.owned_by || item?.owner || item?.provider || item?.group || item?.channel || ''
+                };
+            }).filter(item => item.id);
+        }
+
+        async function fetchAvailableModels(apiConfig) {
+            const endpoint = getModelsEndpoint(apiConfig.baseUrl);
+            const apiKey = (apiConfig.apiKey || '').trim();
+            if (!endpoint || !apiKey) throw new Error('请先填完整 Base URL 和 API Key。');
+
+            const response = await fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`
+                }
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const message = data?.error?.message || data?.message || `HTTP ${response.status}`;
+                throw new Error(message);
+            }
+
+            return normalizeModelList(data);
         }
 
         function showTypingBubble() {
@@ -1288,6 +1417,44 @@ ${userPersona}
         const homeApiTemperatureInput = document.getElementById('home-api-temperature');
         const homeApiContextInput = document.getElementById('home-api-context');
         const homeApiStatusText = document.getElementById('home-api-status-text');
+        const homeApiConnectState = document.getElementById('home-api-connect-state');
+        const homeApiModelList = document.getElementById('home-api-model-list');
+        const homeApiModelsLabel = document.getElementById('home-api-models-label');
+
+        function setConnectState(text, type = '') {
+            homeApiConnectState.innerText = text;
+            homeApiConnectState.classList.remove('connected', 'failed');
+            if (type) homeApiConnectState.classList.add(type);
+        }
+
+        function renderHomeModelList(models = [], selectedModel = '') {
+            homeApiModelList.innerHTML = '';
+            if (!models.length) {
+                homeApiModelsLabel.style.display = 'none';
+                homeApiModelList.style.display = 'none';
+                return;
+            }
+
+            homeApiModelsLabel.style.display = 'block';
+            homeApiModelList.style.display = 'block';
+            models.forEach(model => {
+                const item = document.createElement('div');
+                item.className = 'ios-model-item' + (model.id === selectedModel ? ' selected' : '');
+                item.innerHTML = `
+                    <div class="ios-model-main">
+                        <div class="ios-model-name">${escapeHTML(model.id)}</div>
+                        <div class="ios-model-channel">${escapeHTML(model.channel || '默认渠道')}</div>
+                    </div>
+                    <div class="ios-model-check">✓</div>
+                `;
+                item.addEventListener('click', () => {
+                    homeApiModelInput.value = model.id;
+                    renderHomeModelList(models, model.id);
+                    homeApiStatusText.innerText = `已选择模型：${model.id}`;
+                });
+                homeApiModelList.appendChild(item);
+            });
+        }
 
         function openHomeSettings() {
             const config = getApiSettings();
@@ -1298,6 +1465,9 @@ ${userPersona}
             homeApiTemperatureInput.value = config.temperature || '0.8';
             homeApiContextInput.value = config.contextCount || '20';
             homeApiStatusText.innerText = '';
+            renderHomeModelList(config.availableModels || [], config.model || '');
+            if ((config.availableModels || []).length) setConnectState('已连接', 'connected');
+            else setConnectState('未连接');
             statusBar.classList.remove('status-light');
             statusBar.classList.add('status-dark');
             homeSettingsModal.style.display = 'flex';
@@ -1318,7 +1488,8 @@ ${userPersona}
                 apiKey: homeApiKeyInput.value.trim(),
                 model: homeApiModelInput.value.trim(),
                 temperature: homeApiTemperatureInput.value.trim() || '0.8',
-                contextCount: homeApiContextInput.value.trim() || '20'
+                contextCount: homeApiContextInput.value.trim() || '20',
+                availableModels: (apiSettings && Array.isArray(apiSettings.availableModels)) ? apiSettings.availableModels : []
             };
         }
 
@@ -1327,6 +1498,33 @@ ${userPersona}
             saveApiSettings();
             homeApiStatusText.innerText = '已保存。';
             setTimeout(closeHomeSettings, 350);
+        }
+
+        async function connectHomeApiSettings() {
+            homeApiStatusText.innerText = '正在连接并读取模型…';
+            setConnectState('连接中…');
+
+            const tempConfig = collectHomeApiSettings();
+            tempConfig.enabled = true;
+
+            try {
+                const models = await fetchAvailableModels(tempConfig);
+                tempConfig.availableModels = models;
+                if (!tempConfig.model && models.length) {
+                    tempConfig.model = models[0].id;
+                    homeApiModelInput.value = models[0].id;
+                }
+                homeApiEnabledInput.checked = true;
+                apiSettings = tempConfig;
+                saveApiSettings();
+                renderHomeModelList(models, tempConfig.model || '');
+                setConnectState('已连接', 'connected');
+                homeApiStatusText.innerText = models.length ? `连接成功，读取到 ${models.length} 个模型。` : '连接成功，但这个接口没有返回模型列表，可以手动填写模型名。';
+            } catch (err) {
+                renderHomeModelList([], '');
+                setConnectState('连接失败', 'failed');
+                homeApiStatusText.innerText = '连接失败：' + (err.message || err);
+            }
         }
 
         async function testHomeApiSettings() {
@@ -1357,6 +1555,7 @@ ${userPersona}
         document.getElementById('btn-open-home-settings').addEventListener('click', openHomeSettings);
         document.getElementById('btn-close-home-settings').addEventListener('click', closeHomeSettings);
         document.getElementById('btn-save-home-settings').addEventListener('click', saveHomeSettings);
+        document.getElementById('btn-home-connect-api').addEventListener('click', connectHomeApiSettings);
         document.getElementById('btn-home-test-api').addEventListener('click', testHomeApiSettings);
         homeSettingsModal.addEventListener('click', function(e) {
             if (e.target === homeSettingsModal) closeHomeSettings();
