@@ -280,6 +280,7 @@
         .btn-edit-profile-delete { flex: 1; padding: 12px 0; background: #fff0f0; color: #ff4757; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; }
         .btn-edit-profile-save { flex: 1; padding: 12px 0; background: #12B7F5; color: #fff; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(18,183,245,0.3); }
         .profile-editor-avatar { width: 72px; height: 72px; border-radius: 22px; margin: 0 auto 14px auto; background: linear-gradient(135deg, #ffd1df, #c4e0ff); display: flex; align-items: center; justify-content: center; font-size: 34px; cursor: pointer; background-size: cover; background-position: center; overflow: hidden; }
+        .profile-editor-cover { width: 100%; height: 92px; border-radius: 18px; margin: 0 0 14px 0; background: radial-gradient(circle at 70% 35%, rgba(255,255,255,0.15), transparent 34%), linear-gradient(135deg, #d8362a 0%, #7b1f36 48%, #21151b 100%); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.92); font-size: 13px; font-weight: 800; cursor: pointer; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22); text-shadow: 0 1px 6px rgba(0,0,0,0.3); }
 
 
 
@@ -704,6 +705,258 @@
         .btn-delete-cancel:active, .btn-delete-confirm:active { transform: scale(0.95); }
 
 
+        /* ================= 世界书 App：iOS 小册子 ================= */
+        #screen-worldbook { 
+            background: #f2f2f7;
+            padding-top: 55px; 
+            overflow: hidden;
+        }
+        .worldbook-header {
+            height: 58px;
+            padding: 8px 18px 10px 18px;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: 56px 1fr 56px;
+            align-items: center;
+            background: rgba(242,242,247,0.88);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(60,60,67,0.12);
+            position: relative;
+            z-index: 4;
+        }
+        .worldbook-back, .worldbook-add, .worldbook-save {
+            color: #007aff;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+        }
+        .worldbook-back { text-align: left; font-size: 26px; font-weight: 650; }
+        .worldbook-add { text-align: right; font-size: 28px; line-height: 1; }
+        .worldbook-save { text-align: right; font-size: 15px; font-weight: 700; }
+        .worldbook-title-wrap { text-align: center; min-width: 0; }
+        .worldbook-title { font-size: 17px; font-weight: 750; color: #111; line-height: 1.1; }
+        .worldbook-subtitle { font-size: 10px; color: #8e8e93; margin-top: 3px; font-weight: 600; }
+        .worldbook-book {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 16px 92px 16px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .worldbook-book::-webkit-scrollbar { display: none; }
+        .worldbook-hero {
+            position: relative;
+            border-radius: 18px;
+            padding: 14px 15px;
+            color: #111;
+            background: #fff;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+            overflow: hidden;
+            margin-bottom: 12px;
+            border: 1px solid rgba(60,60,67,0.06);
+        }
+        .worldbook-hero::after { display: none; }
+        .worldbook-hero-kicker { display: none; }
+        .worldbook-hero-title { font-size: 20px; line-height: 1.1; font-weight: 850; letter-spacing: -0.4px; margin-bottom: 6px; }
+        .worldbook-hero-desc { font-size: 12px; line-height: 1.45; color: #8e8e93; width: auto; opacity: 1; }
+        .worldbook-ios-search {
+            height: 38px;
+            border-radius: 12px;
+            background: #e5e5ea;
+            color: #8e8e93;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin: 0 0 14px 0;
+            font-weight: 500;
+        }
+        .worldbook-list { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 0;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+        }
+        .worldbook-card {
+            position: relative;
+            background: #fff;
+            border-radius: 0;
+            padding: 13px 42px 13px 16px;
+            box-sizing: border-box;
+            box-shadow: none;
+            border: none;
+            border-bottom: 1px solid rgba(60,60,67,0.12);
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .worldbook-card:last-child { border-bottom: none; }
+        .worldbook-card:active { background: #f2f2f7; transform: none; opacity: 1; }
+        .worldbook-card::before { display: none; }
+        .worldbook-card::after {
+            content: '›';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #c7c7cc;
+            font-size: 28px;
+            line-height: 1;
+            font-weight: 300;
+        }
+        .worldbook-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+        .worldbook-card-title { font-size: 16px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .worldbook-card-badge { flex-shrink: 0; font-size: 11px; color: #007aff; background: #eef6ff; border-radius: 999px; padding: 3px 7px; font-weight: 700; }
+        .worldbook-card-badge.off { color: #8e8e93; background: #f2f2f7; }
+        .worldbook-card-text { font-size: 12px; line-height: 1.38; color: #8e8e93; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 32px; }
+        .worldbook-card-meta { margin-top: 7px; display: flex; justify-content: space-between; align-items: center; color: #c7c7cc; font-size: 11px; font-weight: 600; }
+        .worldbook-empty {
+            margin-top: 12px;
+            background: #fff;
+            border: none;
+            border-radius: 18px;
+            padding: 28px 22px;
+            text-align: center;
+            color: #8e8e93;
+            font-size: 13px;
+            line-height: 1.55;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+        }
+        .worldbook-empty-icon { font-size: 34px; margin-bottom: 8px; opacity: 0.9; }
+        .worldbook-bottom-nav {
+            position: absolute;
+            left: 16px; right: 16px; bottom: 24px;
+            height: 50px;
+            padding: 4px;
+            box-sizing: border-box;
+            background: rgba(118,118,128,0.16);
+            backdrop-filter: blur(18px);
+            border-radius: 14px;
+            box-shadow: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            z-index: 8;
+        }
+        .worldbook-tab {
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #636366;
+            cursor: pointer;
+        }
+        .worldbook-tab.active {
+            color: #111;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        .worldbook-editor {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 16px 34px 16px;
+            box-sizing: border-box;
+        }
+        .worldbook-editor::-webkit-scrollbar { display: none; }
+        .worldbook-editor-card {
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+        }
+        .worldbook-field-label { font-size: 12px; color: #8e8e93; font-weight: 600; margin: 0 0 7px 14px; }
+        .worldbook-input, .worldbook-textarea {
+            width: 100%;
+            border: none;
+            background: #fff;
+            border-radius: 14px;
+            padding: 13px 14px;
+            box-sizing: border-box;
+            outline: none;
+            font-family: inherit;
+            font-size: 15px;
+            color: #111;
+            margin-bottom: 18px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+        }
+        .worldbook-input:focus, .worldbook-textarea:focus { background: #fff; }
+        .worldbook-textarea { min-height: 390px; resize: none; line-height: 1.5; }
+        .worldbook-switch-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #fff;
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+        }
+        .worldbook-switch-title { font-size: 15px; color: #111; font-weight: 650; }
+        .worldbook-switch-sub { font-size: 12px; color: #8e8e93; margin-top: 3px; }
+
+        .worldbook-role-panel {
+            background: #fff;
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+        }
+        .worldbook-role-panel.hidden { display: none; }
+        .worldbook-role-title { font-size: 15px; color: #111; font-weight: 650; margin-bottom: 4px; }
+        .worldbook-role-sub { font-size: 12px; color: #8e8e93; line-height: 1.35; margin-bottom: 10px; }
+        .worldbook-role-select {
+            width: 100%;
+            height: 38px;
+            border: none;
+            border-radius: 10px;
+            background: #f2f2f7;
+            padding: 0 11px;
+            box-sizing: border-box;
+            font-size: 14px;
+            color: #111;
+            outline: none;
+            font-family: inherit;
+        }
+        .worldbook-card-role {
+            margin-top: 7px;
+            display: inline-flex;
+            align-items: center;
+            max-width: 100%;
+            height: 22px;
+            border-radius: 999px;
+            padding: 0 8px;
+            box-sizing: border-box;
+            background: #f2f2f7;
+            color: #636366;
+            font-size: 11px;
+            font-weight: 650;
+        }
+        .worldbook-delete {
+            height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            background: #fff;
+            color: #ff3b30;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+        }
+        .worldbook-delete:active { background: #f2f2f7; transform: none; opacity: 1; }
+        .worldbook-mode-list .worldbook-add { display: block; }
+        .worldbook-mode-edit .worldbook-add { display: none; }
+        .worldbook-mode-list .worldbook-save { display: none; }
+        .worldbook-mode-edit .worldbook-save { display: block; }
+        .worldbook-mode-list #worldbook-list-view { display: block; }
+        .worldbook-mode-list #worldbook-editor-view { display: none; }
+        .worldbook-mode-edit #worldbook-list-view { display: none; }
+        .worldbook-mode-edit #worldbook-editor-view { display: block; }
+
     </style>
 </head>
 <body>
@@ -740,7 +993,7 @@
                 <div class="memo-square"><div class="memo-title">To-Do List 📌</div><div class="memo-list"><span class="memo-check">✔</span> 捏个人设<br><span class="memo-check">✔</span> 开启新世界<br><span class="memo-check">✔</span> 找角色聊天</div></div>
                 <div class="apps-2x2">
                     <div class="app-item"><div class="app-icon icon-gallery">🖼️</div><div class="app-name">相册</div></div>
-                    <div class="app-item"><div class="app-icon icon-world">🌍</div><div class="app-name">世界书</div></div>
+                    <div class="app-item" id="btn-open-worldbook"><div class="app-icon icon-world">🌍</div><div class="app-name">世界书</div></div>
                     <div class="app-item" id="btn-open-home-settings"><div class="app-icon icon-setting">⚙️</div><div class="app-name">设置</div></div>
                     <div class="app-item" id="btn-open-qq"><div class="app-icon icon-qq">🐧</div><div class="app-name" style="color: #0072ff; font-weight: 800;">QQ</div></div>
                 </div>
@@ -748,6 +1001,61 @@
             <div class="spacer"></div>
             <div class="dock"><div class="app-item"><div class="app-icon">📞</div></div><div class="app-item"><div class="app-icon">🎀</div></div><div class="app-item"><div class="app-icon">💬</div></div><div class="app-item"><div class="app-icon">📷</div></div></div>
         </div>
+
+        <!-- ================= 界面：世界书 App ================= -->
+        <div id="screen-worldbook" class="screen worldbook-mode-list">
+            <div class="worldbook-header">
+                <div class="worldbook-back" id="btn-worldbook-back">‹</div>
+                <div class="worldbook-title-wrap">
+                    <div class="worldbook-title" id="worldbook-header-title">世界书</div>
+                    <div class="worldbook-subtitle" id="worldbook-header-subtitle">Global Lorebook</div>
+                </div>
+                <div class="worldbook-add" id="btn-worldbook-add">＋</div>
+                <div class="worldbook-save" id="btn-worldbook-save">保存</div>
+            </div>
+
+            <div id="worldbook-list-view" class="worldbook-book">
+                <div class="worldbook-hero">
+                    <div class="worldbook-hero-kicker" id="worldbook-hero-kicker">GLOBAL WORLDBOOK</div>
+                    <div class="worldbook-hero-title" id="worldbook-hero-title">全局世界书</div>
+                    <div class="worldbook-hero-desc" id="worldbook-hero-desc">共用规则、气泡格式、基础设定。</div>
+                </div>
+                <div class="worldbook-ios-search">🔍 搜索条目</div>
+                <div class="worldbook-list" id="worldbook-entry-list"></div>
+                <div class="worldbook-empty" id="worldbook-empty">
+                    <div class="worldbook-empty-icon">📖</div>
+                    还没有条目。点右上角「＋」新建一页小册子。
+                </div>
+            </div>
+
+            <div id="worldbook-editor-view" class="worldbook-editor">
+                <div class="worldbook-editor-card">
+                    <div class="worldbook-field-label">条目标题</div>
+                    <input class="worldbook-input" id="worldbook-entry-title" placeholder="例如：深海海豹管理员规则">
+                    <div class="worldbook-switch-row">
+                        <div>
+                            <div class="worldbook-switch-title">启用这个条目</div>
+                            <div class="worldbook-switch-sub">关闭后暂时不加入后续提示词</div>
+                        </div>
+                        <label class="ios-switch"><input type="checkbox" id="worldbook-entry-enabled"><span class="ios-switch-slider"></span></label>
+                    </div>
+                    <div class="worldbook-role-panel hidden" id="worldbook-role-panel">
+                        <div class="worldbook-role-title">关联角色</div>
+                        <div class="worldbook-role-sub">角色世界书条目可以绑定到指定 Char，后续拼 prompt 时只给相关角色使用。</div>
+                        <select class="worldbook-role-select" id="worldbook-entry-role-select"></select>
+                    </div>
+                    <div class="worldbook-field-label">条目内容</div>
+                    <textarea class="worldbook-textarea" id="worldbook-entry-content" placeholder="把规则写在这里。以后哥哥再帮你把启用的条目拼进 AI prompt。"></textarea>
+                    <div class="worldbook-delete" id="btn-worldbook-delete">删除这个世界书条目</div>
+                </div>
+            </div>
+
+            <div class="worldbook-bottom-nav" id="worldbook-bottom-nav">
+                <div class="worldbook-tab active" id="worldbook-tab-global">🌍 全局世界书</div>
+                <div class="worldbook-tab" id="worldbook-tab-role">👥 角色世界书</div>
+            </div>
+        </div>
+
 
         <!-- ================= 界面2：QQ消息列表 ================= -->
         <div id="screen-qq" class="screen">
@@ -1045,6 +1353,8 @@
                     <div class="settings-title" id="user-profile-modal-title">编辑身份</div>
                     <div class="settings-close" id="btn-close-user-profile-modal">×</div>
                 </div>
+                <input type="file" id="user-profile-cover-input" accept="image/*" style="display:none;">
+                <div class="profile-editor-cover" id="user-profile-cover-preview" title="点击上传个人页背景">点击上传个人页背景</div>
                 <input type="file" id="user-profile-avatar-input" accept="image/*" style="display:none;">
                 <div class="profile-editor-avatar" id="user-profile-avatar-preview" title="点击上传头像">👧</div>
                 <div class="settings-group">
@@ -1183,6 +1493,13 @@
         });
         // 2. 桌面点QQ
         document.getElementById('btn-open-qq').addEventListener('click', () => showScreen('screen-qq'));
+        document.getElementById('btn-open-worldbook').addEventListener('click', openWorldbookApp);
+        document.getElementById('btn-worldbook-back').addEventListener('click', handleWorldbookBack);
+        document.getElementById('btn-worldbook-add').addEventListener('click', createWorldbookEntry);
+        document.getElementById('btn-worldbook-save').addEventListener('click', saveWorldbookEditor);
+        document.getElementById('btn-worldbook-delete').addEventListener('click', deleteWorldbookEntry);
+        document.getElementById('worldbook-tab-global').addEventListener('click', () => switchWorldbookScope('global'));
+        document.getElementById('worldbook-tab-role').addEventListener('click', () => switchWorldbookScope('role'));
         // 3. 聊天页点返回
         document.getElementById('btn-chat-back').addEventListener('click', () => showScreen('screen-qq'));
         document.getElementById('btn-open-user-profiles').addEventListener('click', openSelfMenuScreen);
@@ -1205,6 +1522,224 @@
         document.getElementById('btn-add-user-profile').addEventListener('click', () => openUserProfileEditor(''));
 
 
+        // --------- 世界书 App：全局/角色条目册 ---------
+        function saveWorldbookEntries() {
+            localStorage.setItem(WORLDBOOK_KEY, JSON.stringify(worldbookEntries));
+        }
+
+        function getWorldbookList() {
+            if (!worldbookEntries[worldbookScope]) worldbookEntries[worldbookScope] = [];
+            return worldbookEntries[worldbookScope];
+        }
+
+
+        function ensureDemoSealCharacter() {
+            const hasSeal = friends.some(friend => friend.id === 'friend_demo_seal' || friend.name === '海豹');
+            if (hasSeal) return;
+            friends.unshift({
+                id: 'friend_demo_seal',
+                name: '海豹',
+                remark: '',
+                persona: '深海 QQ 服务器里的海豹管理员，负责看守虚拟手机聊天气泡。性格认真、软乎乎，偶尔会用海豹式吐槽提醒 user 好好填写规则。',
+                userPersona: '',
+                userName: '',
+                userNickname: '',
+                userProfileId: defaultUserProfileId || '',
+                avatar: '',
+                emoji: '🦭',
+                bg: 'linear-gradient(135deg, #a1c4fd, #c2e9fb)'
+            });
+            saveFriends();
+        }
+
+        function ensureInitialWorldbookEntries() {
+            if (!worldbookEntries.global) worldbookEntries.global = [];
+            if (!worldbookEntries.role) worldbookEntries.role = [];
+
+            const hasInitial = worldbookEntries.global.some(entry => entry.id === 'global_initial_settings');
+            if (!hasInitial) {
+                worldbookEntries.global.unshift({
+                    id: 'global_initial_settings',
+                    title: '初始设定',
+                    content: '',
+                    enabled: true,
+                    locked: true,
+                    createdAt: Date.now()
+                });
+            }
+
+            const hasSealRolebook = worldbookEntries.role.some(entry => entry.id === 'role_demo_seal_worldbook');
+            if (!hasSealRolebook) {
+                worldbookEntries.role.unshift({
+                    id: 'role_demo_seal_worldbook',
+                    title: '海豹 · 角色规则',
+                    roleId: 'friend_demo_seal',
+                    content: '这里可以写海豹这个 Char 的专属设定、说话习惯、对 user 的认知、关系阶段、禁忌和隐藏记忆。',
+                    enabled: true,
+                    createdAt: Date.now()
+                });
+            }
+            saveWorldbookEntries();
+        }
+
+        function getWorldbookRoleName(roleId) {
+            if (!roleId) return '未关联角色';
+            const role = getFriendById(roleId);
+            return role ? getDisplayName(role) : '角色已不存在';
+        }
+
+        function renderWorldbookRoleSelect(selectedId) {
+            const select = document.getElementById('worldbook-entry-role-select');
+            if (!select) return;
+            select.innerHTML = '';
+            const none = document.createElement('option');
+            none.value = '';
+            none.textContent = '不关联角色';
+            select.appendChild(none);
+            friends.forEach(friend => {
+                const opt = document.createElement('option');
+                opt.value = friend.id;
+                opt.textContent = getDisplayName(friend);
+                select.appendChild(opt);
+            });
+            select.value = selectedId || '';
+        }
+
+        function getWorldbookCopy(text) {
+            const isGlobal = worldbookScope === 'global';
+            return {
+                headerTitle: isGlobal ? '全局世界书' : '角色世界书',
+                headerSub: isGlobal ? 'Global Lorebook' : 'Character Lorebook',
+                kicker: isGlobal ? 'GLOBAL WORLDBOOK' : 'CHARACTER WORLDBOOK',
+                title: isGlobal ? '全局世界书' : '角色世界书',
+                desc: isGlobal ? '初始规则、气泡格式和通用设定。' : '给角色绑定专属规则、关系认知和说话习惯。',
+                empty: isGlobal ? '还没有全局条目。点右上角「＋」新建一条。' : '还没有角色条目。点右上角「＋」新建一条。'
+            };
+        }
+
+        function openWorldbookApp() {
+            worldbookScope = 'global';
+            editingWorldbookEntryId = '';
+            renderWorldbookList();
+            showScreen('screen-worldbook');
+        }
+
+        function setWorldbookMode(mode) {
+            const screen = document.getElementById('screen-worldbook');
+            if (!screen) return;
+            screen.classList.toggle('worldbook-mode-edit', mode === 'edit');
+            screen.classList.toggle('worldbook-mode-list', mode !== 'edit');
+            document.getElementById('worldbook-bottom-nav').style.display = mode === 'edit' ? 'none' : 'grid';
+        }
+
+        function switchWorldbookScope(scope) {
+            worldbookScope = scope;
+            editingWorldbookEntryId = '';
+            renderWorldbookList();
+        }
+
+        function renderWorldbookList() {
+            setWorldbookMode('list');
+            const copy = getWorldbookCopy();
+            document.getElementById('worldbook-header-title').innerText = copy.headerTitle;
+            document.getElementById('worldbook-header-subtitle').innerText = copy.headerSub;
+            document.getElementById('worldbook-hero-kicker').innerText = copy.kicker;
+            document.getElementById('worldbook-hero-title').innerText = copy.title;
+            document.getElementById('worldbook-hero-desc').innerText = copy.desc;
+            document.getElementById('worldbook-tab-global').classList.toggle('active', worldbookScope === 'global');
+            document.getElementById('worldbook-tab-role').classList.toggle('active', worldbookScope === 'role');
+
+            const listBox = document.getElementById('worldbook-entry-list');
+            const emptyBox = document.getElementById('worldbook-empty');
+            const list = getWorldbookList();
+            listBox.innerHTML = '';
+            emptyBox.innerHTML = `<div class="worldbook-empty-icon">📖</div>${copy.empty}`;
+            emptyBox.style.display = list.length ? 'none' : 'block';
+
+            list.forEach((entry, index) => {
+                const card = document.createElement('div');
+                card.className = 'worldbook-card';
+                const title = entry.title || `未命名条目 ${index + 1}`;
+                const content = entry.content || '还没有写内容，点进去补完这页。';
+                const roleTag = worldbookScope === 'role' ? `<div class="worldbook-card-role">关联：${escapeHTML(getWorldbookRoleName(entry.roleId))}</div>` : '';
+                card.innerHTML = `
+                    <div class="worldbook-card-top">
+                        <div class="worldbook-card-title">${escapeHTML(title)}</div>
+                        <div class="worldbook-card-badge ${entry.enabled === false ? 'off' : ''}">${entry.enabled === false ? '停用' : '启用'}</div>
+                    </div>
+                    <div class="worldbook-card-text">${escapeHTML(content)}</div>
+                    ${roleTag}
+                    <div class="worldbook-card-meta"><span>${worldbookScope === 'global' ? '全局规则' : '角色规则'}</span><span>第 ${index + 1} 页 ›</span></div>
+                `;
+                card.addEventListener('click', () => openWorldbookEditor(entry.id));
+                listBox.appendChild(card);
+            });
+        }
+
+        function openWorldbookEditor(entryId) {
+            const list = getWorldbookList();
+            const entry = list.find(item => item.id === entryId);
+            if (!entry) return;
+            editingWorldbookEntryId = entryId;
+            document.getElementById('worldbook-header-title').innerText = '编辑条目';
+            document.getElementById('worldbook-header-subtitle').innerText = worldbookScope === 'global' ? 'Global Entry' : 'Character Entry';
+            document.getElementById('worldbook-entry-title').value = entry.title || '';
+            document.getElementById('worldbook-entry-content').value = entry.content || '';
+            document.getElementById('worldbook-entry-enabled').checked = entry.enabled !== false;
+            const rolePanel = document.getElementById('worldbook-role-panel');
+            if (rolePanel) rolePanel.classList.toggle('hidden', worldbookScope !== 'role');
+            renderWorldbookRoleSelect(entry.roleId || '');
+            setWorldbookMode('edit');
+        }
+
+        function createWorldbookEntry() {
+            const list = getWorldbookList();
+            const entry = {
+                id: 'wb_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                title: worldbookScope === 'global' ? '新的全局条目' : '新的角色条目',
+                content: '',
+                roleId: worldbookScope === 'role' ? ((friends[0] && friends[0].id) || '') : '',
+                enabled: true,
+                createdAt: Date.now()
+            };
+            list.unshift(entry);
+            saveWorldbookEntries();
+            renderWorldbookList();
+            openWorldbookEditor(entry.id);
+        }
+
+        function saveWorldbookEditor() {
+            const list = getWorldbookList();
+            const entry = list.find(item => item.id === editingWorldbookEntryId);
+            if (!entry) return;
+            entry.title = document.getElementById('worldbook-entry-title').value.trim() || '未命名条目';
+            entry.content = document.getElementById('worldbook-entry-content').value.trim();
+            if (worldbookScope === 'role') entry.roleId = document.getElementById('worldbook-entry-role-select').value || '';
+            entry.enabled = document.getElementById('worldbook-entry-enabled').checked;
+            entry.updatedAt = Date.now();
+            saveWorldbookEntries();
+            renderWorldbookList();
+        }
+
+        function deleteWorldbookEntry() {
+            if (!editingWorldbookEntryId) return;
+            if (!confirm('确定要删除这个世界书条目吗？删除后不能恢复。')) return;
+            worldbookEntries[worldbookScope] = getWorldbookList().filter(item => item.id !== editingWorldbookEntryId);
+            editingWorldbookEntryId = '';
+            saveWorldbookEntries();
+            renderWorldbookList();
+        }
+
+        function handleWorldbookBack() {
+            const screen = document.getElementById('screen-worldbook');
+            if (screen && screen.classList.contains('worldbook-mode-edit')) {
+                renderWorldbookList();
+            } else {
+                showScreen('screen-home');
+            }
+        }
+
+
         // --------- QQ 业务逻辑：添加好友 ---------
         const addModal = document.getElementById('add-friend-modal');
         const avatarInput = document.getElementById('avatar-input');
@@ -1222,6 +1757,7 @@
         const API_SETTINGS_KEY = 'airp_phone_api_settings_v1';
         const USER_PROFILES_KEY = 'airp_phone_user_profiles_v1';
         const DEFAULT_USER_PROFILE_KEY = 'airp_phone_default_user_profile_v1';
+        const WORLDBOOK_KEY = 'airp_phone_worldbook_entries_v2';
 
         let friends = JSON.parse(localStorage.getItem(FRIENDS_KEY) || '[]');
         let chatHistories = JSON.parse(localStorage.getItem(CHATS_KEY) || '{}');
@@ -1231,6 +1767,11 @@
         let defaultUserProfileId = localStorage.getItem(DEFAULT_USER_PROFILE_KEY) || '';
         let currentChatId = '';
         let currentChatName = '';
+        let worldbookEntries = JSON.parse(localStorage.getItem(WORLDBOOK_KEY) || '{"global":[],"role":[]}');
+        let worldbookScope = 'global';
+        let editingWorldbookEntryId = '';
+        if (!worldbookEntries.global) worldbookEntries.global = [];
+        if (!worldbookEntries.role) worldbookEntries.role = [];
 
         function saveFriends() {
             localStorage.setItem(FRIENDS_KEY, JSON.stringify(friends));
@@ -1273,13 +1814,14 @@
             if (!profile.qqNumber || profile.qqNumber === '10000001') profile.qqNumber = generateFakeQQNumber();
             // 这里的 qqid 字段现在表示 QQ 昵称，不再存 QQ 号。旧版本如果保存过纯数字，会自动替换掉，避免暴露真实号码。
             if (!profile.qqid || /^\d{5,}$/.test(String(profile.qqid))) profile.qqid = profile.name || '宇宙海豹喵';
+            if (profile.cover === undefined) profile.cover = '';
             return profile;
         }
 
         function ensureDefaultUserProfile() {
             userProfiles.forEach(normalizeUserProfile);
             if (!userProfiles.length) {
-                userProfiles.push({ id: 'user_' + Date.now(), name: 'User', nickname: '', qqid: '宇宙海豹喵', qqNumber: generateFakeQQNumber(), persona: '', signature: '', avatar: '', emoji: '👧' });
+                userProfiles.push({ id: 'user_' + Date.now(), name: 'User', nickname: '', qqid: '宇宙海豹喵', qqNumber: generateFakeQQNumber(), persona: '', signature: '', avatar: '', cover: '', emoji: '👧' });
                 defaultUserProfileId = userProfiles[0].id;
                 saveUserProfiles();
             }
@@ -1729,6 +2271,8 @@ ${userPersona}
         const currentUserProfileSub = document.getElementById('current-user-profile-sub');
         const userProfileModal = document.getElementById('user-profile-modal');
         const userProfileModalTitle = document.getElementById('user-profile-modal-title');
+        const userProfileCoverInput = document.getElementById('user-profile-cover-input');
+        const userProfileCoverPreview = document.getElementById('user-profile-cover-preview');
         const userProfileAvatarInput = document.getElementById('user-profile-avatar-input');
         const userProfileAvatarPreview = document.getElementById('user-profile-avatar-preview');
         const userProfileNameInput = document.getElementById('user-profile-name-input');
@@ -1739,6 +2283,7 @@ ${userPersona}
         const deleteUserProfileBtn = document.getElementById('btn-delete-user-profile');
         let editingUserProfileId = '';
         let editingUserProfileAvatar = '';
+        let editingUserProfileCover = '';
         let userProfileReturnScreen = 'screen-profile-card';
         const selfMenuAvatar = document.getElementById('self-menu-avatar');
         const selfMenuName = document.getElementById('self-menu-name');
@@ -1770,6 +2315,18 @@ ${userPersona}
             }
         }
 
+        function setProfileCoverElement(el, profile, showPrompt = false) {
+            if (!el) return;
+            const cover = profile && profile.cover ? profile.cover : '';
+            if (cover) {
+                el.style.background = `linear-gradient(to bottom, rgba(0,0,0,0.06), rgba(0,0,0,0.24)), url(${cover}) center / cover no-repeat`;
+                if (showPrompt) el.textContent = '';
+            } else {
+                el.style.background = 'radial-gradient(circle at 70% 35%, rgba(255,255,255,0.15), transparent 34%), linear-gradient(135deg, #d8362a 0%, #7b1f36 48%, #21151b 100%)';
+                if (showPrompt) el.textContent = '点击上传个人页背景';
+            }
+        }
+
         function refreshUserProfilePage() {
             ensureDefaultUserProfile();
             const current = normalizeUserProfile(getUserProfileById(defaultUserProfileId));
@@ -1779,6 +2336,8 @@ ${userPersona}
             setProfileAvatarElement(document.getElementById('contacts-self-avatar'), current);
             setProfileAvatarElement(selfMenuAvatar, current);
             setProfileAvatarElement(selfCardAvatar, current);
+            setProfileCoverElement(document.querySelector('#screen-profile-menu .self-cover'), current);
+            setProfileCoverElement(document.querySelector('#screen-profile-card .profile-card-cover'), current);
             const profileName = (current.name || 'User') + (current.nickname ? ` · ${current.nickname}` : '');
             const qqDisplayName = current.qqid || current.name || '宇宙海豹喵';
             const signatureText = current.signature || '编辑个签，展示我的独特态度。';
@@ -1895,8 +2454,9 @@ ${userPersona}
         function openUserProfileEditor(profileId = '') {
             ensureDefaultUserProfile();
             editingUserProfileId = profileId;
-            const profile = profileId ? normalizeUserProfile(getUserProfileById(profileId)) : { id: '', name: '', nickname: '', qqid: '', qqNumber: generateFakeQQNumber(), persona: '', signature: '', avatar: '', emoji: '👧' };
+            const profile = profileId ? normalizeUserProfile(getUserProfileById(profileId)) : { id: '', name: '', nickname: '', qqid: '', qqNumber: generateFakeQQNumber(), persona: '', signature: '', avatar: '', cover: '', emoji: '👧' };
             editingUserProfileAvatar = profile.avatar || '';
+            editingUserProfileCover = profile.cover || '';
             userProfileModalTitle.innerText = profileId ? '编辑身份' : '添加身份';
             userProfileNameInput.value = profile.name || '';
             userProfileNicknameInput.value = profile.nickname || '';
@@ -1905,6 +2465,7 @@ ${userPersona}
             userProfileDefaultInput.checked = profileId ? profile.id === defaultUserProfileId : !userProfiles.length;
             deleteUserProfileBtn.style.display = profileId ? 'block' : 'none';
             setProfileAvatarElement(userProfileAvatarPreview, profile);
+            setProfileCoverElement(userProfileCoverPreview, profile, true);
             userProfileModal.style.display = 'flex';
         }
 
@@ -1923,6 +2484,7 @@ ${userPersona}
                 persona: userProfilePersonaInput.value.trim(),
                 signature: editingUserProfileId ? ((getUserProfileById(editingUserProfileId) || {}).signature || '') : '',
                 avatar: editingUserProfileAvatar,
+                cover: editingUserProfileCover,
                 emoji: '👧'
             };
             if (editingUserProfileId) {
@@ -2324,6 +2886,18 @@ ${userPersona}
         document.getElementById('btn-close-user-profile-modal').addEventListener('click', closeUserProfileEditor);
         document.getElementById('btn-save-user-profile').addEventListener('click', saveEditingUserProfile);
         deleteUserProfileBtn.addEventListener('click', deleteEditingUserProfile);
+        userProfileCoverPreview.addEventListener('click', () => userProfileCoverInput.click());
+        userProfileCoverInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    editingUserProfileCover = event.target.result;
+                    setProfileCoverElement(userProfileCoverPreview, { cover: editingUserProfileCover }, true);
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
         userProfileAvatarPreview.addEventListener('click', () => userProfileAvatarInput.click());
         userProfileAvatarInput.addEventListener('change', (e) => {
             if (e.target.files[0]) {
@@ -2339,6 +2913,10 @@ ${userPersona}
         userProfileModal.addEventListener('click', function(e) {
             if (e.target === userProfileModal) closeUserProfileEditor();
         });
+
+        ensureDefaultUserProfile();
+        ensureDemoSealCharacter();
+        ensureInitialWorldbookEntries();
 
         refreshUserProfilePage();
 
