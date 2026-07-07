@@ -300,16 +300,18 @@
         .profile-menu-bottom-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #111; font-size: 14px; font-weight: 700; cursor: pointer; }
         .profile-menu-bottom-icon { font-size: 27px; }
 
-        .profile-card-cover { height: 315px; padding: 54px 26px 0 26px; box-sizing: border-box; background: radial-gradient(circle at 70% 35%, rgba(255,255,255,0.14), transparent 36%), linear-gradient(135deg, #d8362a 0%, #7b1f36 50%, #20161a 100%); position: relative; color: #fff; }
-        .profile-card-panel { margin-top: -55px; background: #fff; border-radius: 28px 28px 0 0; min-height: calc(100% - 260px); position: relative; z-index: 2; padding: 38px 18px 104px 18px; box-sizing: border-box; }
-        .profile-card-avatar { position: absolute; left: 26px; top: -48px; width: 92px; height: 92px; border-radius: 28px; background: linear-gradient(135deg, #ffd1df, #c4e0ff); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; font-size: 44px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); border: 4px solid #fff; }
-        .profile-card-name-row { margin-left: 118px; display: flex; align-items: center; justify-content: space-between; }
-        .profile-card-name { color: #ff4b32; font-size: 23px; font-weight: 900; }
-        .profile-card-like { color: #1677ff; font-size: 13px; font-weight: 900; }
-        .profile-card-id { margin-left: 118px; margin-top: 4px; color: #999; font-size: 13px; }
-        .profile-card-bio { margin-top: 28px; color: #8e8e93; font-size: 16px; line-height: 1.4; }
-        .profile-card-complete { margin: 18px -18px 0 -18px; padding: 16px 20px; background: #f2f2f2; display: flex; justify-content: space-between; align-items: center; color: #222; font-size: 16px; font-weight: 700; }
-        .profile-card-section { margin-top: 24px; }
+        .profile-card-cover { height: 285px; padding: 54px 26px 0 26px; box-sizing: border-box; background: radial-gradient(circle at 70% 35%, rgba(255,255,255,0.14), transparent 36%), linear-gradient(135deg, #d8362a 0%, #7b1f36 50%, #20161a 100%); position: relative; color: #fff; }
+        .profile-card-panel { margin-top: -34px; background: #fff; border-radius: 28px 28px 0 0; min-height: calc(100% - 251px); position: relative; z-index: 2; padding: 30px 18px 104px 18px; box-sizing: border-box; }
+        .profile-card-head { display: flex; align-items: center; gap: 16px; }
+        .profile-card-avatar { width: 92px; height: 92px; border-radius: 28px; background: linear-gradient(135deg, #ffd1df, #c4e0ff); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; font-size: 44px; box-shadow: 0 8px 24px rgba(0,0,0,0.10); border: 4px solid #fff; flex-shrink: 0; }
+        .profile-card-info { flex: 1; min-width: 0; }
+        .profile-card-name-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .profile-card-name { color: #ff4b32; font-size: 23px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .profile-card-like { color: #1677ff; font-size: 13px; font-weight: 900; flex-shrink: 0; }
+        .profile-card-id { margin-top: 5px; color: #999; font-size: 13px; }
+        .profile-card-bio { margin-top: 22px; color: #8e8e93; font-size: 16px; line-height: 1.4; cursor: pointer; padding: 8px 0; }
+        .profile-card-bio:active { opacity: 0.6; }
+        .profile-card-section { margin-top: 18px; }
         .profile-card-section-title { display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: 800; color: #111; margin-bottom: 14px; }
         .profile-card-section-title span { color: #1677ff; font-size: 13px; font-weight: 700; }
         .profile-card-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
@@ -777,14 +779,17 @@
                 </div>
             </div>
             <div class="profile-card-panel">
-                <div class="profile-card-avatar" id="self-card-avatar">👧</div>
-                <div class="profile-card-name-row">
-                    <div class="profile-card-name" id="self-card-name">User</div>
-                    <div class="profile-card-like">👍 +10</div>
+                <div class="profile-card-head">
+                    <div class="profile-card-avatar" id="self-card-avatar">👧</div>
+                    <div class="profile-card-info">
+                        <div class="profile-card-name-row">
+                            <div class="profile-card-name" id="self-card-name">User</div>
+                            <div class="profile-card-like">👍 +10</div>
+                        </div>
+                        <div class="profile-card-id" id="self-card-id">QQ：3446843157</div>
+                    </div>
                 </div>
-                <div class="profile-card-id" id="self-card-id">QQ：3446843157</div>
                 <div class="profile-card-bio" id="self-card-bio">编辑个签，展示我的独特态度。</div>
-                <div class="profile-card-complete"><span>▣ 资料完成度80%</span><span style="color:#1677ff;">去完善 ›</span></div>
                 <div class="profile-card-section">
                     <div class="profile-card-section-title">☆ QQ空间 <span>分享新鲜事 ›</span></div>
                     <div class="profile-card-thumbs"><div class="profile-card-thumb">0:19</div><div class="profile-card-thumb">🧋</div><div class="profile-card-thumb">💬</div><div class="profile-card-thumb">🥭</div></div>
@@ -1005,6 +1010,24 @@
             </div>
         </div>
 
+        <!-- 弹窗：编辑个签 -->
+        <div class="modal-overlay" id="signature-modal">
+            <div class="modal-box settings-modal-box">
+                <div class="settings-title-row">
+                    <div class="settings-title">编辑个签</div>
+                    <div class="settings-close" id="btn-close-signature-modal">×</div>
+                </div>
+                <div class="settings-group">
+                    <div class="settings-label">个签</div>
+                    <textarea class="settings-textarea" id="signature-input" placeholder="例如：编辑个签，展示我的独特态度。"></textarea>
+                </div>
+                <div class="settings-actions">
+                    <div class="btn-cancel" id="btn-cancel-signature">取消</div>
+                    <div class="btn-confirm" id="btn-save-signature">保存个签</div>
+                </div>
+            </div>
+        </div>
+
         <!-- 弹窗：删除角色确认 -->
         <div class="modal-overlay" id="delete-confirm-modal">
             <div class="modal-box delete-confirm-box">
@@ -1089,6 +1112,11 @@
         document.getElementById('btn-self-menu-back').addEventListener('click', () => showScreen('screen-qq'));
         document.getElementById('btn-open-profile-card').addEventListener('click', openSelfProfileCard);
         document.getElementById('btn-profile-card-back').addEventListener('click', openSelfMenuScreen);
+        document.getElementById('self-card-bio').addEventListener('click', openSignatureEditor);
+        document.getElementById('self-menu-sign').addEventListener('click', function(e) { e.stopPropagation(); openSignatureEditor(); });
+        document.getElementById('btn-close-signature-modal').addEventListener('click', closeSignatureEditor);
+        document.getElementById('btn-cancel-signature').addEventListener('click', closeSignatureEditor);
+        document.getElementById('btn-save-signature').addEventListener('click', saveSignatureEditor);
         document.getElementById('btn-self-menu-settings').addEventListener('click', () => openUserProfilesScreen('screen-profile-menu'));
         document.getElementById('btn-open-user-profiles-from-menu').addEventListener('click', () => openUserProfilesScreen('screen-profile-menu'));
         document.getElementById('btn-open-user-profiles-from-card').addEventListener('click', () => openUserProfilesScreen('screen-profile-card'));
@@ -1155,7 +1183,7 @@
 
         function ensureDefaultUserProfile() {
             if (!userProfiles.length) {
-                userProfiles.push({ id: 'user_' + Date.now(), name: 'User', nickname: '', persona: '', avatar: '', emoji: '👧' });
+                userProfiles.push({ id: 'user_' + Date.now(), name: 'User', nickname: '', persona: '', signature: '', avatar: '', emoji: '👧' });
                 defaultUserProfileId = userProfiles[0].id;
                 saveUserProfiles();
             }
@@ -1582,6 +1610,8 @@ ${userPersona}
         const selfCardName = document.getElementById('self-card-name');
         const selfCardId = document.getElementById('self-card-id');
         const selfCardBio = document.getElementById('self-card-bio');
+        const signatureModal = document.getElementById('signature-modal');
+        const signatureInput = document.getElementById('signature-input');
 
         function setProfileAvatarElement(el, profile) {
             if (!el) return;
@@ -1597,7 +1627,8 @@ ${userPersona}
             setProfileAvatarElement(selfMenuAvatar, current);
             setProfileAvatarElement(selfCardAvatar, current);
             const profileName = (current.name || 'User') + (current.nickname ? ` · ${current.nickname}` : '');
-            const profileBio = current.persona ? current.persona.slice(0, 58) + (current.persona.length > 58 ? '…' : '') : '编辑个签，展示我的独特态度。';
+            const signatureText = current.signature || '编辑个签，展示我的独特态度。';
+            const profileBio = signatureText.slice(0, 58) + (signatureText.length > 58 ? '…' : '');
             currentUserProfileName.innerText = profileName;
             currentUserProfileSub.innerText = current.persona ? current.persona.slice(0, 42) + (current.persona.length > 42 ? '…' : '') : '默认身份会显示在 QQ 个人页，也可以绑定给不同角色。';
             if (selfMenuName) selfMenuName.innerText = profileName;
@@ -1628,6 +1659,28 @@ ${userPersona}
             });
         }
 
+        function openSignatureEditor() {
+            ensureDefaultUserProfile();
+            const current = getUserProfileById(defaultUserProfileId);
+            signatureInput.value = current && current.signature ? current.signature : '';
+            signatureModal.style.display = 'flex';
+        }
+
+        function closeSignatureEditor() {
+            signatureModal.style.display = 'none';
+        }
+
+        function saveSignatureEditor() {
+            ensureDefaultUserProfile();
+            const current = getUserProfileById(defaultUserProfileId);
+            if (current) {
+                current.signature = signatureInput.value.trim();
+                saveUserProfiles();
+                refreshUserProfilePage();
+            }
+            closeSignatureEditor();
+        }
+
         function openSelfMenuScreen() {
             refreshUserProfilePage();
             showScreen('screen-profile-menu');
@@ -1647,7 +1700,7 @@ ${userPersona}
         function openUserProfileEditor(profileId = '') {
             ensureDefaultUserProfile();
             editingUserProfileId = profileId;
-            const profile = profileId ? getUserProfileById(profileId) : { id: '', name: '', nickname: '', persona: '', avatar: '', emoji: '👧' };
+            const profile = profileId ? getUserProfileById(profileId) : { id: '', name: '', nickname: '', persona: '', signature: '', avatar: '', emoji: '👧' };
             editingUserProfileAvatar = profile.avatar || '';
             userProfileModalTitle.innerText = profileId ? '编辑身份' : '添加身份';
             userProfileNameInput.value = profile.name || '';
@@ -1670,6 +1723,7 @@ ${userPersona}
                 name,
                 nickname: userProfileNicknameInput.value.trim(),
                 persona: userProfilePersonaInput.value.trim(),
+                signature: editingUserProfileId ? ((getUserProfileById(editingUserProfileId) || {}).signature || '') : '',
                 avatar: editingUserProfileAvatar,
                 emoji: '👧'
             };
