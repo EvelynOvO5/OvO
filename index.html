@@ -2081,16 +2081,27 @@
         if (!worldbookEntries.global) worldbookEntries.global = [];
         if (!worldbookEntries.role) worldbookEntries.role = [];
 
+        function safeLocalStorageSet(key, value, label = '数据') {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (err) {
+                console.error(`${label}保存失败`, err);
+                showPhoneToast(`${label}保存失败，图片可能太大`);
+                return false;
+            }
+        }
+
         function saveFriends() {
-            localStorage.setItem(FRIENDS_KEY, JSON.stringify(friends));
+            return safeLocalStorageSet(FRIENDS_KEY, JSON.stringify(friends), '角色');
         }
 
         function saveChats() {
-            localStorage.setItem(CHATS_KEY, JSON.stringify(chatHistories));
+            return safeLocalStorageSet(CHATS_KEY, JSON.stringify(chatHistories), '聊天记录');
         }
 
         function saveChatSettings() {
-            localStorage.setItem(CHAT_SETTINGS_KEY, JSON.stringify(chatSettings));
+            return safeLocalStorageSet(CHAT_SETTINGS_KEY, JSON.stringify(chatSettings), '角色设置');
         }
 
         function getApiSettings() {
@@ -2105,12 +2116,50 @@
         }
 
         function saveApiSettings() {
-            localStorage.setItem(API_SETTINGS_KEY, JSON.stringify(apiSettings));
+            return safeLocalStorageSet(API_SETTINGS_KEY, JSON.stringify(apiSettings), 'API设置');
         }
 
         function saveUserProfiles() {
-            localStorage.setItem(USER_PROFILES_KEY, JSON.stringify(userProfiles));
-            localStorage.setItem(DEFAULT_USER_PROFILE_KEY, defaultUserProfileId || '');
+            const ok1 = safeLocalStorageSet(USER_PROFILES_KEY, JSON.stringify(userProfiles), 'User身份');
+            const ok2 = safeLocalStorageSet(DEFAULT_USER_PROFILE_KEY, defaultUserProfileId || '', '默认User');
+            return ok1 && ok2;
+        }
+
+        function readImageFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = event => resolve(event.target.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function compressImageFile(file, maxSide = 720, quality = 0.82) {
+            if (!file || !file.type || !file.type.startsWith('image/')) return '';
+            if (file.type === 'image/gif' || file.type === 'image/svg+xml') return readImageFileAsDataURL(file);
+            const originalDataUrl = await readImageFileAsDataURL(file);
+            return new Promise(resolve => {
+                const img = new Image();
+                img.onload = () => {
+                    try {
+                        const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+                        const width = Math.max(1, Math.round(img.width * scale));
+                        const height = Math.max(1, Math.round(img.height * scale));
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const compressed = canvas.toDataURL('image/jpeg', quality);
+                        resolve(compressed.length < originalDataUrl.length ? compressed : originalDataUrl);
+                    } catch (err) {
+                        console.warn('图片压缩失败，使用原图', err);
+                        resolve(originalDataUrl);
+                    }
+                };
+                img.onerror = () => resolve(originalDataUrl);
+                img.src = originalDataUrl;
+            });
         }
 
         function generateFakeQQNumber() {
@@ -2249,16 +2298,13 @@
         document.getElementById('btn-cancel-add').addEventListener('click', () => addModal.style.display = 'none');
 
         // 读取图片
-        avatarInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    currentUploadedAvatar = event.target.result;
-                    avatarPreview.style.backgroundImage = `url(${currentUploadedAvatar})`;
-                    avatarPreview.innerHTML = ''; avatarPreview.style.border = 'none';
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            }
+        avatarInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            showPhoneToast('正在处理头像…');
+            currentUploadedAvatar = await compressImageFile(file, 520, 0.82);
+            avatarPreview.style.backgroundImage = `url(${currentUploadedAvatar})`;
+            avatarPreview.innerHTML = ''; avatarPreview.style.border = 'none';
         });
 
         // 确定添加并生成列表项，同时保存到浏览器本地
@@ -2291,7 +2337,14 @@
             };
 
             friends.push(friend);
-            saveFriends();
+            if (!chatHistories[friend.id]) chatHistories[friend.id] = [];
+            if (!saveFriends()) {
+                friends = friends.filter(item => item.id !== friend.id);
+                delete chatHistories[friend.id];
+                flashButtonFeedback(confirmAddBtn, '保存失败', '确定添加', 'processing');
+                return;
+            }
+            saveChats();
             refreshMessageList();
             refreshContactList();
             flashButtonFeedback(confirmAddBtn, '已添加', '确定添加');
@@ -2505,26 +2558,34 @@
         }
 
         // 打开聊天室的函数
-        function openChatRoom(id, name, avatarURL, emoji = '', bg = '') {
-            showScreen('screen-chat');
-            currentChatId = id;
-            const profile = getChatProfile(id) || { id, name, avatar: avatarURL, emoji, bg };
-            currentChatName = profile.name || name;
-            document.getElementById('chat-header-name').innerText = getDisplayName(profile);
+        function openChatRoom(id, name = '', avatarURL = '', emoji = '', bg = '') {
+            const profile = getChatProfile(id);
+            if (!profile) {
+                showPhoneToast('这个角色已经不存在了');
+                refreshMessageList();
+                refreshContactList();
+                showScreen('screen-contacts');
+                return;
+            }
+
+            currentChatId = profile.id;
+            currentChatName = profile.name || name || '角色名字';
             currentChatAvatarURL = profile.avatar || avatarURL || '';
-            currentChatEmoji = profile.emoji || emoji || '';
+            currentChatEmoji = profile.emoji || emoji || '🐧';
             currentChatBg = profile.bg || bg || 'linear-gradient(135deg, #12B7F5, #0098EA)';
+            document.getElementById('chat-header-name').innerText = getDisplayName(profile);
+            chatRoomBox.innerHTML = '';
             clearQuotedMessage();
             exitMultiSelectMode();
             hideBubbleActionMenu();
 
-            if (!chatHistories[currentChatId]) {
+            if (!Array.isArray(chatHistories[currentChatId])) {
                 chatHistories[currentChatId] = [];
-                receiveMessage(`你好呀！我是 ${getDisplayName(profile)}，很高兴认识你！`);
-            } else {
-                normalizeChatHistory(currentChatId);
-                renderCurrentChatHistory();
+                saveChats();
             }
+            normalizeChatHistory(currentChatId);
+            renderCurrentChatHistory();
+            showScreen('screen-chat');
         }
 
         function renderCurrentChatHistory() {
@@ -3476,6 +3537,7 @@ ${userPersona}
             const newName = charEditName.value.trim();
             if (!newName) { showPhoneToast('角色名字不能为空'); return false; }
 
+            const oldSnapshot = Object.assign({}, friend);
             friend.name = newName;
             friend.remark = charEditRemark.value.trim();
             friend.setting = charEditSetting.value.trim();
@@ -3483,7 +3545,10 @@ ${userPersona}
             friend.userProfileId = charEditUserProfile.value || defaultUserProfileId || '';
             friend.avatar = editingCharAvatar || '';
             friend.cover = editingCharCover || '';
-            saveFriends();
+            if (!saveFriends()) {
+                Object.assign(friend, oldSnapshot);
+                return false;
+            }
 
             if (currentChatId === friend.id) {
                 currentChatName = friend.name;
@@ -3531,25 +3596,19 @@ ${userPersona}
         document.getElementById('btn-char-cover-upload').addEventListener('click', openCharCoverPicker);
         document.getElementById('btn-char-upload-cover-bottom').addEventListener('click', openCharCoverPicker);
         charCardAvatar.addEventListener('click', openCharAvatarPicker);
-        charAvatarInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    editingCharAvatar = event.target.result;
-                    setCharAvatarElement(charCardAvatar, { avatar: editingCharAvatar, emoji: '🐧' });
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            }
+        charAvatarInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            showPhoneToast('正在处理头像…');
+            editingCharAvatar = await compressImageFile(file, 520, 0.82);
+            setCharAvatarElement(charCardAvatar, { avatar: editingCharAvatar, emoji: '🐧' });
         });
-        charCoverInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    editingCharCover = event.target.result;
-                    setCharCoverElement(charCardCover, { cover: editingCharCover });
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            }
+        charCoverInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            showPhoneToast('正在处理背景…');
+            editingCharCover = await compressImageFile(file, 1100, 0.78);
+            setCharCoverElement(charCardCover, { cover: editingCharCover });
         });
 
         // --------- 联系人与聊天页选择联系人 ---------
@@ -3668,28 +3727,22 @@ ${userPersona}
         document.getElementById('btn-save-user-profile').addEventListener('click', saveEditingUserProfile);
         deleteUserProfileBtn.addEventListener('click', deleteEditingUserProfile);
         userProfileCoverPreview.addEventListener('click', () => userProfileCoverInput.click());
-        userProfileCoverInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    editingUserProfileCover = event.target.result;
-                    setProfileCoverElement(userProfileCoverPreview, { cover: editingUserProfileCover }, true);
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            }
+        userProfileCoverInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            showPhoneToast('正在处理背景…');
+            editingUserProfileCover = await compressImageFile(file, 1100, 0.78);
+            setProfileCoverElement(userProfileCoverPreview, { cover: editingUserProfileCover }, true);
         });
 
         userProfileAvatarPreview.addEventListener('click', () => userProfileAvatarInput.click());
-        userProfileAvatarInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    editingUserProfileAvatar = event.target.result;
-                    userProfileAvatarPreview.style.backgroundImage = `url(${editingUserProfileAvatar})`;
-                    userProfileAvatarPreview.textContent = '';
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            }
+        userProfileAvatarInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            showPhoneToast('正在处理头像…');
+            editingUserProfileAvatar = await compressImageFile(file, 520, 0.82);
+            userProfileAvatarPreview.style.backgroundImage = `url(${editingUserProfileAvatar})`;
+            userProfileAvatarPreview.textContent = '';
         });
         userProfileModal.addEventListener('click', function(e) {
             if (e.target === userProfileModal) closeUserProfileEditor();
