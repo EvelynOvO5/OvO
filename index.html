@@ -411,6 +411,49 @@
         .profile-card-btn { height: 54px; border-radius: 20px; border: 1px solid #d8d8df; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; background: #fff; color: #111; }
         .profile-card-btn.primary { background: #12a8ff; color: #fff; border-color: #12a8ff; }
 
+
+
+        /* ================= QQ 风格：角色名片 / 角色资料页 ================= */
+        #screen-char-profile { background: #fff; padding-top: 0; }
+        .char-card-cover {
+            height: 265px;
+            padding: 54px 26px 0 26px;
+            box-sizing: border-box;
+            background: radial-gradient(circle at 70% 35%, rgba(255,255,255,0.18), transparent 36%), linear-gradient(135deg, #12B7F5 0%, #7dd3fc 48%, #a78bfa 100%);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            color: #fff;
+            overflow: hidden;
+        }
+        .char-card-cover::after { content:''; position:absolute; inset:0; background: linear-gradient(to bottom, rgba(0,0,0,0.08), rgba(0,0,0,0.20)); pointer-events:none; }
+        .char-card-cover .self-top-actions { position: relative; z-index: 2; }
+        .char-card-panel { margin-top: -34px; background: #fff; border-radius: 28px 28px 0 0; height: calc(100% - 231px); position: relative; z-index: 2; padding: 28px 18px 26px 18px; box-sizing: border-box; overflow-y: auto; }
+        .char-card-panel::-webkit-scrollbar { display:none; }
+        .char-card-head { display:flex; align-items:center; gap:16px; }
+        .char-card-avatar { width: 92px; height: 92px; border-radius: 28px; background: linear-gradient(135deg, #12B7F5, #0098EA); background-size: cover; background-position: center; display:flex; justify-content:center; align-items:center; font-size:44px; box-shadow: 0 8px 24px rgba(0,0,0,0.10); border:4px solid #fff; flex-shrink:0; cursor:pointer; color:#fff; }
+        .char-card-info { flex:1; min-width:0; }
+        .char-card-name { color:#1677ff; font-size:23px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .char-card-id { margin-top:5px; color:#999; font-size:13px; }
+        .char-card-bio { margin-top: 18px; color:#8e8e93; font-size:14px; line-height:1.45; }
+        .char-edit-section { margin-top: 18px; }
+        .char-edit-section-title { font-size: 12px; color:#8e8e93; margin: 0 0 7px 14px; font-weight:700; }
+        .char-edit-list { background:#f7f8fb; border-radius:16px; overflow:hidden; border:1px solid rgba(60,60,67,0.08); }
+        .char-edit-cell { min-height:50px; padding: 10px 13px; box-sizing:border-box; display:flex; align-items:center; gap:12px; border-bottom:1px solid rgba(60,60,67,0.10); }
+        .char-edit-cell:last-child { border-bottom:none; }
+        .char-edit-label { width:70px; flex-shrink:0; font-size:14px; color:#111; font-weight:800; }
+        .char-edit-input, .char-edit-select, .char-edit-textarea { flex:1; min-width:0; border:none; outline:none; background:transparent; font-family:inherit; font-size:14px; color:#333; }
+        .char-edit-input { text-align:right; }
+        .char-edit-select { text-align:right; direction: rtl; }
+        .char-edit-select option { direction:ltr; }
+        .char-edit-textarea { min-height:82px; resize:vertical; line-height:1.45; padding:4px 0; }
+        .char-action-row { display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:16px; }
+        .char-action-btn { height:48px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; cursor:pointer; border:1px solid #d8d8df; background:#fff; color:#111; }
+        .char-action-btn.primary { background:#12a8ff; color:#fff; border-color:#12a8ff; }
+        .char-action-btn.danger { background:#fff0f0; color:#ff4757; border-color:#ffd0d4; }
+        .char-cover-hint { position:absolute; left:0; right:0; bottom:50px; z-index:2; text-align:center; color:rgba(255,255,255,0.92); font-size:12px; font-weight:800; text-shadow:0 1px 6px rgba(0,0,0,0.25); pointer-events:none; }
+
+
         /* ================= 聊天设置弹窗 ================= */
         .settings-modal-box {
             width: 330px;
@@ -1259,6 +1302,55 @@
             </div>
         </div>
 
+
+
+        <!-- ================= 界面：QQ 角色名片 / 角色资料 ================= -->
+        <div id="screen-char-profile" class="screen">
+            <div class="char-card-cover" id="char-card-cover">
+                <div class="self-top-actions">
+                    <div class="self-back-btn" id="btn-char-card-back">‹</div>
+                    <div class="self-icons">
+                        <div class="self-round-icon" id="btn-char-cover-upload">🖼️</div>
+                        <div class="self-round-icon" id="btn-char-card-save-top">✓</div>
+                    </div>
+                </div>
+                <div class="char-cover-hint">点击左上图片按钮更换背景</div>
+            </div>
+            <div class="char-card-panel">
+                <div class="char-card-head">
+                    <input type="file" id="char-avatar-input" accept="image/*" style="display:none;">
+                    <input type="file" id="char-cover-input" accept="image/*" style="display:none;">
+                    <div class="char-card-avatar" id="char-card-avatar" title="点击上传头像">🐧</div>
+                    <div class="char-card-info">
+                        <div class="char-card-name" id="char-card-name">角色名字</div>
+                        <div class="char-card-id" id="char-card-id">Char ID：-</div>
+                    </div>
+                </div>
+                <div class="char-card-bio" id="char-card-bio">还没有填写角色人设。</div>
+
+                <div class="char-edit-section">
+                    <div class="char-edit-section-title">角色资料</div>
+                    <div class="char-edit-list">
+                        <label class="char-edit-cell"><span class="char-edit-label">名字</span><input class="char-edit-input" id="char-edit-name" placeholder="角色原名"></label>
+                        <label class="char-edit-cell"><span class="char-edit-label">备注</span><input class="char-edit-input" id="char-edit-remark" placeholder="显示在列表和聊天顶部"></label>
+                        <label class="char-edit-cell"><span class="char-edit-label">设定</span><textarea class="char-edit-textarea" id="char-edit-setting" placeholder="世界观、关系阶段、秘密、禁忌等……"></textarea></label>
+                        <label class="char-edit-cell"><span class="char-edit-label">人设</span><textarea class="char-edit-textarea" id="char-edit-persona" placeholder="性格、经历、身份、说话风格……"></textarea></label>
+                        <label class="char-edit-cell"><span class="char-edit-label">绑定User</span><select class="char-edit-select" id="char-edit-user-profile"></select></label>
+                    </div>
+                </div>
+
+                <div class="char-action-row">
+                    <div class="char-action-btn danger" id="btn-char-delete">删除角色</div>
+                    <div class="char-action-btn primary" id="btn-char-save">保存资料</div>
+                </div>
+                <div class="char-action-row">
+                    <div class="char-action-btn" id="btn-char-upload-cover-bottom">换背景</div>
+                    <div class="char-action-btn primary" id="btn-char-message">发消息</div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- ================= 界面：User 身份管理 ================= -->
         <div id="screen-user-profiles" class="screen">
             <div class="profile-header">
@@ -1318,7 +1410,7 @@
 
             <!-- 底部输入框 -->
             <div class="chat-input-area">
-                <textarea class="chat-input-box" id="chat-input-text" placeholder="给TA发消息... (按回车发送)" rows="1"></textarea>
+                <textarea class="chat-input-box" id="chat-input-text" placeholder="回车发气泡，点按钮触发AI" rows="1"></textarea>
                 <div class="chat-send-btn" id="btn-send-msg">➤</div>
             </div>
         </div>
@@ -2051,7 +2143,7 @@
                     <div class="contact-sub">${escapeHTML(friend.persona ? friend.persona.slice(0, 34) + (friend.persona.length > 34 ? '…' : '') : '在线 · 点一下开始聊天')}</div>
                 </div>
             `;
-            item.addEventListener('click', () => openChatRoom(friend.id, friend.name, friend.avatar || '', friend.emoji || '', friend.bg || ''));
+            item.addEventListener('click', () => openCharProfileScreen(friend.id));
             contactList.appendChild(item);
         }
 
@@ -2106,7 +2198,9 @@
                 userName: '',
                 userNickname: '',
                 userProfileId: defaultUserProfileId || '',
-                avatar: currentUploadedAvatar
+                avatar: currentUploadedAvatar,
+                cover: '',
+                setting: ''
             };
 
             friends.push(friend);
@@ -2467,6 +2561,7 @@
             const boundUser = getBoundUserProfile(profile.id);
             const userName = (boundUser && boundUser.name) || profile.userName || 'User';
             const userNickname = (boundUser && boundUser.nickname) || profile.userNickname || userName;
+            const roleSetting = profile.setting || '';
             const rolePersona = profile.persona || '暂无角色人设。';
             const userPersona = (boundUser && boundUser.persona) || profile.userPersona || '暂无 User 人设。';
             const activeWorldbookText = collectActiveWorldbookText(profile);
@@ -2480,6 +2575,9 @@ ${activeWorldbookText || '【世界书】\n当前没有启用的世界书条目�
 
 【角色名字】${roleName}
 【聊天显示名/备注】${displayName}
+【角色设定】
+${roleSetting || '暂无角色设定。'}
+
 【角色人设】
 ${rolePersona}
 
@@ -2599,31 +2697,42 @@ ${userPersona}
             if (el) el.remove();
         }
 
-        // 我发送消息的功能
-        async function sendMessage() {
-            const text = chatInputText.value.trim();
-            if (!text || !currentChatId) return;
+        let aiReplyInProgress = false;
 
-            const message = { id: createMessageId('me'), from: 'me', text: text };
-            if (quotedMessage) message.quote = quotedMessage;
-            renderMyMessage(message);
-            chatInputText.value = '';
-            clearQuotedMessage();
+        function appendUserMessagesFromText(text) {
+            const bubbleTexts = splitReplyIntoBubbles(text);
+            if (!bubbleTexts.length || !currentChatId) return [];
 
             if (!chatHistories[currentChatId]) chatHistories[currentChatId] = [];
-            chatHistories[currentChatId].push(message);
-            saveChats();
-            updatePreviewInList(currentChatId, text);
+            const createdMessages = bubbleTexts.map((bubbleText, index) => {
+                const message = { id: createMessageId('me'), from: 'me', text: bubbleText };
+                if (quotedMessage && index === 0) message.quote = quotedMessage;
+                renderMyMessage(message);
+                chatHistories[currentChatId].push(message);
+                return message;
+            });
 
+            saveChats();
+            updatePreviewInList(currentChatId, bubbleTexts[bubbleTexts.length - 1]);
+            return createdMessages;
+        }
+
+        async function triggerAIReply() {
+            if (!currentChatId || aiReplyInProgress) return;
             const profile = getChatProfile(currentChatId);
             const apiConfig = getApiSettings();
+            const history = chatHistories[currentChatId] || [];
+            const lastUserMessage = [...history].reverse().find(msg => msg.from === 'me');
+            const lastText = lastUserMessage ? lastUserMessage.text : '';
+
             if (!apiConfig.enabled) {
                 setTimeout(() => {
-                    receiveMessage(`你刚才说：“${text}”。不过还没有启用 API，回到首页点「设置」打开「真实 AI 回复」吧。`);
+                    receiveMessage(lastText ? `你刚才说：“${lastText}”。不过还没有启用 API，回到首页点「设置」打开「真实 AI 回复」吧。` : '还没有启用 API，回到首页点「设置」打开「真实 AI 回复」吧。');
                 }, 600);
                 return;
             }
 
+            aiReplyInProgress = true;
             const typingId = showTypingBubble();
             try {
                 const reply = await requestAIReply(profile, apiConfig);
@@ -2632,7 +2741,23 @@ ${userPersona}
             } catch (err) {
                 removeTypingBubble(typingId);
                 receiveMessage(`API 连接失败：${err.message || err}。如果你用的是官方或中转接口，检查 Base URL、Key、模型名，以及这个接口是否允许网页跨域访问。`);
+            } finally {
+                aiReplyInProgress = false;
             }
+        }
+
+        // 我发送消息的功能：triggerAI=false 时只发出 user 气泡，不触发 AI
+        async function sendMessage(triggerAI = true) {
+            const text = chatInputText.value.trim();
+            if (!currentChatId) return;
+
+            if (text) {
+                appendUserMessagesFromText(text);
+                chatInputText.value = '';
+                clearQuotedMessage();
+            }
+
+            if (triggerAI) await triggerAIReply();
         }
 
         // 接收（对方发来）消息的功能
@@ -2950,18 +3075,7 @@ ${userPersona}
 
         function openChatSettings() {
             if (!currentChatId) return;
-            const profile = getChatProfile(currentChatId);
-            if (!profile) return;
-
-            roleNameInput.value = profile.name || '';
-            roleRemarkInput.value = profile.remark || '';
-            rolePersonaInput.value = profile.persona || '';
-            renderUserProfileSelect(profile.userProfileId || defaultUserProfileId || '');
-
-            deleteRoleBtn.classList.remove('disabled');
-            deleteRoleBtn.innerText = '删除角色';
-
-            chatSettingsModal.style.display = 'flex';
+            openCharProfileScreen(currentChatId);
         }
 
         function closeChatSettings() {
@@ -3041,7 +3155,7 @@ ${userPersona}
             closeDeleteConfirmModal();
             refreshMessageList();
             refreshContactList();
-            showScreen('screen-qq');
+            showScreen('screen-contacts');
         }
 
         // --------- 首页设置：全局 API 接入 ---------
@@ -3189,6 +3303,156 @@ ${userPersona}
         }
 
 
+
+
+        // --------- QQ 角色资料页：联系人点开后编辑头像、背景、设定、人设、绑定 User ---------
+        const charCardCover = document.getElementById('char-card-cover');
+        const charCardAvatar = document.getElementById('char-card-avatar');
+        const charCardName = document.getElementById('char-card-name');
+        const charCardId = document.getElementById('char-card-id');
+        const charCardBio = document.getElementById('char-card-bio');
+        const charAvatarInput = document.getElementById('char-avatar-input');
+        const charCoverInput = document.getElementById('char-cover-input');
+        const charEditName = document.getElementById('char-edit-name');
+        const charEditRemark = document.getElementById('char-edit-remark');
+        const charEditSetting = document.getElementById('char-edit-setting');
+        const charEditPersona = document.getElementById('char-edit-persona');
+        const charEditUserProfile = document.getElementById('char-edit-user-profile');
+        let editingCharId = '';
+        let editingCharAvatar = '';
+        let editingCharCover = '';
+
+        function setCharCoverElement(el, friend) {
+            if (!el) return;
+            if (friend && friend.cover) {
+                el.style.backgroundImage = `linear-gradient(to bottom, rgba(0,0,0,0.08), rgba(0,0,0,0.22)), url(${friend.cover})`;
+            } else {
+                el.style.backgroundImage = '';
+            }
+        }
+
+        function setCharAvatarElement(el, friend) {
+            if (!el) return;
+            if (friend && friend.avatar) {
+                el.style.backgroundImage = `url(${friend.avatar})`;
+                el.textContent = '';
+            } else {
+                el.style.backgroundImage = '';
+                el.textContent = (friend && friend.emoji) || '🐧';
+            }
+        }
+
+        function renderCharUserProfileSelect(selectedId = '') {
+            if (!charEditUserProfile) return;
+            ensureDefaultUserProfile();
+            charEditUserProfile.innerHTML = '';
+            userProfiles.forEach(profile => {
+                const option = document.createElement('option');
+                option.value = profile.id;
+                option.textContent = `${profile.name || 'User'}${profile.nickname ? '｜' + profile.nickname : ''}`;
+                if (profile.id === selectedId) option.selected = true;
+                charEditUserProfile.appendChild(option);
+            });
+        }
+
+        function openCharProfileScreen(friendId) {
+            const friend = getFriendById(friendId);
+            if (!friend) return;
+            editingCharId = friendId;
+            editingCharAvatar = friend.avatar || '';
+            editingCharCover = friend.cover || '';
+
+            charCardName.innerText = getDisplayName(friend);
+            charCardId.innerText = `Char ID：${friend.id.replace(/^friend_/, '')}`;
+            charCardBio.innerText = friend.persona || friend.setting || '还没有填写角色人设。';
+            charEditName.value = friend.name || '';
+            charEditRemark.value = friend.remark || '';
+            charEditSetting.value = friend.setting || '';
+            charEditPersona.value = friend.persona || '';
+            renderCharUserProfileSelect(friend.userProfileId || defaultUserProfileId || '');
+            setCharAvatarElement(charCardAvatar, friend);
+            setCharCoverElement(charCardCover, friend);
+            showScreen('screen-char-profile');
+        }
+
+        function saveCharProfile() {
+            const friend = getFriendById(editingCharId);
+            if (!friend) { alert('这个角色已经不存在了。'); return false; }
+            const newName = charEditName.value.trim();
+            if (!newName) { alert('角色名字不能为空哦！'); return false; }
+
+            friend.name = newName;
+            friend.remark = charEditRemark.value.trim();
+            friend.setting = charEditSetting.value.trim();
+            friend.persona = charEditPersona.value.trim();
+            friend.userProfileId = charEditUserProfile.value || defaultUserProfileId || '';
+            friend.avatar = editingCharAvatar || '';
+            friend.cover = editingCharCover || '';
+            saveFriends();
+
+            if (currentChatId === friend.id) {
+                currentChatName = friend.name;
+                currentChatAvatarURL = friend.avatar || '';
+                currentChatEmoji = friend.emoji || '';
+                currentChatBg = friend.bg || 'linear-gradient(135deg, #12B7F5, #0098EA)';
+                document.getElementById('chat-header-name').innerText = getDisplayName(friend);
+            }
+
+            refreshMessageList();
+            refreshContactList();
+            openCharProfileScreen(friend.id);
+            return true;
+        }
+
+        function openChatFromCharProfile() {
+            const friend = getFriendById(editingCharId);
+            if (!friend) return;
+            if (!saveCharProfile()) return;
+            const updated = getFriendById(editingCharId) || friend;
+            openChatRoom(updated.id, updated.name, updated.avatar || '', updated.emoji || '', updated.bg || '');
+        }
+
+        function openDeleteCharFromProfile(e) {
+            if (e) e.stopPropagation();
+            if (!editingCharId) return;
+            const friend = getFriendById(editingCharId);
+            if (!friend) return;
+            pendingDeleteRoleId = editingCharId;
+            deleteConfirmName.innerText = `「${getDisplayName(friend)}」`;
+            deleteConfirmModal.style.display = 'flex';
+        }
+
+        function openCharCoverPicker() { if (charCoverInput) charCoverInput.click(); }
+        function openCharAvatarPicker() { if (charAvatarInput) charAvatarInput.click(); }
+
+        document.getElementById('btn-char-card-back').addEventListener('click', openContactsScreen);
+        document.getElementById('btn-char-card-save-top').addEventListener('click', saveCharProfile);
+        document.getElementById('btn-char-save').addEventListener('click', saveCharProfile);
+        document.getElementById('btn-char-message').addEventListener('click', openChatFromCharProfile);
+        document.getElementById('btn-char-delete').addEventListener('click', openDeleteCharFromProfile);
+        document.getElementById('btn-char-cover-upload').addEventListener('click', openCharCoverPicker);
+        document.getElementById('btn-char-upload-cover-bottom').addEventListener('click', openCharCoverPicker);
+        charCardAvatar.addEventListener('click', openCharAvatarPicker);
+        charAvatarInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    editingCharAvatar = event.target.result;
+                    setCharAvatarElement(charCardAvatar, { avatar: editingCharAvatar, emoji: '🐧' });
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+        charCoverInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    editingCharCover = event.target.result;
+                    setCharCoverElement(charCardCover, { cover: editingCharCover });
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
 
         // --------- 联系人与聊天页选择联系人 ---------
         const contactPickerModal = document.getElementById('contact-picker-modal');
@@ -3344,13 +3608,13 @@ ${userPersona}
         refreshContactList();
 
         // 绑定发送按钮
-        document.getElementById('btn-send-msg').addEventListener('click', sendMessage);
+        document.getElementById('btn-send-msg').addEventListener('click', () => sendMessage(true));
 
-        // 绑定回车键发送
-        chatInputText.addEventListener('keypress', function(e) {
+        // 回车只发送 user 气泡，不触发 AI；点发送按钮才触发 AI。Shift+Enter 可以在输入框里换行。
+        chatInputText.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault(); // 阻止默认的回车换行
-                sendMessage();
+                e.preventDefault();
+                sendMessage(false);
             }
         });
 
