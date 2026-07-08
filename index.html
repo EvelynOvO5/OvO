@@ -234,6 +234,57 @@
         .bubble-right .bubble-avatar { margin-left: 12px; background: linear-gradient(135deg, #ff9a9e, #fecfef); }
         .bubble-right .bubble-text { background-color: #12B7F5; color: #fff; border-radius: 18px 2px 18px 18px; }
 
+        /* 长按气泡菜单 / 引用 / 多选 */
+        .bubble-row { position: relative; }
+        .bubble-row.selectable { cursor: pointer; }
+        .bubble-row.multi-selected .bubble-text { outline: 3px solid rgba(18, 183, 245, 0.35); }
+        .bubble-select-dot {
+            width: 22px; height: 22px; border-radius: 50%; border: 2px solid #c7c7cc; background: #fff;
+            display: none; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 900;
+            position: absolute; top: 9px; z-index: 4; box-sizing: border-box;
+        }
+        .bubble-left .bubble-select-dot { right: 2px; }
+        .bubble-right .bubble-select-dot { left: 2px; }
+        .chat-room.multi-mode .bubble-select-dot { display: flex; }
+        .bubble-row.multi-selected .bubble-select-dot { background: #12B7F5; border-color: #12B7F5; }
+        .bubble-row.multi-selected .bubble-select-dot::before { content: '✓'; }
+        .bubble-action-menu {
+            position: absolute; z-index: 1700; display: none; background: rgba(34, 34, 34, 0.94);
+            backdrop-filter: blur(18px); border-radius: 16px; padding: 6px; box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+            gap: 4px; align-items: center; animation: bubble-menu-in 0.12s ease;
+        }
+        @keyframes bubble-menu-in { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+        .bubble-action-item { color: #fff; font-size: 13px; font-weight: 800; padding: 9px 12px; border-radius: 12px; cursor: pointer; white-space: nowrap; }
+        .bubble-action-item:active { background: rgba(255,255,255,0.14); }
+        .bubble-action-item.danger { color: #ff6b78; }
+        .quote-preview-bar {
+            display: none; align-items: center; gap: 10px; margin: 8px 20px 0 20px; padding: 9px 12px;
+            background: rgba(255,255,255,0.92); border: 1px solid rgba(60,60,67,0.10); border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.04); box-sizing: border-box;
+        }
+        .quote-preview-line { width: 3px; height: 34px; border-radius: 999px; background: #12B7F5; flex-shrink: 0; }
+        .quote-preview-main { flex: 1; min-width: 0; }
+        .quote-preview-name { font-size: 12px; color: #12B7F5; font-weight: 900; margin-bottom: 2px; }
+        .quote-preview-text { font-size: 12px; color: #7a7a7a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .quote-preview-close { width: 24px; height: 24px; border-radius: 50%; background: #f2f2f7; color: #8e8e93; display: flex; align-items: center; justify-content: center; font-weight: 900; cursor: pointer; flex-shrink: 0; }
+        .bubble-quote-card {
+            border-left: 3px solid rgba(255,255,255,0.8); padding: 6px 8px; margin-bottom: 6px; border-radius: 8px;
+            background: rgba(255,255,255,0.18); font-size: 12px; line-height: 1.35; opacity: 0.95;
+        }
+        .bubble-left .bubble-quote-card { border-left-color: #12B7F5; background: #f2f6ff; color: #666; }
+        .bubble-quote-name { font-weight: 900; margin-bottom: 2px; }
+        .bubble-quote-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 190px; }
+        .chat-multi-bar {
+            display: none; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 18px;
+            background: rgba(255,255,255,0.96); backdrop-filter: blur(16px); border-top: 1px solid rgba(60,60,67,0.12);
+            box-shadow: 0 -6px 18px rgba(0,0,0,0.04); z-index: 9;
+        }
+        .chat-multi-bar.active { display: flex; }
+        .chat-multi-info { font-size: 13px; color: #8e8e93; font-weight: 800; }
+        .chat-multi-actions { display: flex; gap: 10px; }
+        .chat-multi-btn { padding: 8px 12px; border-radius: 999px; background: #f2f2f7; color: #007aff; font-size: 13px; font-weight: 900; cursor: pointer; }
+        .chat-multi-btn.danger { color: #ff3b30; background: #fff0f0; }
+
         /* 底部输入框 */
         .chat-input-area {
             background: #f5f6fa; padding: 10px 20px 25px 20px; display: flex; align-items: flex-end; gap: 10px; border-top: 1px solid #ddd;
@@ -1242,6 +1293,29 @@
                 <!-- 消息气泡会动态添加到这里 -->
             </div>
 
+            <div class="bubble-action-menu" id="bubble-action-menu">
+                <div class="bubble-action-item danger" id="bubble-menu-delete">删除</div>
+                <div class="bubble-action-item" id="bubble-menu-multi">多选</div>
+                <div class="bubble-action-item" id="bubble-menu-quote">引用</div>
+            </div>
+
+            <div class="chat-multi-bar" id="chat-multi-bar">
+                <div class="chat-multi-info" id="chat-multi-info">已选择 0 条</div>
+                <div class="chat-multi-actions">
+                    <div class="chat-multi-btn" id="chat-multi-cancel">取消</div>
+                    <div class="chat-multi-btn danger" id="chat-multi-delete">删除</div>
+                </div>
+            </div>
+
+            <div class="quote-preview-bar" id="quote-preview-bar">
+                <div class="quote-preview-line"></div>
+                <div class="quote-preview-main">
+                    <div class="quote-preview-name" id="quote-preview-name">引用</div>
+                    <div class="quote-preview-text" id="quote-preview-text"></div>
+                </div>
+                <div class="quote-preview-close" id="quote-preview-close">×</div>
+            </div>
+
             <!-- 底部输入框 -->
             <div class="chat-input-area">
                 <textarea class="chat-input-box" id="chat-input-text" placeholder="给TA发消息... (按回车发送)" rows="1"></textarea>
@@ -2052,6 +2126,199 @@
         let currentChatEmoji = '';
         let currentChatBg = '';
 
+        let quotedMessage = null;
+        let activeBubbleMessageId = '';
+        let multiSelectMode = false;
+        let selectedBubbleIds = new Set();
+        let longPressTimer = null;
+
+        const bubbleActionMenu = document.getElementById('bubble-action-menu');
+        const bubbleMenuDelete = document.getElementById('bubble-menu-delete');
+        const bubbleMenuMulti = document.getElementById('bubble-menu-multi');
+        const bubbleMenuQuote = document.getElementById('bubble-menu-quote');
+        const quotePreviewBar = document.getElementById('quote-preview-bar');
+        const quotePreviewName = document.getElementById('quote-preview-name');
+        const quotePreviewText = document.getElementById('quote-preview-text');
+        const quotePreviewClose = document.getElementById('quote-preview-close');
+        const chatMultiBar = document.getElementById('chat-multi-bar');
+        const chatMultiInfo = document.getElementById('chat-multi-info');
+        const chatMultiCancel = document.getElementById('chat-multi-cancel');
+        const chatMultiDelete = document.getElementById('chat-multi-delete');
+
+        function createMessageId(prefix = 'msg') {
+            return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+        }
+
+        function normalizeChatHistory(friendId) {
+            if (!friendId) return [];
+            if (!Array.isArray(chatHistories[friendId])) chatHistories[friendId] = [];
+            let changed = false;
+            chatHistories[friendId].forEach(msg => {
+                if (!msg.id) { msg.id = createMessageId(msg.from === 'me' ? 'me' : 'ai'); changed = true; }
+                if (!msg.from) { msg.from = 'friend'; changed = true; }
+                if (typeof msg.text !== 'string') { msg.text = String(msg.text || ''); changed = true; }
+            });
+            if (changed) saveChats();
+            return chatHistories[friendId];
+        }
+
+        function getMessageById(messageId) {
+            return (chatHistories[currentChatId] || []).find(msg => msg.id === messageId) || null;
+        }
+
+        function getMessageSpeakerName(msg) {
+            if (!msg) return '消息';
+            if (msg.from === 'me') {
+                const boundUser = currentChatId ? getBoundUserProfile(currentChatId) : getUserProfileById(defaultUserProfileId);
+                return (boundUser && ((boundUser.nickname && boundUser.nickname.trim()) || (boundUser.name && boundUser.name.trim()))) || '我';
+            }
+            const profile = currentChatId ? getChatProfile(currentChatId) : null;
+            return getDisplayName(profile) || currentChatName || '对方';
+        }
+
+        function makeQuotePayload(msg) {
+            if (!msg) return null;
+            return {
+                id: msg.id || '',
+                from: msg.from || 'friend',
+                name: getMessageSpeakerName(msg),
+                text: msg.text || ''
+            };
+        }
+
+        function shortenText(text, limit = 40) {
+            const value = String(text || '').replace(/\s+/g, ' ').trim();
+            return value.length > limit ? value.slice(0, limit) + '…' : value;
+        }
+
+        function getQuoteHTML(quote) {
+            if (!quote || !quote.text) return '';
+            return `<div class="bubble-quote-card">
+                <div class="bubble-quote-name">${escapeHTML(quote.name || '引用')}</div>
+                <div class="bubble-quote-text">${escapeHTML(shortenText(quote.text, 46))}</div>
+            </div>`;
+        }
+
+        function hideBubbleActionMenu() {
+            if (bubbleActionMenu) bubbleActionMenu.style.display = 'none';
+            activeBubbleMessageId = '';
+        }
+
+        function showBubbleActionMenu(messageId, clientX, clientY) {
+            if (!messageId || !bubbleActionMenu) return;
+            if (multiSelectMode) return;
+            activeBubbleMessageId = messageId;
+            const screen = document.getElementById('screen-chat');
+            const rect = screen.getBoundingClientRect();
+            bubbleActionMenu.style.display = 'flex';
+            const menuRect = bubbleActionMenu.getBoundingClientRect();
+            let left = clientX - rect.left - menuRect.width / 2;
+            let top = clientY - rect.top - menuRect.height - 12;
+            left = Math.max(12, Math.min(left, rect.width - menuRect.width - 12));
+            top = Math.max(64, Math.min(top, rect.height - menuRect.height - 86));
+            bubbleActionMenu.style.left = `${left}px`;
+            bubbleActionMenu.style.top = `${top}px`;
+        }
+
+        function setQuotedMessage(msg) {
+            quotedMessage = makeQuotePayload(msg);
+            renderQuotePreview();
+        }
+
+        function clearQuotedMessage() {
+            quotedMessage = null;
+            renderQuotePreview();
+        }
+
+        function renderQuotePreview() {
+            if (!quotePreviewBar) return;
+            if (!quotedMessage) {
+                quotePreviewBar.style.display = 'none';
+                return;
+            }
+            quotePreviewName.innerText = `引用 ${quotedMessage.name || '消息'}`;
+            quotePreviewText.innerText = shortenText(quotedMessage.text, 70);
+            quotePreviewBar.style.display = 'flex';
+        }
+
+        function updateMultiBar() {
+            if (!chatMultiBar || !chatMultiInfo) return;
+            chatMultiBar.classList.toggle('active', multiSelectMode);
+            chatMultiInfo.innerText = `已选择 ${selectedBubbleIds.size} 条`;
+            chatRoomBox.classList.toggle('multi-mode', multiSelectMode);
+            chatRoomBox.querySelectorAll('.bubble-row[data-msg-id]').forEach(row => {
+                row.classList.toggle('multi-selected', selectedBubbleIds.has(row.dataset.msgId));
+                row.classList.toggle('selectable', multiSelectMode);
+            });
+        }
+
+        function enterMultiSelectMode(firstMessageId = '') {
+            hideBubbleActionMenu();
+            multiSelectMode = true;
+            selectedBubbleIds = new Set();
+            if (firstMessageId) selectedBubbleIds.add(firstMessageId);
+            updateMultiBar();
+        }
+
+        function exitMultiSelectMode() {
+            multiSelectMode = false;
+            selectedBubbleIds.clear();
+            updateMultiBar();
+        }
+
+        function toggleBubbleSelection(messageId) {
+            if (!messageId || !multiSelectMode) return;
+            if (selectedBubbleIds.has(messageId)) selectedBubbleIds.delete(messageId);
+            else selectedBubbleIds.add(messageId);
+            updateMultiBar();
+        }
+
+        function deleteMessagesByIds(ids) {
+            const idSet = new Set((ids || []).filter(Boolean));
+            if (!currentChatId || !idSet.size) return;
+            normalizeChatHistory(currentChatId);
+            chatHistories[currentChatId] = (chatHistories[currentChatId] || []).filter(msg => !idSet.has(msg.id));
+            saveChats();
+            if (quotedMessage && idSet.has(quotedMessage.id)) clearQuotedMessage();
+            hideBubbleActionMenu();
+            exitMultiSelectMode();
+            renderCurrentChatHistory();
+            const last = (chatHistories[currentChatId] || []).slice(-1)[0];
+            updatePreviewInList(currentChatId, last ? last.text : '戳一戳开始聊天吧！');
+        }
+
+        function attachBubbleEvents(row) {
+            if (!row || !row.dataset || !row.dataset.msgId) return;
+            const getPoint = (event) => {
+                const touch = event.touches && event.touches[0] ? event.touches[0] : event.changedTouches && event.changedTouches[0] ? event.changedTouches[0] : event;
+                return { x: touch.clientX, y: touch.clientY };
+            };
+            const startPress = (event) => {
+                if (multiSelectMode) return;
+                const point = getPoint(event);
+                clearTimeout(longPressTimer);
+                longPressTimer = setTimeout(() => {
+                    showBubbleActionMenu(row.dataset.msgId, point.x, point.y);
+                }, 520);
+            };
+            const cancelPress = () => clearTimeout(longPressTimer);
+            row.addEventListener('mousedown', startPress);
+            row.addEventListener('touchstart', startPress, { passive: true });
+            row.addEventListener('mouseup', cancelPress);
+            row.addEventListener('mouseleave', cancelPress);
+            row.addEventListener('touchend', cancelPress);
+            row.addEventListener('touchmove', cancelPress);
+            row.addEventListener('contextmenu', (event) => {
+                event.preventDefault();
+                const point = getPoint(event);
+                showBubbleActionMenu(row.dataset.msgId, point.x, point.y);
+            });
+            row.addEventListener('click', () => {
+                if (multiSelectMode) toggleBubbleSelection(row.dataset.msgId);
+                else hideBubbleActionMenu();
+            });
+        }
+
         // 打开聊天室的函数
         function openChatRoom(id, name, avatarURL, emoji = '', bg = '') {
             showScreen('screen-chat');
@@ -2059,32 +2326,29 @@
             const profile = getChatProfile(id) || { id, name, avatar: avatarURL, emoji, bg };
             currentChatName = profile.name || name;
             document.getElementById('chat-header-name').innerText = getDisplayName(profile);
-            
-            // 保存当前对方的头像数据，发消息时要用到
-            currentChatAvatarURL = avatarURL;
-            currentChatEmoji = emoji;
-            currentChatBg = bg;
+            currentChatAvatarURL = profile.avatar || avatarURL || '';
+            currentChatEmoji = profile.emoji || emoji || '';
+            currentChatBg = profile.bg || bg || 'linear-gradient(135deg, #12B7F5, #0098EA)';
+            clearQuotedMessage();
+            exitMultiSelectMode();
+            hideBubbleActionMenu();
 
-            // 清空旧的聊天记录
-            chatRoomBox.innerHTML = '';
-
-            // 插入一条系统时间
-            const now = new Date();
-            chatRoomBox.innerHTML += `<div class="chat-time-stamp">${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}</div>`;
-
-            // 有历史就恢复历史，没有历史才发欢迎语
             if (!chatHistories[currentChatId]) {
                 chatHistories[currentChatId] = [];
                 receiveMessage(`你好呀！我是 ${getDisplayName(profile)}，很高兴认识你！`);
             } else {
-                chatHistories[currentChatId].forEach(msg => {
-                    if (msg.from === 'me') {
-                        renderMyMessage(msg.text);
-                    } else {
-                        renderFriendMessage(msg.text);
-                    }
-                });
+                normalizeChatHistory(currentChatId);
+                renderCurrentChatHistory();
             }
+        }
+
+        function renderCurrentChatHistory() {
+            chatRoomBox.innerHTML = '';
+            const now = new Date();
+            chatRoomBox.insertAdjacentHTML('beforeend', `<div class="chat-time-stamp">${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}</div>`);
+            normalizeChatHistory(currentChatId).forEach(msg => renderChatMessage(msg));
+            chatRoomBox.scrollTop = chatRoomBox.scrollHeight;
+            updateMultiBar();
         }
 
         function getUserAvatarHTML(profile, extraStyle = '') {
@@ -2095,30 +2359,41 @@
             return `<div class="bubble-avatar" style="background: linear-gradient(135deg, #ff9a9e, #fecfef); color: white; ${safeExtra}">${(profile && profile.emoji) || '👧'}</div>`;
         }
 
-        function renderMyMessage(text) {
+        function renderChatMessage(msg) {
+            if (!msg || !msg.id) return;
+            if (msg.from === 'me') renderMyMessage(msg);
+            else renderFriendMessage(msg);
+        }
+
+        function renderMyMessage(message) {
+            const msg = typeof message === 'object' ? message : { id: createMessageId('me'), text: String(message || ''), from: 'me' };
             const boundUser = currentChatId ? getBoundUserProfile(currentChatId) : getUserProfileById(defaultUserProfileId);
             const myMsg = `
-                <div class="bubble-row bubble-right">
-                    <div class="bubble-text">${escapeHTML(text)}</div>
+                <div class="bubble-row bubble-right" data-msg-id="${escapeHTML(msg.id)}">
+                    <div class="bubble-select-dot"></div>
+                    <div class="bubble-text">${getQuoteHTML(msg.quote)}${escapeHTML(msg.text)}</div>
                     ${getUserAvatarHTML(boundUser, 'margin-left: 12px;')}
                 </div>
             `;
             chatRoomBox.insertAdjacentHTML('beforeend', myMsg);
+            attachBubbleEvents(chatRoomBox.lastElementChild);
             chatRoomBox.scrollTop = chatRoomBox.scrollHeight;
         }
 
-        function renderFriendMessage(text) {
-            // 判断对方是图片头像还是emoji头像
+        function renderFriendMessage(message) {
+            const msg = typeof message === 'object' ? message : { id: createMessageId('ai'), text: String(message || ''), from: 'friend' };
             let avatarStyle = currentChatAvatarURL ? `background-image: url(${currentChatAvatarURL});` : `background: ${currentChatBg}; color: white;`;
             let avatarInner = currentChatAvatarURL ? '' : currentChatEmoji;
 
             const friendMsg = `
-                <div class="bubble-row bubble-left">
+                <div class="bubble-row bubble-left" data-msg-id="${escapeHTML(msg.id)}">
                     <div class="bubble-avatar" style="${avatarStyle}; border: 1px solid #eee;">${avatarInner}</div>
-                    <div class="bubble-text">${escapeHTML(text)}</div>
+                    <div class="bubble-text">${getQuoteHTML(msg.quote)}${escapeHTML(msg.text)}</div>
+                    <div class="bubble-select-dot"></div>
                 </div>
             `;
             chatRoomBox.insertAdjacentHTML('beforeend', friendMsg);
+            attachBubbleEvents(chatRoomBox.lastElementChild);
             chatRoomBox.scrollTop = chatRoomBox.scrollHeight;
         }
 
@@ -2212,9 +2487,12 @@ ${userPersona}
             ];
 
             history.forEach(msg => {
+                const quoteText = msg.quote && msg.quote.text
+                    ? `【引用 ${msg.quote.name || '消息'}】${msg.quote.text}\n`
+                    : '';
                 messages.push({
                     role: msg.from === 'me' ? 'user' : 'assistant',
-                    content: msg.text || ''
+                    content: quoteText + (msg.text || '')
                 });
             });
 
@@ -2314,11 +2592,14 @@ ${userPersona}
             const text = chatInputText.value.trim();
             if (!text || !currentChatId) return;
 
-            renderMyMessage(text);
+            const message = { id: createMessageId('me'), from: 'me', text: text };
+            if (quotedMessage) message.quote = quotedMessage;
+            renderMyMessage(message);
             chatInputText.value = '';
+            clearQuotedMessage();
 
             if (!chatHistories[currentChatId]) chatHistories[currentChatId] = [];
-            chatHistories[currentChatId].push({ from: 'me', text: text });
+            chatHistories[currentChatId].push(message);
             saveChats();
             updatePreviewInList(currentChatId, text);
 
@@ -2346,10 +2627,11 @@ ${userPersona}
         function receiveMessage(text) {
             if (!currentChatId) return;
 
-            renderFriendMessage(text);
+            const message = { id: createMessageId('ai'), from: 'friend', text: text };
+            renderFriendMessage(message);
 
             if (!chatHistories[currentChatId]) chatHistories[currentChatId] = [];
-            chatHistories[currentChatId].push({ from: 'friend', text: text });
+            chatHistories[currentChatId].push(message);
             saveChats();
             updatePreviewInList(currentChatId, text);
         }
@@ -2950,6 +3232,32 @@ ${userPersona}
             if (e.target === homeSettingsModal) closeHomeSettings();
         });
         
+        if (bubbleMenuDelete) bubbleMenuDelete.addEventListener('click', function(e) {
+            e.stopPropagation();
+            deleteMessagesByIds([activeBubbleMessageId]);
+        });
+        if (bubbleMenuQuote) bubbleMenuQuote.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const msg = getMessageById(activeBubbleMessageId);
+            if (msg) setQuotedMessage(msg);
+            hideBubbleActionMenu();
+            chatInputText.focus();
+        });
+        if (bubbleMenuMulti) bubbleMenuMulti.addEventListener('click', function(e) {
+            e.stopPropagation();
+            enterMultiSelectMode(activeBubbleMessageId);
+        });
+        if (chatMultiCancel) chatMultiCancel.addEventListener('click', exitMultiSelectMode);
+        if (chatMultiDelete) chatMultiDelete.addEventListener('click', function() {
+            deleteMessagesByIds(Array.from(selectedBubbleIds));
+        });
+        if (quotePreviewClose) quotePreviewClose.addEventListener('click', clearQuotedMessage);
+        document.addEventListener('click', function(e) {
+            if (bubbleActionMenu && bubbleActionMenu.style.display === 'flex' && !bubbleActionMenu.contains(e.target) && !e.target.closest('.bubble-row')) {
+                hideBubbleActionMenu();
+            }
+        });
+
         document.getElementById('btn-open-chat-settings').addEventListener('click', openChatSettings);
         document.getElementById('btn-close-chat-settings').addEventListener('click', closeChatSettings);
         document.getElementById('btn-save-chat-settings').addEventListener('click', saveCurrentChatSettings);
