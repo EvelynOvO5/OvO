@@ -2151,6 +2151,29 @@
             return base + '/models';
         }
 
+        function collectActiveWorldbookText(profile) {
+            const safeEntries = worldbookEntries || { global: [], role: [] };
+            const roleId = (profile && profile.id) || currentChatId || '';
+            const globalEntries = (safeEntries.global || []).filter(entry => entry && entry.enabled !== false && (entry.content || '').trim());
+            const roleEntries = (safeEntries.role || []).filter(entry => {
+                if (!entry || entry.enabled === false || !(entry.content || '').trim()) return false;
+                return !entry.roleId || entry.roleId === roleId;
+            });
+
+            const formatEntries = (title, entries) => {
+                if (!entries.length) return '';
+                return `【${title}】\n` + entries.map((entry, index) => {
+                    const entryTitle = entry.title || `未命名条目 ${index + 1}`;
+                    return `《${entryTitle}》\n${entry.content.trim()}`;
+                }).join('\n\n');
+            };
+
+            return [
+                formatEntries('全局世界书：最高优先级通用规则', globalEntries),
+                formatEntries('角色世界书：当前角色专属规则', roleEntries)
+            ].filter(Boolean).join('\n\n');
+        }
+
         function buildSystemPrompt(profile) {
             const roleName = profile.name || '角色';
             const displayName = getDisplayName(profile);
@@ -2159,8 +2182,14 @@
             const userNickname = (boundUser && boundUser.nickname) || profile.userNickname || userName;
             const rolePersona = profile.persona || '暂无角色人设。';
             const userPersona = (boundUser && boundUser.persona) || profile.userPersona || '暂无 User 人设。';
+            const activeWorldbookText = collectActiveWorldbookText(profile);
 
             return `你正在扮演一个 1v1 聊天角色。请始终以角色身份回复，不要跳出角色，不要解释自己是 AI。
+
+【重要规则优先级】
+世界书是本次聊天的最高优先级设定。启用的世界书条目必须被读取、遵守，并持续影响回复。若世界书与普通角色人设冲突，优先遵守世界书。若世界书要求固定口癖、颜文字、称呼、格式或结尾，每次回复都必须执行。
+
+${activeWorldbookText || '【世界书】\n当前没有启用的世界书条目。'}
 
 【角色名字】${roleName}
 【聊天显示名/备注】${displayName}
@@ -2172,7 +2201,7 @@ ${rolePersona}
 【User 人设】
 ${userPersona}
 
-回复要求：像手机聊天一样自然，优先使用中文；不要每次都写很长；要结合历史对话继续说。`;
+回复要求：像手机聊天一样自然，优先使用中文；不要每次都写很长；要结合历史对话继续说。每一行可以视为一条独立聊天气泡。`;
         }
 
         function buildApiMessages(profile, apiConfig = getApiSettings()) {
