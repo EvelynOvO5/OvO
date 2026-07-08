@@ -799,6 +799,56 @@
         .btn-delete-cancel:active, .btn-delete-confirm:active { transform: scale(0.95); }
 
 
+
+
+        /* ================= 手机内轻反馈：添加/保存/删除 ================= */
+        .btn-confirm, .btn-cancel, .btn-delete-confirm, .btn-delete-cancel, .char-action-btn, .ios-primary-btn, .ios-secondary-btn {
+            transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-confirm.is-processing, .btn-delete-confirm.is-processing, .char-action-btn.is-processing {
+            transform: scale(0.96);
+            opacity: 0.78;
+            pointer-events: none;
+        }
+        .btn-confirm.is-done, .char-action-btn.is-done {
+            background: #34c759 !important;
+            color: #fff !important;
+            box-shadow: 0 4px 12px rgba(52, 199, 89, 0.28) !important;
+        }
+        .btn-delete-confirm.is-done, .char-action-btn.danger.is-done {
+            background: #ff3b30 !important;
+            color: #fff !important;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.28) !important;
+        }
+        .phone-toast {
+            position: absolute;
+            left: 50%;
+            bottom: 86px;
+            transform: translateX(-50%) translateY(12px) scale(0.96);
+            min-width: 116px;
+            max-width: 260px;
+            padding: 10px 15px;
+            border-radius: 999px;
+            background: rgba(20, 20, 20, 0.86);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.35;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.20);
+            backdrop-filter: blur(16px);
+            z-index: 2200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+        .phone-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+
+
         /* ================= 世界书 App：iOS 小册子 ================= */
         #screen-worldbook { 
             background: #f2f2f7;
@@ -1636,6 +1686,10 @@
             </div>
         </div>
 
+
+        <!-- 手机内轻提示 -->
+        <div class="phone-toast" id="phone-toast"></div>
+
         <!-- 全局底部黑条 -->
         <div class="home-indicator"></div>
     </div>
@@ -1664,6 +1718,30 @@
         window.addEventListener('resize', updatePhoneScale);
         window.addEventListener('orientationchange', updatePhoneScale);
         updatePhoneScale();
+
+
+        // 手机内轻提示和按钮状态反馈，不使用浏览器 alert 样式
+        const phoneToast = document.getElementById('phone-toast');
+        let phoneToastTimer = null;
+        function showPhoneToast(text) {
+            if (!phoneToast) return;
+            phoneToast.textContent = text;
+            phoneToast.classList.add('show');
+            clearTimeout(phoneToastTimer);
+            phoneToastTimer = setTimeout(() => phoneToast.classList.remove('show'), 1350);
+        }
+
+        function flashButtonFeedback(btn, doneText, resetText, type = 'done') {
+            if (!btn) return;
+            const originalText = resetText || btn.textContent;
+            btn.classList.remove('is-processing', 'is-done');
+            btn.classList.add(type === 'processing' ? 'is-processing' : 'is-done');
+            if (doneText) btn.textContent = doneText;
+            setTimeout(() => {
+                btn.classList.remove('is-processing', 'is-done');
+                btn.textContent = originalText;
+            }, 900);
+        }
 
         // --------- 基础组件：时间更新 ---------
 
@@ -2184,10 +2262,19 @@
         });
 
         // 确定添加并生成列表项，同时保存到浏览器本地
-        document.getElementById('btn-confirm-add').addEventListener('click', () => {
+        const confirmAddBtn = document.getElementById('btn-confirm-add');
+        confirmAddBtn.addEventListener('click', () => {
             const friendName = nameInput.value.trim(); 
-            if (!currentUploadedAvatar) return alert('请上传一张头像哦！');
-            if (!friendName) return alert('名字不能为空哦！');
+            if (!currentUploadedAvatar) {
+                showPhoneToast('请先上传头像');
+                flashButtonFeedback(confirmAddBtn, '需要头像', '确定添加', 'processing');
+                return;
+            }
+            if (!friendName) {
+                showPhoneToast('名字不能为空');
+                flashButtonFeedback(confirmAddBtn, '需要名字', '确定添加', 'processing');
+                return;
+            }
 
             const friend = {
                 id: 'friend_' + Date.now(),
@@ -2207,8 +2294,12 @@
             saveFriends();
             refreshMessageList();
             refreshContactList();
-            showScreen('screen-contacts');
-            addModal.style.display = 'none';
+            flashButtonFeedback(confirmAddBtn, '已添加', '确定添加');
+            showPhoneToast(`已添加「${friendName}」`);
+            setTimeout(() => {
+                showScreen('screen-contacts');
+                addModal.style.display = 'none';
+            }, 180);
         });
 
 
@@ -3152,10 +3243,14 @@ ${userPersona}
                 chatRoomBox.innerHTML = '';
             }
 
-            closeDeleteConfirmModal();
-            refreshMessageList();
-            refreshContactList();
-            showScreen('screen-contacts');
+            flashButtonFeedback(confirmDeleteRoleBtn, '已删除', '确认删除');
+            showPhoneToast('角色已删除');
+            setTimeout(() => {
+                closeDeleteConfirmModal();
+                refreshMessageList();
+                refreshContactList();
+                showScreen('screen-contacts');
+            }, 180);
         }
 
         // --------- 首页设置：全局 API 接入 ---------
@@ -3377,9 +3472,9 @@ ${userPersona}
 
         function saveCharProfile() {
             const friend = getFriendById(editingCharId);
-            if (!friend) { alert('这个角色已经不存在了。'); return false; }
+            if (!friend) { showPhoneToast('这个角色已经不存在了'); return false; }
             const newName = charEditName.value.trim();
-            if (!newName) { alert('角色名字不能为空哦！'); return false; }
+            if (!newName) { showPhoneToast('角色名字不能为空'); return false; }
 
             friend.name = newName;
             friend.remark = charEditRemark.value.trim();
@@ -3401,6 +3496,9 @@ ${userPersona}
             refreshMessageList();
             refreshContactList();
             openCharProfileScreen(friend.id);
+            flashButtonFeedback(document.getElementById('btn-char-save'), '已保存', '保存资料');
+            flashButtonFeedback(document.getElementById('btn-char-card-save-top'), '✓', '✓');
+            showPhoneToast('角色资料已保存');
             return true;
         }
 
