@@ -948,6 +948,35 @@
             box-shadow: 0 1px 0 rgba(0,0,0,0.04);
         }
         .worldbook-delete:active { background: #f2f2f7; transform: none; opacity: 1; }
+        .worldbook-confirm-sheet {
+            width: 310px;
+            padding: 0;
+            border-radius: 22px;
+            overflow: hidden;
+            background: rgba(242,242,247,0.96);
+            box-shadow: 0 18px 50px rgba(0,0,0,0.25);
+            text-align: center;
+            animation: pop-up 0.22s ease;
+        }
+        .worldbook-confirm-main {
+            background: rgba(255,255,255,0.92);
+            padding: 20px 18px 14px 18px;
+            border-bottom: 1px solid rgba(60,60,67,0.16);
+        }
+        .worldbook-confirm-title { font-size: 17px; font-weight: 800; color: #111; margin-bottom: 7px; }
+        .worldbook-confirm-text { font-size: 13px; line-height: 1.45; color: #6b7280; }
+        .worldbook-confirm-actions { background: #fff; }
+        .worldbook-confirm-btn {
+            height: 48px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(60,60,67,0.13);
+        }
+        .worldbook-confirm-btn:last-child { border-bottom: none; }
+        .worldbook-confirm-btn:active { background: #f2f2f7; }
+        .worldbook-confirm-danger { color: #ff3b30; font-weight: 700; }
+        .worldbook-confirm-cancel { color: #007aff; font-weight: 600; }
         .worldbook-mode-list .worldbook-add { display: block; }
         .worldbook-mode-edit .worldbook-add { display: none; }
         .worldbook-mode-list .worldbook-save { display: none; }
@@ -1053,6 +1082,19 @@
             <div class="worldbook-bottom-nav" id="worldbook-bottom-nav">
                 <div class="worldbook-tab active" id="worldbook-tab-global">🌍 全局世界书</div>
                 <div class="worldbook-tab" id="worldbook-tab-role">👥 角色世界书</div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="worldbook-delete-confirm-modal">
+            <div class="worldbook-confirm-sheet">
+                <div class="worldbook-confirm-main">
+                    <div class="worldbook-confirm-title">删除世界书条目？</div>
+                    <div class="worldbook-confirm-text" id="worldbook-delete-confirm-text">删除后不能恢复，这条规则也不会再加入提示词。</div>
+                </div>
+                <div class="worldbook-confirm-actions">
+                    <div class="worldbook-confirm-btn worldbook-confirm-danger" id="btn-confirm-worldbook-delete">删除</div>
+                    <div class="worldbook-confirm-btn worldbook-confirm-cancel" id="btn-cancel-worldbook-delete">取消</div>
+                </div>
             </div>
         </div>
 
@@ -1498,6 +1540,11 @@
         document.getElementById('btn-worldbook-add').addEventListener('click', createWorldbookEntry);
         document.getElementById('btn-worldbook-save').addEventListener('click', saveWorldbookEditor);
         document.getElementById('btn-worldbook-delete').addEventListener('click', deleteWorldbookEntry);
+        document.getElementById('btn-confirm-worldbook-delete').addEventListener('click', confirmWorldbookDelete);
+        document.getElementById('btn-cancel-worldbook-delete').addEventListener('click', closeWorldbookDeleteConfirm);
+        document.getElementById('worldbook-delete-confirm-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeWorldbookDeleteConfirm();
+        });
         document.getElementById('worldbook-tab-global').addEventListener('click', () => switchWorldbookScope('global'));
         document.getElementById('worldbook-tab-role').addEventListener('click', () => switchWorldbookScope('role'));
         // 3. 聊天页点返回
@@ -1723,9 +1770,26 @@
 
         function deleteWorldbookEntry() {
             if (!editingWorldbookEntryId) return;
-            if (!confirm('确定要删除这个世界书条目吗？删除后不能恢复。')) return;
+            const modal = document.getElementById('worldbook-delete-confirm-modal');
+            const text = document.getElementById('worldbook-delete-confirm-text');
+            const entry = getWorldbookList().find(item => item.id === editingWorldbookEntryId);
+            if (text) {
+                const title = entry && entry.title ? `「${entry.title}」` : '这个条目';
+                text.innerText = `确定要删除 ${title} 吗？删除后不能恢复，这条规则也不会再加入提示词。`;
+            }
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeWorldbookDeleteConfirm() {
+            const modal = document.getElementById('worldbook-delete-confirm-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function confirmWorldbookDelete() {
+            if (!editingWorldbookEntryId) return;
             worldbookEntries[worldbookScope] = getWorldbookList().filter(item => item.id !== editingWorldbookEntryId);
             editingWorldbookEntryId = '';
+            closeWorldbookDeleteConfirm();
             saveWorldbookEntries();
             renderWorldbookList();
         }
