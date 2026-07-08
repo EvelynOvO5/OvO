@@ -2365,6 +2365,18 @@
             else renderFriendMessage(msg);
         }
 
+        // 把 AI 一次回复拆成多个真实聊天气泡：普通换行 = 下一条消息
+        function splitReplyIntoBubbles(text) {
+            const raw = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+            if (!raw) return [];
+
+            return raw
+                .split(/\n+/)
+                .map(line => line.trim())
+                .map(line => line.replace(/^[-•]+\s*/, '').trim())
+                .filter(Boolean);
+        }
+
         function renderMyMessage(message) {
             const msg = typeof message === 'object' ? message : { id: createMessageId('me'), text: String(message || ''), from: 'me' };
             const boundUser = currentChatId ? getBoundUserProfile(currentChatId) : getUserProfileById(defaultUserProfileId);
@@ -2476,7 +2488,7 @@ ${rolePersona}
 【User 人设】
 ${userPersona}
 
-回复要求：像手机聊天一样自然，优先使用中文；不要每次都写很长；要结合历史对话继续说。每一行可以视为一条独立聊天气泡。`;
+回复要求：像手机聊天一样自然，优先使用中文；不要每次都写很长；要结合历史对话继续说。需要拆成多条聊天气泡时，请直接用换行分隔；每一行都会被手机渲染成一条独立气泡。不要用编号或项目符号伪装气泡。`;
         }
 
         function buildApiMessages(profile, apiConfig = getApiSettings()) {
@@ -2627,13 +2639,19 @@ ${userPersona}
         function receiveMessage(text) {
             if (!currentChatId) return;
 
-            const message = { id: createMessageId('ai'), from: 'friend', text: text };
-            renderFriendMessage(message);
+            const bubbleTexts = splitReplyIntoBubbles(text);
+            if (!bubbleTexts.length) return;
 
             if (!chatHistories[currentChatId]) chatHistories[currentChatId] = [];
-            chatHistories[currentChatId].push(message);
+
+            bubbleTexts.forEach((bubbleText) => {
+                const message = { id: createMessageId('ai'), from: 'friend', text: bubbleText };
+                renderFriendMessage(message);
+                chatHistories[currentChatId].push(message);
+            });
+
             saveChats();
-            updatePreviewInList(currentChatId, text);
+            updatePreviewInList(currentChatId, bubbleTexts[bubbleTexts.length - 1]);
         }
 
 
